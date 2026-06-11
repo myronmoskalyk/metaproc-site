@@ -1,0 +1,17 @@
+# Build
+dist/
+.astro/
+node_modules/
+
+# Env / secrets
+.env
+.env.*
+
+# Tooling output
+lighthouse-report*/
+playwright-report/
+test-results/
+
+# OS noise
+Thumbs.db
+.DS_Store
