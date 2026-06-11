@@ -1,0 +1,25 @@
+WEBVTT
+
+NOTE
+Silent screen capture — these captions describe the on-screen action.
+
+00:00.000 --> 00:06.000
+[No audio] MetaProc opens in the browser — nothing to install.
+
+00:06.000 --> 00:12.000
+The pairwise binary-outcome (2×2) template loads a worked risk-ratio example and runs it.
+
+00:12.000 --> 00:28.000
+Results: pooled risk ratio 0.69 (95% CI 0.62 to 0.78) across 10 studies, I² = 0%.
+
+00:28.000 --> 00:50.000
+Scrolling the results: heterogeneity, the 95% prediction interval, and a clinical translation with NNT/NNH absolute effects.
+
+00:50.000 --> 00:58.000
+Appraise tab: the GRADE certainty form, with suggestions pre-filled from the live analysis.
+
+00:58.000 --> 01:08.000
+Report tab: choose sections, generate an HTML, PDF, or R Markdown report — or download the reproducibility bundle.
+
+01:08.000 --> 01:13.400
+Plots studio: the saved forest plot, re-drawn — with the exact R code that drew it shown beneath.

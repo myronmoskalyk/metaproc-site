@@ -3,6 +3,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ForestPlot from '../components/ForestPlot.astro';
 import ProofAsset from '../components/ProofAsset.astro';
 
+// Real screenshots from the live containerized app (Stage 4 captures).
+import shotAppOverview from '../assets/proof/hero-app-overview.png';
+import shotWorkflowStore from '../assets/proof/workflow-store.png';
+import shotPlotsStudio from '../assets/proof/plots-studio.png';
+import shotReportBuilder from '../assets/proof/report-builder.png';
+import shotGradeSof from '../assets/proof/grade-sof.png';
+import shotCodePanel from '../assets/proof/code-panel.png';
+
 const steps = [
 	{
 		n: '1',
@@ -22,11 +30,31 @@ const steps = [
 ];
 
 const tour = [
-	{ label: 'Workflow store', caption: 'Workspace panel — every loaded file and sheet, switchable app-wide.' },
-	{ label: 'Plots studio', caption: 'Forest & funnel plots with prediction intervals, sorting, and PNG/PDF/SVG export.' },
-	{ label: 'Report builder', caption: 'Reproducible rmarkdown report — choose sections, export, re-render anywhere.' },
-	{ label: 'GRADE summary', caption: 'Cochrane-style summary-of-findings row populated from your live analysis.' },
-	{ label: 'Live R code panel', caption: 'The exact R that ran — copy it, audit it, re-run it. What you see is what executed.' },
+	{
+		image: shotWorkflowStore,
+		alt: 'MetaProc home screen with the Workflow panel open on the right, holding a saved risk-ratio analysis with buttons to send it to the Plots studio or the Report.',
+		caption: 'Workflow store — every result you collect across tabs, reorderable and sendable to Plots or Report, saved with your project.',
+	},
+	{
+		image: shotPlotsStudio,
+		alt: 'Plots studio: a ten-study forest plot of risk ratios with a random-effects pooled estimate of 0.69, plot-type and drawing-engine controls on the left, and a Reproducible R panel underneath.',
+		caption: 'Plots studio — forest & funnel plots re-drawn from your saved analysis, with the exact R that drew the preview shown beneath.',
+	},
+	{
+		image: shotReportBuilder,
+		alt: 'Reproducible report builder with checkboxes for methods, PRISMA flow, included studies, pooled result, forest plot, heterogeneity, reproducible code and packages used, plus HTML, PDF and R Markdown output formats.',
+		caption: 'Report builder — choose sections, export HTML / PDF / .Rmd, or download a reproducibility bundle that re-runs anywhere.',
+	},
+	{
+		image: shotGradeSof,
+		alt: 'GRADE certainty-of-evidence form with the five downgrade domains — risk of bias, inconsistency, indirectness, imprecision, publication bias — and suggestions derived from the live analysis.',
+		caption: 'GRADE — rate certainty across the five domains, with suggestions pre-filled from your own analysis.',
+	},
+	{
+		image: shotCodePanel,
+		alt: 'Live R code panel: a metafor script with escalc effect-size, rma model, forest and funnel calls beside the raw random-effects model output it produced.',
+		caption: 'Live R code panel — every analysis shows the exact R it ran, metafor calls included. Copy it, audit it, re-run it.',
+	},
 ];
 
 const audiences = [
@@ -104,6 +132,15 @@ const faqs = [
 					</li>
 				))}
 			</ol>
+			<div class="how__shot">
+				<ProofAsset
+					image={shotAppOverview}
+					alt="MetaProc home screen: a welcome banner with Start: import your data and Plan my analysis buttons, above a five-step Your workflow strip — import data, explore (EDA), run an analysis, plan a pipeline, build a report."
+					caption="The home screen mirrors those steps — import, explore, analyze, pipeline, report — and your whole project saves to a file you can reload later."
+					sizes="(min-width: 78rem) 72rem, 96vw"
+					widths={[800, 1200, 1600, 2000]}
+				/>
+			</div>
 		</div>
 	</section>
 
@@ -116,10 +153,27 @@ const faqs = [
 			</p>
 			<div class="tour__grid">
 				{tour.map((t) => (
-					<ProofAsset label={t.label} caption={t.caption} />
+					<ProofAsset image={t.image} alt={t.alt} caption={t.caption} />
 				))}
 			</div>
 			<p class="section__more"><a href="/features">See the full feature tour →</a></p>
+		</div>
+	</section>
+
+	<!-- ===================== DEMO TEASER ===================== -->
+	<section class="section demo-teaser" aria-labelledby="demo-teaser-title">
+		<div class="mp-container demo-teaser__inner">
+			<div>
+				<h2 id="demo-teaser-title" class="section__title">See it run</h2>
+				<p>
+					A 73-second screen capture from the live app: a worked binary-outcome example
+					pools ten trials, gets a GRADE rating, and exports a reproducible report.
+				</p>
+			</div>
+			<a class="mp-cta mp-cta--outline" href="/features#demo">
+				<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M4 2.5v11l9-5.5-9-5.5z"/></svg>
+				Watch the demo
+			</a>
 		</div>
 	</section>
 
@@ -338,11 +392,34 @@ const faqs = [
 	.step h3 { margin: 0 0 0.4rem; font-size: 1.25rem; }
 	.step p { margin: 0; color: var(--mp-muted); }
 
+	/* App overview shot under How-it-works */
+	.how__shot {
+		margin-top: 2rem;
+	}
+
 	/* Feature tour grid */
 	.tour__grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-		gap: 1.5rem;
+		grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+		gap: 1.75rem;
+	}
+
+	/* Demo teaser */
+	.demo-teaser {
+		padding-block: clamp(2rem, 4vw, 3rem);
+		border-block: 1px solid var(--mp-card-border);
+	}
+	.demo-teaser__inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 2rem;
+		flex-wrap: wrap;
+	}
+	.demo-teaser p {
+		color: var(--mp-muted);
+		max-width: 38rem;
+		margin: 0.5rem 0 0;
 	}
 
 	/* Audience cards */

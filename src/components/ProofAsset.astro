@@ -1,18 +1,38 @@
 ---
-// Placeholder slot for a real UI screenshot (Stage 4 captures replace these).
-// Marked data-proof-asset so the capture tooling can find every slot.
+// Real UI screenshot, captured from the live containerized app (Stage 4 → wired in Stage 7).
+// Marked data-proof-asset so tooling can find every proof slot.
+// Emits <picture> with AVIF + WebP sources, srcset, and explicit dimensions (no CLS).
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
 interface Props {
+	image: ImageMetadata;
+	alt: string;
 	caption: string;
-	label?: string;
-	ratio?: string; // aspect-ratio, e.g. "16 / 10"
+	widths?: number[];
+	sizes?: string;
+	loading?: 'lazy' | 'eager';
 }
-const { caption, label = 'Screenshot', ratio = '16 / 10' } = Astro.props;
+const {
+	image,
+	alt,
+	caption,
+	widths = [480, 800, 1200, 1600],
+	sizes = '(min-width: 64rem) 22rem, (min-width: 40rem) 45vw, 92vw',
+	loading = 'lazy',
+} = Astro.props;
 ---
 <figure class="mp-proof" data-proof-asset>
-	<div class="mp-proof__box" style={`aspect-ratio:${ratio}`} aria-hidden="true">
-		<span class="mp-proof__tag">{label}</span>
-		<span class="mp-proof__note">Real screenshot arrives in Stage 4</span>
-	</div>
+	<Picture
+		src={image}
+		alt={alt}
+		formats={['avif', 'webp']}
+		fallbackFormat="webp"
+		widths={widths}
+		sizes={sizes}
+		loading={loading}
+		decoding="async"
+	/>
 	<figcaption>{caption}</figcaption>
 </figure>
 
@@ -20,27 +40,14 @@ const { caption, label = 'Screenshot', ratio = '16 / 10' } = Astro.props;
 	.mp-proof {
 		margin: 0;
 	}
-	.mp-proof__box {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		gap: 0.35rem;
+	.mp-proof :global(img) {
+		display: block;
 		width: 100%;
-		border: 2px dashed var(--mp-card-border);
+		height: auto;
+		border: 1px solid var(--mp-card-border);
 		border-radius: var(--mp-radius-lg);
-		background: linear-gradient(135deg, #f6f3fd 0%, #eef2fe 100%);
-		color: var(--mp-muted);
-		text-align: center;
-		padding: 1rem;
-	}
-	.mp-proof__tag {
-		font-weight: 700;
-		color: var(--mp-violet-deep, #5B21B6);
-		font-size: 0.95rem;
-	}
-	.mp-proof__note {
-		font-size: 0.8rem;
+		background: #fff;
+		box-shadow: 0 14px 34px -22px rgba(30, 27, 46, 0.4);
 	}
 	.mp-proof figcaption {
 		margin-top: 0.6rem;

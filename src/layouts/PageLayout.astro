@@ -10,6 +10,7 @@ interface Props {
 const { title, description, activePath, lede } = Astro.props;
 ---
 <BaseLayout title={title} description={description} activePath={activePath}>
+	<slot name="head" slot="head" />
 	<article class="mp-page">
 		<div class="mp-container">
 			<header class="mp-page__head">
