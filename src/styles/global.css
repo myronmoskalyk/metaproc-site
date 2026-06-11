@@ -112,6 +112,15 @@ body.mp-marketing {
 	padding-inline: 1.25rem;
 }
 
+/* ---- Starlight (docs) accessibility tweaks ------------------------------- */
+/* WCAG 1.4.1 / axe "link-in-text-block": inline links in docs prose must be
+   distinguishable from surrounding text without relying on colour alone.
+   Excludes heading anchor icons and not-content regions (code frames etc.). */
+.sl-markdown-content a:not(:where(.not-content *, .sl-anchor-link)) {
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+}
+
 /* Visually-hidden but screen-reader-available */
 .mp-visually-hidden {
 	position: absolute;

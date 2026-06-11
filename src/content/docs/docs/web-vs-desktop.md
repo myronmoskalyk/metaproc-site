@@ -12,7 +12,7 @@ installation, data, and offline use**.
 
 ## At a glance
 
-| | Web app | Desktop build *(planned)* |
+| Aspect | Web app | Desktop build *(planned)* |
 |---|---|---|
 | Install | Nothing — open a URL | One-time installer (bundles R + all packages) |
 | Always up to date | Yes, automatically | You update when you choose |
