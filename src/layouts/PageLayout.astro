@@ -1,0 +1,99 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+	title: string;
+	description?: string;
+	activePath?: string;
+	lede?: string;
+}
+const { title, description, activePath, lede } = Astro.props;
+---
+<BaseLayout title={title} description={description} activePath={activePath}>
+	<article class="mp-page">
+		<div class="mp-container">
+			<header class="mp-page__head">
+				<h1>{title}</h1>
+				{lede && <p class="mp-page__lede">{lede}</p>}
+				<slot name="banner" />
+			</header>
+			<div class="mp-prose">
+				<slot />
+			</div>
+		</div>
+	</article>
+</BaseLayout>
+
+<style>
+	.mp-page { padding-block: clamp(2.5rem, 5vw, 4rem); }
+	.mp-page__head { max-width: 48rem; margin-bottom: 2rem; }
+	.mp-page__head h1 {
+		font-size: clamp(2rem, 4vw, 2.8rem);
+		letter-spacing: -0.02em;
+		margin: 0 0 0.75rem;
+	}
+	.mp-page__lede {
+		font-size: 1.2rem;
+		color: var(--mp-muted);
+		margin: 0;
+	}
+	.mp-prose { max-width: 48rem; }
+	.mp-prose :global(h2) {
+		font-size: 1.5rem;
+		margin: 2.5rem 0 0.75rem;
+		letter-spacing: -0.01em;
+	}
+	.mp-prose :global(h3) { font-size: 1.2rem; margin: 1.75rem 0 0.5rem; }
+	.mp-prose :global(p),
+	.mp-prose :global(li) { color: #3a3550; }
+	.mp-prose :global(a) { color: var(--mp-link); font-weight: 500; }
+	.mp-prose :global(a:hover) { color: var(--mp-link-hover); }
+	.mp-prose :global(table) {
+		width: 100%;
+		border-collapse: collapse;
+		margin: 1.25rem 0;
+		font-size: 0.95rem;
+	}
+	.mp-prose :global(th),
+	.mp-prose :global(td) {
+		text-align: left;
+		padding: 0.6rem 0.8rem;
+		border-bottom: 1px solid var(--mp-card-border);
+		vertical-align: top;
+	}
+	.mp-prose :global(th) { background: var(--mp-card-cap); font-weight: 700; }
+	.mp-prose :global(code) {
+		font-family: var(--font-mono, monospace);
+		background: #f1edfb;
+		padding: 0.12em 0.35em;
+		border-radius: 4px;
+		font-size: 0.9em;
+	}
+	.mp-prose :global(.mp-banner) {
+		border-radius: var(--mp-radius);
+		padding: 0.85rem 1.1rem;
+		margin: 1.25rem 0 0;
+		font-weight: 600;
+	}
+	.mp-prose :global(.mp-banner--draft) {
+		background: #fff4e0;
+		border: 1px solid #f0c886;
+		color: #8a5a00;
+	}
+	.mp-prose :global(.mp-banner--info) {
+		background: #eef2fe;
+		border: 1px solid #c5d3fb;
+		color: #1e3a8a;
+	}
+	:global(.mp-page__head .mp-banner) {
+		margin-top: 1.25rem;
+		border-radius: var(--mp-radius);
+		padding: 0.85rem 1.1rem;
+		font-weight: 600;
+	}
+	:global(.mp-page__head .mp-banner--draft) {
+		background: #fff4e0;
+		border: 1px solid #f0c886;
+		color: #8a5a00;
+	}
+</style>

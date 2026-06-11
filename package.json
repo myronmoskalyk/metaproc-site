@@ -1,0 +1,22 @@
+{
+  "name": "metaproc-site",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "sync-docs": "node scripts/sync-docs.mjs"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.40.0",
+    "@fontsource-variable/inter": "^5.2.8",
+    "@fontsource/ibm-plex-mono": "^5.2.7",
+    "@tailwindcss/vite": "^4.3.0",
+    "astro": "^6.4.5",
+    "sharp": "^0.34.5",
+    "tailwindcss": "^4.3.0"
+  }
+}

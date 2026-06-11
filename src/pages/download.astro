@@ -1,0 +1,47 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+
+// Stage 8: flip when public repo + tag live.
+// Desktop downloads are gated until a public source repo and a matching release
+// tag exist — GPLv3 §6 requires each shipped installer to have its Corresponding
+// Source available, so we do not link binaries before the tagged source is up.
+const SHOW_DOWNLOADS = false;
+
+const SOURCE_URL = 'https://github.com/myronmoskalyk/metaproc';
+---
+<PageLayout
+	title="Download"
+	activePath="/download"
+	lede="MetaProc runs in your browser today. A bundled desktop build — R, packages and all — is on the way."
+	description="Download MetaProc desktop builds. Returning soon alongside the public source repository and release tags."
+>
+	{SHOW_DOWNLOADS ? (
+		<section>
+			<h2>Desktop builds</h2>
+			<p>Pick the build for your platform. Each release links its matching source tag.</p>
+			<ul>
+				<li><a href="#" data-placeholder="download-windows">Windows (.exe)</a></li>
+				<li><a href="#" data-placeholder="download-macos">macOS (.dmg)</a></li>
+				<li><a href="#" data-placeholder="download-linux">Linux (AppImage)</a></li>
+			</ul>
+		</section>
+	) : (
+		<div class="mp-banner mp-banner--info">
+			<strong>Desktop downloads return soon</strong> — together with the public source code
+			and release tags. The browser app is available now: just
+			<a href="#" data-placeholder="app-url">launch MetaProc</a>.
+		</div>
+	)}
+
+	<h2>Why the wait?</h2>
+	<p>
+		MetaProc is GPL-3.0-or-later. When we ship a desktop installer, GPLv3 §6 requires the
+		exact corresponding source to be publicly available at a matching tag. We are lining
+		the public repository and the first tagged release up together, so that every binary
+		you can download has its source you can inspect. Until then, the
+		<a href="/docs/web-vs-desktop">web app</a> gives you the full workflow with nothing to install.
+	</p>
+	<p>
+		Source code: <a href={SOURCE_URL} rel="noopener">{SOURCE_URL}</a>.
+	</p>
+</PageLayout>

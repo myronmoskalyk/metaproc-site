@@ -6,6 +6,13 @@ node_modules/
 # Env / secrets
 .env
 .env.*
+.env.production
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
 # Tooling output
 lighthouse-report*/

@@ -1,0 +1,70 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+// Self-hosted Inter variable font file, for an LCP-light <link rel="preload">.
+// Resolved at build time so the hashed asset URL is correct.
+import interWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+
+interface Props {
+	title: string;
+	description?: string;
+	activePath?: string;
+}
+
+const {
+	title,
+	description = 'Run a complete, reproducible meta-analysis in your browser — data to forest plot to GRADE, with the exact R code for every step.',
+	activePath = '',
+} = Astro.props;
+
+const fullTitle = title === 'MetaProc' ? title : `${title} · MetaProc`;
+
+// Stage 8: paste the Cloudflare Web Analytics token here to enable the snippet.
+// Empty string => nothing renders (no third-party request, no cookie).
+const ANALYTICS_TOKEN = '';
+---
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{fullTitle}</title>
+		<meta name="description" content={description} />
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+		<!-- LCP: preload the variable UI font so the hero headline paints fast. -->
+		<link
+			rel="preload"
+			href={interWoff2}
+			as="font"
+			type="font/woff2"
+			crossorigin
+		/>
+
+		<meta property="og:title" content={fullTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+
+		{
+			/* Stage 8: Cloudflare Web Analytics — guarded behind an empty token so it
+			   renders nothing (and makes no request) until configured. */
+			ANALYTICS_TOKEN && (
+				<script
+					defer
+					src="https://static.cloudflareinsights.com/beacon.min.js"
+					data-cf-beacon={`{"token": "${ANALYTICS_TOKEN}"}`}
+				/>
+			)
+		}
+	</head>
+	<body class="mp-marketing">
+		<a class="mp-skip" href="#main">Skip to content</a>
+		<Header activePath={activePath} />
+		<main id="main">
+			<slot />
+		</main>
+		<Footer />
+	</body>
+</html>

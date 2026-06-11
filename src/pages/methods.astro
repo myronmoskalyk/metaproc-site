@@ -1,0 +1,76 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+
+const engines = [
+	{ name: 'metafor', role: 'Pairwise pooling, diagnostics, three-level and multivariate models (escalc, rma, rma.mh, rma.peto, rma.glmm, rma.mv).' },
+	{ name: 'netmeta', role: 'Frequentist network meta-analysis (pairwise, netmeta) — league tables, P-scores, net-split.' },
+	{ name: 'meta', role: 'Locked reference dependency in the meta-analysis ecosystem.' },
+	{ name: 'robvis', role: 'Risk-of-bias traffic-light and summary figures.' },
+	{ name: 'esc', role: 'Effect-size conversions between reported statistics.' },
+];
+---
+<PageLayout
+	title="Methods you can defend"
+	activePath="/methods"
+	lede="MetaProc does not reinvent the statistics. It drives the same gold-standard R engines the field already trusts — and proves it stays faithful to them with a large automated test suite."
+	description="How MetaProc validates its results: gold-standard R engines, golden testing against reference output, and full code capture."
+>
+	<h2>The engines, not a re-implementation</h2>
+	<p>
+		Every pooled estimate, plot, and diagnostic in MetaProc is computed by the
+		established meta-analysis packages — not by hand-rolled statistics. The app's job
+		is to make those engines accessible from buttons and templates, then get out of the way.
+	</p>
+
+	<table>
+		<thead>
+			<tr><th>Engine</th><th>What it powers</th></tr>
+		</thead>
+		<tbody>
+			{engines.map((e) => (
+				<tr><td><code>{e.name}</code></td><td>{e.role}</td></tr>
+			))}
+		</tbody>
+	</table>
+
+	<h2>Golden-tested against the reference output</h2>
+	<p>
+		"Golden testing" means we capture the exact output of the underlying engine for a
+		fixed set of inputs and assert that MetaProc reproduces it — so the app can never
+		silently drift from what <code>metafor</code> or <code>netmeta</code> would give you.
+		Across the regression baseline, MetaProc matches the reference engines on
+		<strong>96 of 96</strong> golden cases, inside a wider suite of
+		<strong>2,600+ automated tests</strong> that exercise importing, cleaning,
+		every template, the pipeline, appraisal, and reporting.
+	</p>
+	<p>
+		The point is not that the number is large — it is that the numbers MetaProc shows
+		you are <em>the same numbers</em> a methodologist would get running the R code by hand.
+	</p>
+
+	<h2>Code capture: what you see is what ran</h2>
+	<p>
+		MetaProc's defining principle is <strong>SAS-like reproducible code capture</strong>.
+		Every model, table, figure, and graphic is produced by building R code as text from
+		your choices, evaluating that exact text, and displaying the same text in a copyable
+		panel. The code in the "R code" panel is — by construction — what actually executed.
+	</p>
+	<p>
+		That means three things you can rely on: you can <strong>audit</strong> any result by
+		reading the code that produced it; you can <strong>reproduce</strong> it outside the
+		app by copying that code into a plain R session; and your <strong>methods section</strong>
+		can quote the real call, not a paraphrase. The reproducibility bundle goes further —
+		it ships a runnable <code>analysis.R</code>, the dataset it reads, <code>sessionInfo()</code>,
+		and an <code>renv.lock</code> pinning exact package versions, so a reviewer can re-run
+		your analysis in a clean R session and land on the same pooled estimate.
+	</p>
+
+	<h2>Honest about scope</h2>
+	<p>
+		MetaProc is <strong>frequentist only</strong> — there is no Bayesian pairwise or network
+		meta-analysis, no diagnostic test-accuracy (bivariate/HSROC), and no dose-response or IPD
+		meta-analysis. The pipeline builder is currently locked to the binary base template. We
+		would rather name these limits plainly than imply coverage we do not have; the
+		<a href="/docs/manual">product manual</a> lists exactly what does and does not exist.
+	</p>
+</PageLayout>

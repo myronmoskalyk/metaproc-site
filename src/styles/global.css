@@ -1,0 +1,126 @@
+/* MetaProc site — global styles + brand tokens.
+   Tailwind v4 is configured in CSS (no tailwind.config.js). Brand palette is
+   lifted verbatim from the app's R/app_theme.R so the site matches the product. */
+
+@import "tailwindcss";
+
+/* Self-hosted fonts (no Google CDN). Inter variable for UI/headings, IBM Plex
+   Mono for code — the same pairing the app uses. */
+@import "@fontsource-variable/inter";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+/* ---- Brand tokens (source of truth: app R/app_theme.R) ---------------------- */
+:root {
+	/* Core palette */
+	--mp-violet: #7C3AED;       /* primary accent — AA on white only for LARGE text/accents */
+	--mp-blue: #2563EB;         /* secondary accent */
+	--mp-fuchsia: #C026D3;      /* tertiary plot accent (mp_plot_palette) */
+	--mp-link: #6D28D9;         /* body links — darker violet, AA on white for body text */
+	--mp-link-hover: #5B21B6;   /* deep violet (also plot title colour) */
+	--mp-violet-deep: #5B21B6;
+
+	/* Surfaces & ink */
+	--mp-canvas: #E9E3F6;       /* soft lavender canvas (app bg) */
+	--mp-ink: #1E1B2E;          /* deep plum-ink text (app fg) */
+	--mp-paper: #ffffff;
+	--mp-card-border: #E9E4F5;
+	--mp-card-cap: #F3F0FB;
+	--mp-muted: #5b5570;        /* secondary text, AA on white */
+
+	/* Semantic (from bslib theme) */
+	--mp-success: #16A34A;
+	--mp-info: #0EA5E9;
+	--mp-warning: #D97706;
+	--mp-danger: #DC2626;
+
+	/* Code panel (app: dark #14101F w/ neon-purple text) */
+	--mp-code-bg: #14101F;
+	--mp-code-fg: #C9BEF0;
+
+	--mp-radius: 0.6rem;
+	--mp-radius-lg: 0.85rem;
+
+	color-scheme: light;
+}
+
+/* Expose tokens to Tailwind's utility theme (Tailwind v4 @theme). */
+@theme {
+	--color-violet-brand: #7C3AED;
+	--color-blue-brand: #2563EB;
+	--color-fuchsia-brand: #C026D3;
+	--color-link-brand: #6D28D9;
+	--color-ink: #1E1B2E;
+	--color-canvas: #E9E3F6;
+	--font-sans: "Inter Variable", Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+	--font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+/* ---- Base (marketing pages only — Starlight has its own reset) -------------- */
+html {
+	font-family: var(--font-sans, system-ui, sans-serif);
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html { scroll-behavior: auto; }
+}
+
+body.mp-marketing {
+	margin: 0;
+	color: var(--mp-ink);
+	background: var(--mp-paper);
+	line-height: 1.6;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+.mp-marketing a {
+	color: var(--mp-link);
+}
+.mp-marketing a:hover {
+	color: var(--mp-link-hover);
+}
+
+/* Accessibility: a single consistent focus-visible ring everywhere. */
+:where(a, button, summary, input, [tabindex]):focus-visible {
+	outline: 3px solid var(--mp-violet);
+	outline-offset: 2px;
+	border-radius: 4px;
+}
+
+/* Skip link */
+.mp-skip {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+	background: var(--mp-violet);
+	color: #fff;
+	padding: 0.6rem 1rem;
+	z-index: 100;
+	border-radius: 0 0 var(--mp-radius) 0;
+}
+.mp-skip:focus {
+	left: 0;
+}
+
+/* Shared content width */
+.mp-container {
+	width: 100%;
+	max-width: 72rem;
+	margin-inline: auto;
+	padding-inline: 1.25rem;
+}
+
+/* Visually-hidden but screen-reader-available */
+.mp-visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+	border: 0;
+}

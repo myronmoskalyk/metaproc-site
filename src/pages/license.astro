@@ -1,0 +1,50 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+const SOURCE_URL = 'https://github.com/myronmoskalyk/metaproc';
+---
+<PageLayout
+	title="License"
+	activePath="/license"
+	lede="The MetaProc code is free and open under GPL-3.0-or-later. The name MetaProc is a trademark. Here is what that means in plain language."
+	description="MetaProc licensing: GPL-3.0-or-later code with a trademark carve-out for the MetaProc name, in plain language."
+>
+	<h2>The code: GPL-3.0-or-later</h2>
+	<p>
+		MetaProc is built on the R meta-analysis ecosystem — <code>metafor</code>,
+		<code>netmeta</code>, <code>meta</code>, <code>robvis</code>, <code>esc</code> — which
+		is copyleft (GPL). MetaProc itself is therefore licensed
+		<strong>GPL-3.0-or-later</strong>. In plain language:
+	</p>
+	<ul>
+		<li>You are free to <strong>use, study, modify, and share</strong> the code.</li>
+		<li>If you distribute MetaProc (or a modified version), you must pass on the
+			<strong>same freedoms</strong> and make the corresponding source available under the GPL.</li>
+		<li>Any <strong>desktop installer</strong> we ship is "conveyance" under the GPL, so each
+			release ships with a matching public source tag (GPLv3 §6, Corresponding Source).</li>
+		<li>Using the <strong>hosted web app</strong> is not distribution — running software over a
+			network is not "conveyance" under GPLv3 — so simply using metaproc.example does not
+			itself trigger source-distribution obligations.</li>
+	</ul>
+	<p>
+		The full text is the standard GNU General Public License v3. The
+		<a href={SOURCE_URL} rel="noopener">source code lives on GitHub</a> (alongside
+		<code>LICENSING.md</code> and <code>NOTICE</code> with the per-dependency detail).
+	</p>
+
+	<h2>The name: a trademark carve-out</h2>
+	<p>
+		"MetaProc" — the name and wordmark — is a <strong>trademark</strong>, not part of the
+		GPL grant. The GPL covers the <em>code</em>; it does not give permission to use the
+		<em>name</em> to brand your own builds. In practice:
+	</p>
+	<ul>
+		<li>You may fork and redistribute the code under the GPL.</li>
+		<li>Please <strong>do not</strong> call your fork "MetaProc" or use the MetaProc wordmark
+			in a way that implies it is the official project — rename your distribution instead.</li>
+	</ul>
+	<p>
+		This is a common, GPL-compatible arrangement (the code stays free; the name stays
+		unambiguous). Questions:
+		<a href="mailto:myron.moskalyk@gmail.com?subject=metaproc%20license">myron.moskalyk@gmail.com</a>.
+	</p>
+</PageLayout>

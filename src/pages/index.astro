@@ -1,0 +1,445 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ForestPlot from '../components/ForestPlot.astro';
+import ProofAsset from '../components/ProofAsset.astro';
+
+const steps = [
+	{
+		n: '1',
+		title: 'Import',
+		body: 'Upload a CSV or Excel workbook — or load a bundled example. MetaProc detects headers, flags duplicate study IDs, and runs biological-range and consistency checks as you go.',
+	},
+	{
+		n: '2',
+		title: 'Analyze',
+		body: 'Pick a template (binary, continuous, proportion, correlation, time-to-event and more), map your columns, and run. Forest and funnel plots, heterogeneity, subgroups, and sensitivity analyses appear instantly.',
+	},
+	{
+		n: '3',
+		title: 'Report',
+		body: 'Build a reproducible report (HTML, PDF, or .Rmd), add a GRADE summary of findings, and export a bundle that re-runs in a clean R session and reproduces your pooled estimate.',
+	},
+];
+
+const tour = [
+	{ label: 'Workflow store', caption: 'Workspace panel — every loaded file and sheet, switchable app-wide.' },
+	{ label: 'Plots studio', caption: 'Forest & funnel plots with prediction intervals, sorting, and PNG/PDF/SVG export.' },
+	{ label: 'Report builder', caption: 'Reproducible rmarkdown report — choose sections, export, re-render anywhere.' },
+	{ label: 'GRADE summary', caption: 'Cochrane-style summary-of-findings row populated from your live analysis.' },
+	{ label: 'Live R code panel', caption: 'The exact R that ran — copy it, audit it, re-run it. What you see is what executed.' },
+];
+
+const audiences = [
+	{
+		title: 'Clinical researchers',
+		body: 'Run a defensible pairwise or network meta-analysis without writing R. RoB 2 / ROBINS-I / QUADAS-2, GRADE, and PRISMA flow are built in.',
+	},
+	{
+		title: 'Students & educators',
+		body: 'Learn by doing: guided tour, one-click worked examples, and a plain-language interpretation on every result. The generated R is a teaching tool in itself.',
+	},
+	{
+		title: 'Methodologists',
+		body: 'Three-level models, cluster-robust SEs, meta-regression, trim-and-fill, leave-one-out and influence diagnostics — with the exact code captured for every step.',
+	},
+];
+
+const faqs = [
+	{
+		q: 'Is it free?',
+		a: 'Free while in beta. We will give plenty of notice and a fair offer before anything changes.',
+	},
+	{
+		q: 'Is my data private?',
+		a: 'Analyses run in ephemeral, RAM-backed isolated containers hosted in the EU and destroyed at the end of your session. Please do not upload patient-level identifiable data — MetaProc works on the aggregate, study-level data a meta-analysis needs.',
+	},
+	{
+		q: 'Can I see the code my analysis ran?',
+		a: 'Yes — that is the whole point. Every model, table, and figure is produced by building R code from your choices, running that exact code, and showing you the same text in a copyable panel. What you see is what ran.',
+	},
+	{
+		q: 'Web or desktop?',
+		a: 'The browser app needs nothing installed and is always current. A desktop build (bundling R and all packages for fully-offline use) is planned. See the web-vs-desktop comparison in the docs.',
+	},
+	{
+		q: 'How do I cite it?',
+		a: 'A citation and the exact package versions ship in every report and reproducibility bundle (via sessionInfo() and renv.lock), so your write-up names metaproc and the underlying engines — metafor, netmeta and friends — with the versions you actually used.',
+	},
+	{
+		q: 'What is the license?',
+		a: 'The code is GPL-3.0-or-later (built on the GPL R meta-analysis ecosystem). The name "MetaProc" is a trademark. See the license page for the plain-language version.',
+	},
+];
+---
+<BaseLayout title="MetaProc" activePath="/">
+	<!-- ===================== HERO ===================== -->
+	<section class="hero">
+		<div class="mp-container hero__grid">
+			<div class="hero__copy">
+				<h1>Run a complete, reproducible meta-analysis in your browser.</h1>
+				<p class="hero__sub">
+					Data to forest plot to GRADE summary — with the exact R code for every step.
+				</p>
+				<div class="hero__cta">
+					<a class="mp-cta" href="#" data-placeholder="app-url">Launch MetaProc free</a>
+					<a class="hero__secondary" href="/download">Prefer the desktop app?</a>
+				</div>
+			</div>
+			<div class="hero__visual">
+				<ForestPlot />
+			</div>
+		</div>
+	</section>
+
+	<!-- ===================== HOW IT WORKS ===================== -->
+	<section class="section" aria-labelledby="how">
+		<div class="mp-container">
+			<h2 id="how" class="section__title">How it works</h2>
+			<ol class="steps">
+				{steps.map((s) => (
+					<li class="step">
+						<span class="step__n" aria-hidden="true">{s.n}</span>
+						<h3>{s.title}</h3>
+						<p>{s.body}</p>
+					</li>
+				))}
+			</ol>
+		</div>
+	</section>
+
+	<!-- ===================== FEATURE TOUR ===================== -->
+	<section class="section section--tint" aria-labelledby="tour">
+		<div class="mp-container">
+			<h2 id="tour" class="section__title">A tour of the workspace</h2>
+			<p class="section__lead">
+				Every surface in MetaProc — from the workflow store to the live R code panel.
+			</p>
+			<div class="tour__grid">
+				{tour.map((t) => (
+					<ProofAsset label={t.label} caption={t.caption} />
+				))}
+			</div>
+			<p class="section__more"><a href="/features">See the full feature tour →</a></p>
+		</div>
+	</section>
+
+	<!-- ===================== AUDIENCE CARDS ===================== -->
+	<section class="section" aria-labelledby="who">
+		<div class="mp-container">
+			<h2 id="who" class="section__title">Built for the people who do the work</h2>
+			<div class="cards">
+				{audiences.map((a) => (
+					<article class="card">
+						<h3>{a.title}</h3>
+						<p>{a.body}</p>
+					</article>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- ===================== METHODS ===================== -->
+	<section class="section section--ink" aria-labelledby="methods">
+		<div class="mp-container methods">
+			<div>
+				<h2 id="methods" class="section__title section__title--light">Methods you can defend</h2>
+				<p class="methods__lead">
+					MetaProc does not reinvent the statistics. It drives the same gold-standard R
+					engines the field already trusts, and it is golden-tested against them: a suite
+					of <strong>2,600+ automated tests</strong> checks that every result matches the
+					reference engine, byte for byte.
+				</p>
+				<a class="mp-cta mp-cta--light" href="/methods">How we validate</a>
+			</div>
+			<ul class="engines" aria-label="Underlying engines">
+				<li>metafor</li>
+				<li>netmeta</li>
+				<li>meta</li>
+				<li>robvis</li>
+				<li>esc</li>
+			</ul>
+		</div>
+	</section>
+
+	<!-- ===================== DOCS TEASER ===================== -->
+	<section class="section" aria-labelledby="docs-teaser">
+		<div class="mp-container docs-teaser">
+			<div>
+				<h2 id="docs-teaser" class="section__title">Read the docs</h2>
+				<p>
+					New to meta-analysis or new to MetaProc? The Quickstart walks you from a blank
+					workspace to a finished forest plot, GRADE summary, and exported report in about
+					ten minutes.
+				</p>
+			</div>
+			<a class="mp-cta mp-cta--outline" href="/docs/quickstart">Open the Quickstart</a>
+		</div>
+	</section>
+
+	<!-- ===================== FAQ ===================== -->
+	<section class="section section--tint" id="faq" aria-labelledby="faq-title">
+		<div class="mp-container faq">
+			<h2 id="faq-title" class="section__title">Frequently asked</h2>
+			<div class="faq__list">
+				{faqs.map((f) => (
+					<details class="faq__item">
+						<summary>{f.q}</summary>
+						<div class="faq__answer"><p>{f.a}</p></div>
+					</details>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- ===================== FINAL CTA ===================== -->
+	<section class="section final-cta" aria-labelledby="final">
+		<div class="mp-container">
+			<h2 id="final">Your next meta-analysis starts in the browser.</h2>
+			<a class="mp-cta mp-cta--lg" href="#" data-placeholder="app-url">Launch MetaProc free</a>
+		</div>
+	</section>
+</BaseLayout>
+
+<style>
+	/* Shared CTA — used across the site (defined here, scoped via :global). */
+	:global(.mp-cta) {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		background: linear-gradient(135deg, #7C3AED 0%, #2563EB 100%);
+		color: #fff;
+		font-weight: 700;
+		text-decoration: none;
+		padding: 0.85rem 1.6rem;
+		border-radius: var(--mp-radius);
+		box-shadow: 0 6px 20px -8px rgba(124, 58, 237, 0.6);
+		transition: transform 0.15s ease, box-shadow 0.15s ease;
+	}
+	:global(.mp-cta:hover) {
+		color: #fff;
+		transform: translateY(-1px);
+		box-shadow: 0 10px 26px -8px rgba(124, 58, 237, 0.7);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		:global(.mp-cta) { transition: none; }
+		:global(.mp-cta:hover) { transform: none; }
+	}
+	:global(.mp-cta--sm) { padding: 0.5rem 1rem; font-size: 0.9rem; }
+	:global(.mp-cta--lg) { padding: 1.05rem 2.2rem; font-size: 1.1rem; }
+	:global(.mp-cta--light) {
+		background: #fff;
+		color: var(--mp-violet-deep, #5B21B6);
+		box-shadow: none;
+	}
+	:global(.mp-cta--light:hover) { color: var(--mp-violet-deep, #5B21B6); }
+	:global(.mp-cta--outline) {
+		background: transparent;
+		color: var(--mp-link);
+		border: 2px solid var(--mp-violet);
+		box-shadow: none;
+	}
+	:global(.mp-cta--outline:hover) { color: var(--mp-link-hover); background: #f6f3fd; }
+
+	/* Hero */
+	.hero {
+		background:
+			radial-gradient(1200px 400px at 80% -10%, rgba(37, 99, 235, 0.08), transparent),
+			linear-gradient(180deg, #faf8ff 0%, #ffffff 100%);
+		padding-block: clamp(2.5rem, 6vw, 5rem);
+		border-bottom: 1px solid var(--mp-card-border);
+	}
+	.hero__grid {
+		display: grid;
+		grid-template-columns: 1.05fr 1fr;
+		gap: clamp(2rem, 5vw, 4rem);
+		align-items: center;
+	}
+	.hero h1 {
+		font-size: clamp(2rem, 4.5vw, 3.2rem);
+		line-height: 1.08;
+		letter-spacing: -0.02em;
+		margin: 0 0 1rem;
+		color: var(--mp-ink);
+	}
+	.hero__sub {
+		font-size: clamp(1.05rem, 2vw, 1.3rem);
+		color: var(--mp-muted);
+		margin: 0 0 2rem;
+		max-width: 32rem;
+	}
+	.hero__cta {
+		display: flex;
+		align-items: center;
+		gap: 1.5rem;
+		flex-wrap: wrap;
+	}
+	.hero__secondary {
+		font-weight: 600;
+		color: var(--mp-link);
+		text-decoration: none;
+	}
+	.hero__secondary:hover { text-decoration: underline; }
+	.hero__visual {
+		background: #fff;
+		border: 1px solid var(--mp-card-border);
+		border-radius: var(--mp-radius-lg);
+		padding: 1.25rem 1.5rem;
+		box-shadow: 0 20px 50px -24px rgba(30, 27, 46, 0.3);
+	}
+	@media (max-width: 820px) {
+		.hero__grid { grid-template-columns: 1fr; }
+	}
+
+	/* Generic section scaffolding */
+	.section { padding-block: clamp(3rem, 6vw, 5rem); }
+	.section--tint { background: #faf8ff; }
+	.section--ink { background: linear-gradient(135deg, #221b3a 0%, #2a2150 100%); }
+	.section__title {
+		font-size: clamp(1.6rem, 3vw, 2.2rem);
+		letter-spacing: -0.01em;
+		margin: 0 0 0.5rem;
+	}
+	.section__title--light { color: #fff; }
+	.section__lead, .section__more { color: var(--mp-muted); }
+	.section__lead { margin: 0 0 2rem; font-size: 1.05rem; }
+	.section__more { margin-top: 1.5rem; }
+	.section__more a { color: var(--mp-link); font-weight: 600; text-decoration: none; }
+	.section__more a:hover { text-decoration: underline; }
+
+	/* Steps */
+	.steps {
+		list-style: none;
+		margin: 1.5rem 0 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.5rem;
+		counter-reset: step;
+	}
+	.step {
+		background: #fff;
+		border: 1px solid var(--mp-card-border);
+		border-radius: var(--mp-radius-lg);
+		padding: 1.5rem;
+	}
+	.step__n {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.2rem;
+		height: 2.2rem;
+		border-radius: 50%;
+		background: linear-gradient(135deg, #7C3AED, #2563EB);
+		color: #fff;
+		font-weight: 800;
+		margin-bottom: 0.75rem;
+	}
+	.step h3 { margin: 0 0 0.4rem; font-size: 1.25rem; }
+	.step p { margin: 0; color: var(--mp-muted); }
+
+	/* Feature tour grid */
+	.tour__grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+		gap: 1.5rem;
+	}
+
+	/* Audience cards */
+	.cards {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.5rem;
+		margin-top: 1.5rem;
+	}
+	.card {
+		background: #fff;
+		border: 1px solid var(--mp-card-border);
+		border-radius: var(--mp-radius-lg);
+		padding: 1.5rem;
+		border-top: 4px solid var(--mp-violet);
+	}
+	.card h3 { margin: 0 0 0.5rem; font-size: 1.2rem; }
+	.card p { margin: 0; color: var(--mp-muted); }
+
+	/* Methods */
+	.methods {
+		display: grid;
+		grid-template-columns: 1.6fr 1fr;
+		gap: 2.5rem;
+		align-items: center;
+	}
+	.methods__lead { color: #d9d3ee; font-size: 1.1rem; margin: 0 0 1.5rem; }
+	.methods__lead strong { color: #fff; }
+	.engines {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+	.engines li {
+		font-family: var(--font-mono, monospace);
+		font-size: 0.95rem;
+		color: #e7e2f5;
+		background: rgba(255, 255, 255, 0.08);
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		border-radius: var(--mp-radius);
+		padding: 0.5rem 0.9rem;
+	}
+
+	/* Docs teaser */
+	.docs-teaser {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 2rem;
+		flex-wrap: wrap;
+	}
+	.docs-teaser p { color: var(--mp-muted); max-width: 38rem; margin: 0.5rem 0 0; }
+
+	/* FAQ */
+	.faq__list {
+		margin-top: 1.5rem;
+		display: grid;
+		gap: 0.75rem;
+		max-width: 50rem;
+	}
+	.faq__item {
+		background: #fff;
+		border: 1px solid var(--mp-card-border);
+		border-radius: var(--mp-radius);
+		padding: 0 1.25rem;
+	}
+	.faq__item summary {
+		cursor: pointer;
+		font-weight: 600;
+		padding: 1rem 0;
+		list-style: none;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.faq__item summary::after {
+		content: '+';
+		font-size: 1.3rem;
+		color: var(--mp-violet);
+		margin-left: 1rem;
+	}
+	.faq__item[open] summary::after { content: '\2212'; }
+	.faq__answer { padding-bottom: 1rem; }
+	.faq__answer p { margin: 0; color: var(--mp-muted); }
+
+	/* Final CTA */
+	.final-cta { text-align: center; }
+	.final-cta h2 {
+		font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+		margin: 0 0 1.5rem;
+	}
+
+	@media (max-width: 820px) {
+		.steps, .cards { grid-template-columns: 1fr; }
+		.methods { grid-template-columns: 1fr; }
+	}
+</style>

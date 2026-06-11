@@ -1,0 +1,61 @@
+---
+const year = new Date().getFullYear();
+---
+<footer class="mp-footer">
+	<div class="mp-container mp-footer__inner">
+		<nav class="mp-footer__links" aria-label="Footer">
+			<a href="/license">License</a>
+			<a href="/privacy">Privacy</a>
+			<a href="/methods">Methods</a>
+			<a href="/docs">Docs</a>
+			<a href="mailto:myron.moskalyk@gmail.com?subject=metaproc%20%E2%80%94%20tell%20us%20what%27s%20missing">
+				Tell us what's missing
+			</a>
+		</nav>
+		<p class="mp-footer__legal">
+			<span class="mp-footer__mark">metaproc</span> &mdash; reproducible meta-analysis.
+			<br />
+			&copy; {year} Myron Moskalyk. Code under
+			<a href="/license">GPL-3.0-or-later</a>; &ldquo;MetaProc&rdquo; is a trademark.
+		</p>
+	</div>
+</footer>
+
+<style>
+	.mp-footer {
+		margin-top: 5rem;
+		border-top: 1px solid var(--mp-card-border);
+		background: var(--mp-card-cap);
+	}
+	.mp-footer__inner {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.5rem 2.5rem;
+		justify-content: space-between;
+		align-items: flex-start;
+		padding-block: 2.5rem;
+	}
+	.mp-footer__links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem 1.5rem;
+	}
+	.mp-footer__links a {
+		color: var(--mp-link);
+		text-decoration: none;
+		font-weight: 500;
+	}
+	.mp-footer__links a:hover {
+		text-decoration: underline;
+	}
+	.mp-footer__legal {
+		margin: 0;
+		color: var(--mp-muted);
+		font-size: 0.9rem;
+		max-width: 30rem;
+	}
+	.mp-footer__mark {
+		font-weight: 800;
+		color: var(--mp-violet);
+	}
+</style>

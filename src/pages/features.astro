@@ -1,0 +1,76 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import ProofAsset from '../components/ProofAsset.astro';
+
+const groups = [
+	{
+		title: 'Import & prepare',
+		blurb: 'Get messy real-world extraction workbooks into shape — without leaving the browser.',
+		assets: [
+			{ label: 'Data import', caption: 'CSV / Excel upload, multi-sheet workbooks, automatic header detection, value boxes.' },
+			{ label: 'Edit & clean', caption: 'Editable grid, per-column retype/rename, row include/exclude — each emitting its exact R.' },
+			{ label: 'Combine', caption: 'Join or stack worksheets with auto-detected keys, a grain guard, and fan-out warnings.' },
+			{ label: 'Quality checks', caption: 'Duplicate study-ID detection, biological-range checks, configurable consistency rules.' },
+		],
+	},
+	{
+		title: 'Explore & analyze',
+		blurb: 'Eleven templates, a six-view EDA, network meta-analysis, and a drag-to-build pipeline.',
+		assets: [
+			{ label: 'EDA studio', caption: 'Summary, distributions, missingness, correlations, by-group, and scatter — each with code.' },
+			{ label: 'Templates', caption: 'Binary, continuous, proportion, correlation, HR, IRR, three-level and more.' },
+			{ label: 'Plots studio', caption: 'Forest & funnel with prediction intervals, subgroup diamonds, and PNG/PDF/SVG export.' },
+			{ label: 'Network MA', caption: 'netmeta network plot, league table, P-scores, and net-split inconsistency.' },
+			{ label: 'Pipeline', caption: 'Drag components — meta-regression, cumulative, trim-and-fill, Baujat — into an ordered run.' },
+			{ label: 'Live R code panel', caption: 'The exact R that produced every result, copyable. What you see is what ran.' },
+		],
+	},
+	{
+		title: 'Appraise & report',
+		blurb: 'Risk of bias, GRADE, SWiM, PRISMA, and a reproducibility bundle that re-runs anywhere.',
+		assets: [
+			{ label: 'Risk of bias', caption: 'RoB 2 / ROBINS-I / QUADAS-2 traffic-light and summary plots (robvis).' },
+			{ label: 'GRADE summary', caption: 'Certainty rating plus a Cochrane-style summary-of-findings row from your live analysis.' },
+			{ label: 'SWiM & PRISMA', caption: 'Vote-counting harvest plot and a PRISMA 2020 flow diagram from your screening data.' },
+			{ label: 'Report builder', caption: 'rmarkdown report (HTML / PDF / .Rmd) — choose sections, export, re-render.' },
+			{ label: 'Reproducibility bundle', caption: 'A .zip with runnable analysis.R, the data, sessionInfo(), and renv.lock.' },
+			{ label: 'Tools', caption: 'Effect-size converter (12 conversions) and a-priori power analysis.' },
+		],
+	},
+];
+---
+<PageLayout
+	title="Features"
+	activePath="/features"
+	lede="A button-driven, template-based workflow that covers the whole meta-analysis — from a raw extraction workbook to a GRADE summary of findings and a re-runnable bundle."
+	description="The full MetaProc feature tour: import, clean, analyze, appraise, and report — with the exact R code captured at every step."
+>
+	{groups.map((g) => (
+		<section class="ftour">
+			<h2>{g.title}</h2>
+			<p class="ftour__blurb">{g.blurb}</p>
+			<div class="ftour__grid">
+				{g.assets.map((a) => (
+					<ProofAsset label={a.label} caption={a.caption} />
+				))}
+			</div>
+		</section>
+	))}
+
+	<p style="margin-top:2rem">
+		Screenshots and a short demo video are placeholders for now — real captures from
+		the running app arrive in Stage 4. For the exact, up-to-date capability inventory,
+		see the <a href="/docs/manual">generated product manual</a>.
+	</p>
+</PageLayout>
+
+<style>
+	.ftour { margin-bottom: 3rem; }
+	.ftour h2 { margin-bottom: 0.25rem; }
+	.ftour__blurb { color: var(--mp-muted); margin: 0 0 1.25rem; }
+	.ftour__grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+		gap: 1.5rem;
+	}
+</style>

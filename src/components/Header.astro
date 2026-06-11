@@ -1,0 +1,79 @@
+---
+// Shared site header: wordmark + primary nav + the single CTA.
+const { activePath = '' } = Astro.props;
+const nav = [
+	{ label: 'Features', href: '/features' },
+	{ label: 'Methods', href: '/methods' },
+	{ label: 'Docs', href: '/docs' },
+	{ label: 'FAQ', href: '/#faq' },
+];
+---
+<header class="mp-header">
+	<div class="mp-container mp-header__inner">
+		<a href="/" class="mp-wordmark" aria-label="MetaProc home">metaproc</a>
+
+		<nav class="mp-nav" aria-label="Primary">
+			<ul>
+				{nav.map((item) => (
+					<li>
+						<a
+							href={item.href}
+							aria-current={activePath === item.href ? 'page' : undefined}
+						>{item.label}</a>
+					</li>
+				))}
+			</ul>
+		</nav>
+
+		<a class="mp-cta mp-cta--sm" href="#" data-placeholder="app-url">Launch MetaProc</a>
+	</div>
+</header>
+
+<style>
+	.mp-header {
+		position: sticky;
+		top: 0;
+		z-index: 40;
+		background: rgba(255, 255, 255, 0.92);
+		backdrop-filter: saturate(140%) blur(8px);
+		border-bottom: 1px solid var(--mp-card-border);
+	}
+	.mp-header__inner {
+		display: flex;
+		align-items: center;
+		gap: 1.5rem;
+		min-height: 4rem;
+	}
+	.mp-wordmark {
+		font-weight: 800;
+		font-size: 1.4rem;
+		letter-spacing: -0.02em;
+		color: var(--mp-violet);
+		text-decoration: none;
+	}
+	.mp-nav {
+		margin-left: auto;
+	}
+	.mp-nav ul {
+		display: flex;
+		gap: 1.4rem;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.mp-nav a {
+		color: var(--mp-ink);
+		text-decoration: none;
+		font-weight: 500;
+		padding: 0.3rem 0;
+		border-bottom: 2px solid transparent;
+	}
+	.mp-nav a:hover,
+	.mp-nav a[aria-current='page'] {
+		color: var(--mp-link-hover);
+		border-bottom-color: var(--mp-violet);
+	}
+	@media (max-width: 640px) {
+		.mp-nav { display: none; }
+	}
+</style>

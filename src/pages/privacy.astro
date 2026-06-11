@@ -1,0 +1,62 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+
+const subprocessors = [
+	{ name: 'Hetzner', purpose: 'Application hosting & compute', location: 'Germany / Finland (EU)' },
+	{ name: 'Cloudflare', purpose: 'CDN, DNS, and edge delivery', location: 'Global edge (config in EU)' },
+	{ name: 'Auth0 / Okta', purpose: 'Authentication / login', location: 'EU region' },
+	{ name: 'Backblaze', purpose: 'Build artifact storage', location: 'EU region' },
+];
+---
+<PageLayout
+	title="Privacy"
+	activePath="/privacy"
+	lede="How MetaProc handles your data — short version: analyses run in throwaway, EU-hosted containers, and you should never upload identifiable patient-level data."
+	description="MetaProc privacy: ephemeral EU-hosted analysis containers, no identifiable patient-level data, and the list of sub-processors."
+>
+	<p slot="banner" class="mp-banner mp-banner--draft">
+		Draft — pending review. This page describes intended practice and will be finalized
+		before public launch.
+	</p>
+
+	<h2>No identifiable patient-level data</h2>
+	<p>
+		MetaProc is a tool for <strong>aggregate, study-level meta-analysis</strong> — the
+		summary statistics already published in papers (event counts, means, SDs, effect
+		sizes). It is <strong>not</strong> designed for and you should <strong>not</strong>
+		upload individual patient data or any directly identifiable personal information.
+		Please remove identifiers before importing anything.
+	</p>
+
+	<h2>Ephemeral by design</h2>
+	<p>
+		Your analysis runs inside an <strong>isolated, RAM-backed container</strong> that is
+		<strong>destroyed at the end of your session</strong>. Data you upload lives in that
+		container's memory for the duration of your work and is not written to long-term
+		storage by the analysis runtime. When your session ends, the container — and the data
+		in it — is torn down.
+	</p>
+
+	<h2>Hosting & sub-processors</h2>
+	<p>
+		MetaProc is hosted in the EU. The following sub-processors may handle data in the
+		course of running the service:
+	</p>
+	<table>
+		<thead>
+			<tr><th>Sub-processor</th><th>Purpose</th><th>Location</th></tr>
+		</thead>
+		<tbody>
+			{subprocessors.map((s) => (
+				<tr><td>{s.name}</td><td>{s.purpose}</td><td>{s.location}</td></tr>
+			))}
+		</tbody>
+	</table>
+
+	<h2>Erasure & contact</h2>
+	<p>
+		Because analyses are ephemeral, there is normally nothing persistent to erase once
+		your session ends. For any privacy question, data-erasure request, or concern, contact
+		<a href="mailto:myron.moskalyk@gmail.com?subject=metaproc%20privacy">myron.moskalyk@gmail.com</a>.
+	</p>
+</PageLayout>
