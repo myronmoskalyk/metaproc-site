@@ -50,3 +50,38 @@ preload.) axe: 0 violations on both pages. Re-ran `scripts/sync-docs.mjs` (manua
 from app repo @ 2026-05-31 review, GPL notices included). Deferred: H.264 MP4 fallback
 (Stage 8, full ffmpeg) · quickstart docs still use `placeholder.svg` in 5 markdown slots
 (out of Stage 7 scope; 3–4 real shots could fill them).
+
+## [2026-06-12] build | Orbital retheme — full visual overhaul to the locked brand
+Rethemed the whole site from the violet palette to **"Orbital"** (locked 2026-06-12; source of
+truth `metaproc-deploy/design/BRAND.md`, reference mockup
+`design/portal-proposal/mockup-g-orbital-final.html` — motion language reused verbatim).
+- **Tokens** (`src/styles/global.css`): warm-light default + deep-dusk mood via
+  `[data-theme="dusk"]`; per-mood accents exactly per BRAND §2 (amber+coral light,
+  amber+violet dusk); tinted canvas `#F3F0E9`/`#060A11` with two drifting aurora layers;
+  shared Orbital components (edge-lit `.mp-panel`, AA-safe `.mp-cta`, ripple, shine, rise);
+  approved keyframes only; global reduced-motion kill (every animation + transition).
+- **Mood toggle**: accessible moon/sun button in the header (`aria-pressed` + labels),
+  persisted under `mp-site-mood`, applied before first paint by an inline head script,
+  `prefers-color-scheme` honoured on first visit.
+- **Sweep**: Header (glass chrome + forest-plot logo tile), Footer, index (hero rise/shine,
+  CSS-only launch-core ring miniature, bracketed step/audience panels, dark code-anchor
+  Methods band), ForestPlot (teal series + amber pooled diamond, per-mood contrast ≥3:1
+  computed), ProofAsset (hover lift + brand glow), PageLayout (token banners/prose/tables),
+  features, changelog, placeholder.svg retinted. Shared `.mp-cta` moved from index-scoped
+  CSS to global (header CTA on subpages was previously unstyled there).
+- **Starlight**: both docs modes mapped to Orbital via `--sl-*` props (teal accent triplet,
+  dusk/warm surfaces, Inter/IBM Plex Mono); Starlight's own toggle remains the docs mode
+  control — NOT unified with the marketing toggle (different storage keys/state models;
+  would require swizzling ThemeSelect).
+- **Favicon**: replaced default Astro icon with the teal forest-plot mark (app geometry,
+  `#11C7B4 → #11B981` at 160°); regenerated `public/brand/metaproc-logo.png` (512px, sharp).
+- **AA computed, not eyeballed**: links `#0A7A68` ≈4.6:1 on warm canvas / `#12BBA0` ≈8.2:1 on
+  dusk; white on CTA gradient ≥4.5:1 (derived `#0B8170 → #0A7A68`); focus ring = partner
+  accent, `-deep` coral on light (coral itself is only ≈2.8:1 vs canvas); banner text tokens
+  ≈5:1 on their tints; muted text ≈5:1 both moods.
+- **Stale — recapture pending**: all proof assets still show the violet app UI
+  (`src/assets/proof/`: hero-app-overview/workflow-store/plots-studio/report-builder/
+  grade-sof/code-panel PNGs + demo.webm + demo-poster.png). Recapture after the app retheme.
+- Verified: `npm run build` green (11 pages). Lighthouse/axe battery NOT re-run this pass
+  (no npm script exists; 2026-06-11 scores predate the retheme) — re-run with the
+  devDependency CLIs at recapture.
