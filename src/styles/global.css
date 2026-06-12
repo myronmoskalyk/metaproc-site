@@ -404,6 +404,47 @@ body.mp-marketing::after {
 	to { transform: translate(-50%, -50%) scale(2.4); opacity: 0; }
 }
 
+/* ---- Starlight (docs) — Orbital token mapping ------------------------------ */
+/* Starlight keeps its OWN light/dark toggle as the docs' mode control (its
+   ThemeSelect, key 'starlight-theme') — distinct from the marketing pages'
+   'mp-site-mood' toggle; the two coexist. These blocks recolour BOTH Starlight
+   modes to Orbital: surfaces per BRAND.md §3, accent triplet derived from the
+   brand teal with computed AA (accent carries white/inverted text ≥4.5:1;
+   accent-high is the link colour in dark mode, deep variant in light). */
+:root {
+	--sl-font: "Inter Variable", Inter, sans-serif;
+	--sl-font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+	/* Dark mode (Starlight's default) — deep-dusk, teal-tinted grays */
+	--sl-color-accent-low: #0E322D;
+	--sl-color-accent: #0A7A68;
+	--sl-color-accent-high: #7EE8D8;
+	--sl-color-white: #EEF4FB;
+	--sl-color-gray-1: #D5E1EC;
+	--sl-color-gray-2: #BCCCDA;
+	--sl-color-gray-3: #9DB0C3;
+	--sl-color-gray-4: #5E7183;
+	--sl-color-gray-5: #2A3845;
+	--sl-color-gray-6: #131C24;
+	--sl-color-black: #060A11;
+}
+:root[data-theme='light'] {
+	/* Light mode — warm-light canvas (never pure white), warm grays */
+	--sl-color-accent-low: #CFE9E2;
+	--sl-color-accent: #0A7A68;
+	--sl-color-accent-high: #084B40;
+	--sl-color-white: #19222C;
+	--sl-color-gray-1: #2A3642;
+	--sl-color-gray-2: #3D4B59;
+	--sl-color-gray-3: #5B6877;
+	--sl-color-gray-4: #84919F;
+	--sl-color-gray-5: #DCD7CC;
+	--sl-color-gray-6: #FAF7F0;
+	--sl-color-gray-7: #F6F2EA;
+	--sl-color-black: #FDFCF8;
+	--sl-color-bg: #F3F0E9;
+}
+
 /* ---- Starlight (docs) accessibility tweaks ------------------------------- */
 /* WCAG 1.4.1 / axe "link-in-text-block": inline links in docs prose must be
    distinguishable from surrounding text without relying on colour alone.
