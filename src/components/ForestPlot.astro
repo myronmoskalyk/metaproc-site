@@ -1,7 +1,9 @@
 ---
 // Signature hero visual: an animated inline-SVG forest plot.
 // Zero JS — CI whiskers draw in via stroke-dashoffset, study markers fade/scale
-// in staggered, and a violet->blue gradient summary diamond scales in last.
+// in staggered, and the amber pooled diamond scales in last.
+// Colours follow the Orbital plot palette (BRAND.md §8): teal series for
+// studies, amber (the "current/pooled" accent) for the summary diamond.
 // Full prefers-reduced-motion fallback renders the same plot, static.
 
 // 5 study rows + a summary. x is the effect axis (SVG units); plot spans 70..560.
@@ -22,13 +24,6 @@ const summaryY = top + studies.length * rowH + 14;
 ---
 <div class="mp-forest" role="img" aria-label="Animated forest plot: five study effect estimates with confidence intervals, all favouring treatment, pooled into a summary diamond left of the no-effect line.">
 	<svg viewBox="0 0 620 270" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-		<defs>
-			<linearGradient id="mp-diamond" x1="0" y1="0" x2="1" y2="0">
-				<stop offset="0" stop-color="#7C3AED" />
-				<stop offset="1" stop-color="#2563EB" />
-			</linearGradient>
-		</defs>
-
 		<!-- No-effect reference line -->
 		<line class="mp-forest__null" x1={nullX} y1="14" x2={nullX} y2={summaryY + 18} />
 
@@ -60,11 +55,10 @@ const summaryY = top + studies.length * rowH + 14;
 			);
 		})}
 
-		{/* Summary diamond — scales in last */}
+		{/* Summary diamond — amber, scales in last */}
 		<polygon
 			class="mp-forest__diamond"
 			points={`${summary.lo},${summaryY} ${summary.cx},${summaryY - 11} ${summary.hi},${summaryY} ${summary.cx},${summaryY + 11}`}
-			fill="url(#mp-diamond)"
 		/>
 		<text class="mp-forest__label mp-forest__label--bold" x="64" y={summaryY + 4} text-anchor="end">Pooled (RE)</text>
 	</svg>
@@ -73,6 +67,16 @@ const summaryY = top + studies.length * rowH + 14;
 <style>
 	.mp-forest {
 		width: 100%;
+		/* Plot series colours (BRAND §8), tuned per mood so every meaningful
+		   graphic keeps ≥3:1 against the panel surface (computed). */
+		--plot-line: var(--mp-brand-deep);   /* CI whiskers/caps */
+		--plot-marker: #0E9F8E;              /* plot-palette primary teal */
+		--plot-diamond: var(--mp-accent-deep); /* pooled = amber (deep on light) */
+	}
+	:global(html[data-theme='dusk']) .mp-forest {
+		--plot-line: var(--mp-brand);
+		--plot-marker: var(--mp-g1);
+		--plot-diamond: var(--mp-accent-deep);
 	}
 	.mp-forest svg {
 		width: 100%;
@@ -81,44 +85,48 @@ const summaryY = top + studies.length * rowH + 14;
 	}
 
 	.mp-forest__null {
-		stroke: #b8aee0;
+		stroke: var(--mp-muted);
+		stroke-opacity: 0.55;
 		stroke-width: 1.5;
 		stroke-dasharray: 4 4;
 	}
 	.mp-forest__axis {
-		stroke: #d8d2ea;
+		stroke: var(--mp-edge);
 		stroke-width: 1;
 	}
 	.mp-forest__label {
 		font-family: var(--font-sans, system-ui, sans-serif);
 		font-size: 11px;
-		fill: #4a4361;
+		fill: var(--mp-ink);
+		fill-opacity: 0.85;
 	}
 	.mp-forest__label--bold {
 		font-weight: 700;
-		fill: var(--mp-violet-deep, #5B21B6);
+		fill: var(--mp-link);
+		fill-opacity: 1;
 	}
 	.mp-forest__hint {
 		font-family: var(--font-sans, system-ui, sans-serif);
 		font-size: 9.5px;
-		fill: #8a82a6;
+		fill: var(--mp-muted);
 		letter-spacing: 0.02em;
 	}
 	.mp-forest__ci {
-		stroke: var(--mp-blue, #2563EB);
+		stroke: var(--plot-line);
 		stroke-width: 2;
 		stroke-linecap: round;
 	}
 	.mp-forest__cap {
-		stroke: var(--mp-blue, #2563EB);
+		stroke: var(--plot-line);
 		stroke-width: 2;
 		stroke-linecap: round;
 	}
 	.mp-forest__marker {
-		fill: var(--mp-violet, #7C3AED);
+		fill: var(--plot-marker);
 	}
 	.mp-forest__diamond {
-		stroke: #fff;
+		fill: var(--plot-diamond);
+		stroke: var(--mp-panel);
 		stroke-width: 1;
 	}
 

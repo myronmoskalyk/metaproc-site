@@ -34,6 +34,24 @@ const ANALYTICS_TOKEN = '';
 		<meta name="description" content={description} />
 		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
+		<!-- Mood (Orbital): warm light default, deep dusk opt-in. Applied BEFORE
+		     first paint — inline + blocking on purpose. Persisted under
+		     'mp-site-mood'; first visit honours prefers-color-scheme. -->
+		<script is:inline>
+			(function () {
+				var mood = 'light';
+				try {
+					var stored = localStorage.getItem('mp-site-mood');
+					if (stored === 'light' || stored === 'dusk') {
+						mood = stored;
+					} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+						mood = 'dusk';
+					}
+				} catch (e) { /* storage unavailable — keep light */ }
+				document.documentElement.setAttribute('data-theme', mood);
+			})();
+		</script>
+
 		<!-- LCP: preload the variable UI font so the hero headline paints fast. -->
 		<link
 			rel="preload"
@@ -69,5 +87,29 @@ const ANALYTICS_TOKEN = '';
 			<slot />
 		</main>
 		<Footer />
+
+		<!-- Ripple on primary CTAs (BRAND §6) — skipped under reduced motion. -->
+		<script>
+			const reduce = () =>
+				window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+			function ripple(e: PointerEvent) {
+				if (reduce()) return;
+				const el = e.currentTarget as HTMLElement;
+				const r = el.getBoundingClientRect();
+				const s = document.createElement('span');
+				s.className = 'mp-ripple';
+				const size = Math.max(r.width, r.height);
+				s.style.width = s.style.height = `${size}px`;
+				s.style.left = `${e.clientX - r.left}px`;
+				s.style.top = `${e.clientY - r.top}px`;
+				el.appendChild(s);
+				s.addEventListener('animationend', () => s.remove());
+			}
+
+			document.querySelectorAll<HTMLElement>('.mp-cta').forEach((b) => {
+				b.addEventListener('pointerdown', ripple as EventListener);
+			});
+		</script>
 	</body>
 </html>

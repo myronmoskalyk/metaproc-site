@@ -152,9 +152,9 @@ const groups = [
 		display: block;
 		width: 100%;
 		height: auto;
-		border: 1px solid var(--mp-card-border);
+		border: 1px solid var(--mp-edge);
 		border-radius: var(--mp-radius-lg);
-		background: #1e1b2e;
+		background: var(--mp-code-bg);
 	}
 
 	.ftour { margin-bottom: 3rem; }
@@ -172,5 +172,6 @@ const groups = [
 		gap: 0.5rem;
 	}
 	.ftour__list li { color: var(--mp-muted); }
+	.ftour__list li::marker { color: var(--mp-accent2-deep); }
 	.ftour__list strong { color: var(--mp-ink); }
 </style>

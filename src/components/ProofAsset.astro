@@ -44,10 +44,15 @@ const {
 		display: block;
 		width: 100%;
 		height: auto;
-		border: 1px solid var(--mp-card-border);
+		border: 1px solid var(--mp-edge);
 		border-radius: var(--mp-radius-lg);
-		background: #fff;
-		box-shadow: 0 14px 34px -22px rgba(30, 27, 46, 0.4);
+		background: var(--mp-panel);
+		box-shadow: var(--mp-shadow-panel);
+		transition: transform .18s var(--mp-ease), box-shadow .22s ease;
+	}
+	.mp-proof:hover :global(img) {
+		transform: translateY(-2px);
+		box-shadow: var(--mp-shadow-panel), 0 0 30px -14px var(--mp-glow);
 	}
 	.mp-proof figcaption {
 		margin-top: 0.6rem;

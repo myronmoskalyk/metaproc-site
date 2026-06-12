@@ -138,19 +138,6 @@
 	color-scheme: dark;
 }
 
-/* ---- Transitional aliases ---------------------------------------------------
-   Legacy violet-era token names mapped onto Orbital so every commit renders
-   coherently while components are swept. Removed once the sweep lands. */
-:root {
-	--mp-violet: var(--mp-brand-deep);
-	--mp-blue: var(--mp-brand);
-	--mp-fuchsia: var(--mp-accent);
-	--mp-violet-deep: var(--mp-brand-deep);
-	--mp-card-border: var(--mp-edge);
-	--mp-card-cap: var(--mp-cap);
-	--mp-paper: var(--mp-panel);
-}
-
 /* Expose tokens to Tailwind's utility theme (Tailwind v4 @theme). */
 @theme {
 	--color-brand: #12BBA0;

@@ -13,7 +13,7 @@ const { title, description, activePath, lede } = Astro.props;
 	<slot name="head" slot="head" />
 	<article class="mp-page">
 		<div class="mp-container">
-			<header class="mp-page__head">
+			<header class="mp-page__head mp-rise">
 				<h1>{title}</h1>
 				{lede && <p class="mp-page__lede">{lede}</p>}
 				<slot name="banner" />
@@ -31,6 +31,7 @@ const { title, description, activePath, lede } = Astro.props;
 	.mp-page__head h1 {
 		font-size: clamp(2rem, 4vw, 2.8rem);
 		letter-spacing: -0.02em;
+		font-weight: 800;
 		margin: 0 0 0.75rem;
 	}
 	.mp-page__lede {
@@ -46,7 +47,7 @@ const { title, description, activePath, lede } = Astro.props;
 	}
 	.mp-prose :global(h3) { font-size: 1.2rem; margin: 1.75rem 0 0.5rem; }
 	.mp-prose :global(p),
-	.mp-prose :global(li) { color: #3a3550; }
+	.mp-prose :global(li) { color: color-mix(in srgb, var(--mp-ink) 90%, var(--mp-canvas)); }
 	.mp-prose :global(a) { color: var(--mp-link); font-weight: 500; }
 	.mp-prose :global(a:hover) { color: var(--mp-link-hover); }
 	.mp-prose :global(table) {
@@ -59,42 +60,38 @@ const { title, description, activePath, lede } = Astro.props;
 	.mp-prose :global(td) {
 		text-align: left;
 		padding: 0.6rem 0.8rem;
-		border-bottom: 1px solid var(--mp-card-border);
+		border-bottom: 1px solid var(--mp-edge);
 		vertical-align: top;
 	}
-	.mp-prose :global(th) { background: var(--mp-card-cap); font-weight: 700; }
+	.mp-prose :global(th) { background: var(--mp-cap); font-weight: 700; }
 	.mp-prose :global(code) {
 		font-family: var(--font-mono, monospace);
-		background: #f1edfb;
+		background: color-mix(in srgb, var(--mp-brand) 9%, var(--mp-panel));
+		border: 1px solid var(--mp-hair);
 		padding: 0.12em 0.35em;
 		border-radius: 4px;
 		font-size: 0.9em;
 	}
-	.mp-prose :global(.mp-banner) {
-		border-radius: var(--mp-radius);
-		padding: 0.85rem 1.1rem;
-		margin: 1.25rem 0 0;
-		font-weight: 600;
-	}
-	.mp-prose :global(.mp-banner--draft) {
-		background: #fff4e0;
-		border: 1px solid #f0c886;
-		color: #8a5a00;
-	}
-	.mp-prose :global(.mp-banner--info) {
-		background: #eef2fe;
-		border: 1px solid #c5d3fb;
-		color: #1e3a8a;
-	}
+	/* Banners: draft = amber (the "attention/current" accent), info = the
+	   mood's partner accent — tints over panel, text tokens computed for AA. */
+	.mp-prose :global(.mp-banner),
 	:global(.mp-page__head .mp-banner) {
-		margin-top: 1.25rem;
 		border-radius: var(--mp-radius);
 		padding: 0.85rem 1.1rem;
 		font-weight: 600;
 	}
+	.mp-prose :global(.mp-banner) { margin: 1.25rem 0 0; }
+	:global(.mp-page__head .mp-banner) { margin-top: 1.25rem; }
+	.mp-prose :global(.mp-banner--draft),
 	:global(.mp-page__head .mp-banner--draft) {
-		background: #fff4e0;
-		border: 1px solid #f0c886;
-		color: #8a5a00;
+		background: color-mix(in srgb, var(--mp-accent) 14%, var(--mp-panel));
+		border: 1px solid color-mix(in srgb, var(--mp-accent) 50%, transparent);
+		color: var(--mp-banner-draft-fg);
+	}
+	.mp-prose :global(.mp-banner--info),
+	:global(.mp-page__head .mp-banner--info) {
+		background: color-mix(in srgb, var(--mp-accent2) 12%, var(--mp-panel));
+		border: 1px solid color-mix(in srgb, var(--mp-accent2) 45%, transparent);
+		color: var(--mp-banner-info-fg);
 	}
 </style>
