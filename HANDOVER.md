@@ -9,9 +9,9 @@ amber HUD brackets, AA-safe teal CTA gradient with ripple + press punch, hero ri
 CSS-only launch-core ring miniature, forest-plot hero recoloured to the teal/amber plot palette,
 Starlight docs mapped to Orbital in both of its modes, teal forest-plot favicon + regenerated
 512px Auth0 logo PNG (`public/brand/metaproc-logo.png`). `npm run build` green.
-Previous state (2026-06-11): feature-complete for local preview; gates were green on / and
-/features (Perf 99–100/A11y 100/BP 100/SEO 100, LCP ≤1.9 s, CLS 0; axe 0 violations) — those
-numbers predate the retheme; re-run the battery (see below).
+Post-retheme gates re-run 2026-06-12: **axe 0 violations on all 11 pages** (after fixing a
+latent CTA-text-colour specificity bug + underlining in-text links); Lighthouse
+**/** 99/100/100/100 (LCP 1.81 s, CLS 0) · **/features** 99/100/100/100 (LCP 1.96 s, CLS 0).
 
 **Remaining before public:**
 1. **Recapture proof assets** — all current captures show the **old violet app UI**

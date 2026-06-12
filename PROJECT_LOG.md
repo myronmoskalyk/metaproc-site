@@ -82,6 +82,22 @@ truth `metaproc-deploy/design/BRAND.md`, reference mockup
 - **Stale — recapture pending**: all proof assets still show the violet app UI
   (`src/assets/proof/`: hero-app-overview/workflow-store/plots-studio/report-builder/
   grade-sof/code-panel PNGs + demo.webm + demo-poster.png). Recapture after the app retheme.
-- Verified: `npm run build` green (11 pages). Lighthouse/axe battery NOT re-run this pass
-  (no npm script exists; 2026-06-11 scores predate the retheme) — re-run with the
-  devDependency CLIs at recapture.
+- Verified: `npm run build` green (11 pages). Battery run separately — see the qa entry below.
+
+## [2026-06-12] qa | Post-retheme quality gates (axe + Lighthouse) — green after 2 fixes
+axe-core 4.11 (headless Chrome, built dist via `astro preview`; OS dark mode, so marketing
+pages rendered in **deep dusk** — first-visit `prefers-color-scheme` logic confirmed live):
+- First pass found 2 violations: `color-contrast` on `.mp-cta--light` (computed fg was
+  `#12BBA0` — the generic `.mp-marketing a` rule (specificity 0-1-1) was overriding every
+  CTA's own text colour (0-1-0); latent pre-retheme bug, surfaced by the teal palette) and
+  `link-in-text-block` on the footer-legal License link.
+- Fixed: generic link rule is now `a:where(:not(.mp-cta))`; footer-legal + marketing prose
+  links underlined (same rule the docs already had). Re-run: **0 violations on all 11 pages**
+  (7 marketing + 4 docs).
+Lighthouse (headless Chrome, same preview):
+- **/** 99 / 100 / 100 / 100 · LCP 1.81 s · CLS 0
+- **/features** 99 / 100 / 100 / 100 · LCP 1.96 s · CLS 0
+Both inside the gates (≥95 ×4, LCP <2 s, CLS ≈0). /features BP dropped nothing; Perf 100→99
+vs 2026-06-11 (aurora/ring compositing + slightly larger CSS) — not chased further; re-check
+at proof-asset recapture. Reports: `lighthouse-report/home-orbital.json`,
+`features-orbital.json` (gitignored).
