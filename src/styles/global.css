@@ -1,6 +1,16 @@
-/* MetaProc site — global styles + brand tokens.
-   Tailwind v4 is configured in CSS (no tailwind.config.js). Brand palette is
-   lifted verbatim from the app's R/app_theme.R so the site matches the product. */
+/* MetaProc site — global styles + brand tokens ("Orbital", locked 2026-06-12).
+   Tailwind v4 is configured in CSS (no tailwind.config.js).
+
+   Source of truth for the palette and motion language:
+     C:\dev\metaproc-deploy\design\BRAND.md   (the locked Orbital brand spec)
+   mirrored in the app's R/app_theme.R — when a shade is needed that BRAND.md
+   does not list, derive it from these tokens and document the derivation in
+   README.md / HANDOVER.md.
+
+   Two moods. "Warm light" is the marketing default; "deep dusk" is opted into
+   via [data-theme="dusk"] on <html> (toggle in the header, persisted in
+   localStorage 'mp-site-mood', applied before first paint in BaseLayout).
+   Accents per mood: amber + coral (light), amber + violet (dusk). */
 
 @import "tailwindcss";
 
@@ -10,48 +20,146 @@
 @import "@fontsource/ibm-plex-mono/400.css";
 @import "@fontsource/ibm-plex-mono/500.css";
 
-/* ---- Brand tokens (source of truth: app R/app_theme.R) ---------------------- */
+/* ---- Core brand (mood-independent) — BRAND.md §1 -------------------------- */
 :root {
-	/* Core palette */
-	--mp-violet: #7C3AED;       /* primary accent — AA on white only for LARGE text/accents */
-	--mp-blue: #2563EB;         /* secondary accent */
-	--mp-fuchsia: #C026D3;      /* tertiary plot accent (mp_plot_palette) */
-	--mp-link: #6D28D9;         /* body links — darker violet, AA on white for body text */
-	--mp-link-hover: #5B21B6;   /* deep violet (also plot title colour) */
-	--mp-violet-deep: #5B21B6;
+	--mp-g1: #11C7B4;          /* gradient start — decorative/glow only */
+	--mp-g2: #11B981;          /* gradient end — decorative/glow only */
+	--mp-brand: #12BBA0;       /* mid reference; borders, icons on dark */
+	--mp-brand-deep: #0A7A68;  /* AA-safe: white-text buttons, links on light */
+	--mp-grad: linear-gradient(135deg, var(--mp-g1), var(--mp-g2));
+	/* CTA gradient: brand-deep lightened ≤4% toward brand so WHITE text stays
+	   ≥4.5:1 across the whole surface (computed: #fff on #0B8170 ≈ 4.8:1,
+	   on #0A7A68 ≈ 5.3:1). Derivation documented in README/HANDOVER. */
+	--mp-grad-cta: linear-gradient(135deg, #0B8170, var(--mp-brand-deep));
 
-	/* Surfaces & ink */
-	--mp-canvas: #E9E3F6;       /* soft lavender canvas (app bg) */
-	--mp-ink: #1E1B2E;          /* deep plum-ink text (app fg) */
-	--mp-paper: #ffffff;
-	--mp-card-border: #E9E4F5;
-	--mp-card-cap: #F3F0FB;
-	--mp-muted: #5b5570;        /* secondary text, AA on white */
+	--mp-ease: cubic-bezier(.22, .61, .36, 1);
+	--mp-radius: 12px;         /* controls (BRAND §5: 9–13px) */
+	--mp-radius-lg: 20px;      /* panels (BRAND §5: 18–22px) */
+	--mp-radius-pill: 999px;
 
-	/* Semantic (from bslib theme) */
+	/* Code panel stays dark in BOTH moods — premium contrast anchor (BRAND §3) */
+	--mp-code-bg: #0D141B;
+	--mp-code-fg: #9FE8DC;
+	--mp-code-edge: #22303B;
+}
+
+/* ---- Warm light (default mood) — BRAND.md §2–3 ----------------------------- */
+:root {
+	--mp-accent: #E08A00;        /* amber — active/current affordances */
+	--mp-accent-deep: #B45309;
+	--mp-accent2: #F2613F;       /* coral — informational highlights */
+	--mp-accent2-deep: #D24524;
+	--mp-on-accent: #fff;
+	--mp-on-accent2: #fff;
+
+	--mp-canvas: #F3F0E9;        /* never pure white */
+	--mp-bg-teal: color-mix(in srgb, var(--mp-g1) 15%, #fbf8f1);
+	--mp-bg-emer: color-mix(in srgb, var(--mp-g2) 13%, #f4efe6);
+	--mp-bg-acc: color-mix(in srgb, var(--mp-accent2) 9%, #f6f1ea);
+	--mp-tint: color-mix(in srgb, var(--mp-g1) 7%, var(--mp-canvas));
+
+	--mp-glass: color-mix(in srgb, var(--mp-brand) 5%, rgba(255, 255, 255, .82));
+	--mp-panel: #FDFCF8;         /* tinted opaque card surface */
+	--mp-cap: color-mix(in srgb, var(--mp-brand) 7%, #FAF7F0);
+
+	--mp-ink: #19222C;
+	--mp-muted: #5B6877;         /* ≥4.5:1 on canvas and panel (computed) */
+	--mp-link: var(--mp-brand-deep);   /* ≈4.6:1 on canvas, 5.3:1 on white */
+	--mp-link-hover: #085D4F;          /* ≈6.9:1 on canvas */
+
+	--mp-edge: color-mix(in srgb, var(--mp-brand) 26%, rgba(20, 28, 40, .12));
+	--mp-hair: rgba(20, 28, 40, .08);
+	--mp-glow: color-mix(in srgb, var(--mp-brand) 36%, transparent);
+	--mp-aglow: color-mix(in srgb, var(--mp-accent) 45%, transparent);
+	--mp-aglow2: color-mix(in srgb, var(--mp-accent2) 45%, transparent);
+	--mp-shadow-panel: 0 30px 70px -44px rgba(58, 48, 32, .55);
+
+	--mp-tshine: color-mix(in srgb, var(--mp-brand) 70%, var(--mp-ink));
+	--mp-tshadow: none;
+
+	/* Focus ring: partner accent, but the -deep variant on light so the ring
+	   itself is ≥3:1 against the canvas (coral #F2613F is only ≈2.8:1). */
+	--mp-focus: var(--mp-accent2-deep);
+
+	/* Banners (draft/info) — text colours computed for ≥4.5:1 on their tints */
+	--mp-banner-draft-fg: #8A5A00;
+	--mp-banner-info-fg: #A8331A;
+
+	/* Semantic */
 	--mp-success: #16A34A;
 	--mp-info: #0EA5E9;
-	--mp-warning: #D97706;
+	--mp-warning: var(--mp-accent-deep);
 	--mp-danger: #DC2626;
-
-	/* Code panel (app: dark #14101F w/ neon-purple text) */
-	--mp-code-bg: #14101F;
-	--mp-code-fg: #C9BEF0;
-
-	--mp-radius: 0.6rem;
-	--mp-radius-lg: 0.85rem;
 
 	color-scheme: light;
 }
 
+/* ---- Deep dusk — opt-in mood for marketing pages ([data-theme="dusk"]) and
+        token alignment for Starlight's own dark mode ([data-theme="dark"]) --- */
+:root[data-theme="dusk"],
+:root[data-theme="dark"] {
+	--mp-accent: #F5A524;
+	--mp-accent-deep: #D97706;
+	--mp-accent2: #9B8BFF;       /* violet partner (dusk) */
+	--mp-accent2-deep: #6D55E0;
+	--mp-on-accent: #1c1206;
+	--mp-on-accent2: #fff;
+
+	--mp-canvas: #060A11;
+	--mp-bg-teal: color-mix(in srgb, var(--mp-g1) 24%, #070c14);
+	--mp-bg-emer: color-mix(in srgb, var(--mp-g2) 22%, #060a10);
+	--mp-bg-acc: color-mix(in srgb, var(--mp-accent2) 14%, #070a12);
+	--mp-tint: color-mix(in srgb, var(--mp-brand) 8%, var(--mp-canvas));
+
+	--mp-glass: color-mix(in srgb, var(--mp-brand) 9%, rgba(16, 22, 32, .60));
+	--mp-panel: #141C25;         /* solid card fallback (BRAND §3) */
+	--mp-cap: #18222B;           /* elevated */
+
+	--mp-ink: #EEF4FB;
+	--mp-muted: #9DB0C3;
+	--mp-link: var(--mp-brand);  /* ≈8.2:1 on dusk canvas (computed) */
+	--mp-link-hover: #7EE8D8;
+
+	--mp-edge: color-mix(in srgb, var(--mp-brand) 34%, rgba(255, 255, 255, .10));
+	--mp-hair: rgba(255, 255, 255, .12);
+	--mp-glow: color-mix(in srgb, var(--mp-brand) 60%, transparent);
+	--mp-aglow: color-mix(in srgb, var(--mp-accent) 55%, transparent);
+	--mp-aglow2: color-mix(in srgb, var(--mp-accent2) 55%, transparent);
+	--mp-shadow-panel: 0 30px 70px -44px #000;
+
+	--mp-tshine: color-mix(in srgb, var(--mp-brand) 85%, #fff);
+	--mp-tshadow: 0 0 30px var(--mp-glow);
+
+	--mp-focus: var(--mp-accent2);  /* violet ≈7.1:1 on dusk canvas */
+
+	--mp-banner-draft-fg: #F2C078;
+	--mp-banner-info-fg: #C9BFFF;
+
+	color-scheme: dark;
+}
+
+/* ---- Transitional aliases ---------------------------------------------------
+   Legacy violet-era token names mapped onto Orbital so every commit renders
+   coherently while components are swept. Removed once the sweep lands. */
+:root {
+	--mp-violet: var(--mp-brand-deep);
+	--mp-blue: var(--mp-brand);
+	--mp-fuchsia: var(--mp-accent);
+	--mp-violet-deep: var(--mp-brand-deep);
+	--mp-card-border: var(--mp-edge);
+	--mp-card-cap: var(--mp-cap);
+	--mp-paper: var(--mp-panel);
+}
+
 /* Expose tokens to Tailwind's utility theme (Tailwind v4 @theme). */
 @theme {
-	--color-violet-brand: #7C3AED;
-	--color-blue-brand: #2563EB;
-	--color-fuchsia-brand: #C026D3;
-	--color-link-brand: #6D28D9;
-	--color-ink: #1E1B2E;
-	--color-canvas: #E9E3F6;
+	--color-brand: #12BBA0;
+	--color-brand-deep: #0A7A68;
+	--color-brand-teal: #11C7B4;
+	--color-brand-emerald: #11B981;
+	--color-amber-accent: #E08A00;
+	--color-ink: #19222C;
+	--color-canvas: #F3F0E9;
 	--font-sans: "Inter Variable", Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
 	--font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -62,17 +170,45 @@ html {
 	scroll-behavior: smooth;
 }
 
-@media (prefers-reduced-motion: reduce) {
-	html { scroll-behavior: auto; }
-}
-
 body.mp-marketing {
 	margin: 0;
 	color: var(--mp-ink);
-	background: var(--mp-paper);
+	background: var(--mp-canvas);
 	line-height: 1.6;
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
+	overflow-x: hidden;
+	transition: background .4s ease, color .4s ease;
+}
+
+/* Aurora canvas — two fixed drifting tint layers (BRAND §6 "drift").
+   Marketing pages only; transform-only animation, composited. */
+body.mp-marketing::before {
+	content: "";
+	position: fixed;
+	inset: -30%;
+	z-index: -3;
+	pointer-events: none;
+	background:
+		radial-gradient(34% 36% at 16% 14%, var(--mp-bg-teal), transparent 60%),
+		radial-gradient(40% 40% at 86% 20%, var(--mp-bg-emer), transparent 60%),
+		radial-gradient(30% 30% at 70% 92%, var(--mp-bg-acc), transparent 62%);
+	filter: saturate(1.08);
+	animation: mp-drift1 24s ease-in-out infinite alternate;
+	will-change: transform;
+}
+body.mp-marketing::after {
+	content: "";
+	position: fixed;
+	inset: -30%;
+	z-index: -2;
+	pointer-events: none;
+	background:
+		radial-gradient(26% 30% at 80% 70%, var(--mp-bg-teal), transparent 60%),
+		radial-gradient(24% 26% at 24% 80%, var(--mp-bg-emer), transparent 60%);
+	opacity: .7;
+	animation: mp-drift2 34s ease-in-out infinite alternate;
+	will-change: transform;
 }
 
 .mp-marketing a {
@@ -82,11 +218,12 @@ body.mp-marketing {
 	color: var(--mp-link-hover);
 }
 
-/* Accessibility: a single consistent focus-visible ring everywhere. */
-:where(a, button, summary, input, [tabindex]):focus-visible {
-	outline: 3px solid var(--mp-violet);
-	outline-offset: 2px;
-	border-radius: 4px;
+/* Accessibility: one consistent focus ring everywhere (BRAND §9 —
+   2px partner-accent outline, 3px offset; -deep variant on light for ≥3:1). */
+:where(a, button, summary, input, select, textarea, [tabindex]):focus-visible {
+	outline: 2px solid var(--mp-focus);
+	outline-offset: 3px;
+	border-radius: 10px;
 }
 
 /* Skip link */
@@ -94,8 +231,9 @@ body.mp-marketing {
 	position: absolute;
 	left: -9999px;
 	top: 0;
-	background: var(--mp-violet);
+	background: var(--mp-brand-deep);
 	color: #fff;
+	font-weight: 800;
 	padding: 0.6rem 1rem;
 	z-index: 100;
 	border-radius: 0 0 var(--mp-radius) 0;
@@ -110,6 +248,173 @@ body.mp-marketing {
 	max-width: 72rem;
 	margin-inline: auto;
 	padding-inline: 1.25rem;
+}
+
+/* ---- Orbital shared components --------------------------------------------- */
+
+/* Eyebrow label (BRAND §4) — uses --mp-link so it is AA in both moods. */
+.mp-eyebrow {
+	font-size: 0.68rem;
+	font-weight: 800;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--mp-link);
+	margin: 0 0 0.55rem;
+}
+
+/* Tinted opaque panel with edge-lit top hairline (glass is chrome-only). */
+.mp-panel {
+	position: relative;
+	background: var(--mp-panel);
+	border: 1px solid var(--mp-edge);
+	border-radius: var(--mp-radius-lg);
+	box-shadow: var(--mp-shadow-panel), inset 0 1px 0 var(--mp-hair);
+}
+.mp-panel::before {
+	content: "";
+	position: absolute;
+	inset: 0 0 auto 0;
+	height: 1px;
+	border-radius: var(--mp-radius-lg) var(--mp-radius-lg) 0 0;
+	background: linear-gradient(90deg, transparent,
+		color-mix(in srgb, var(--mp-accent2) 70%, transparent) 28% 72%, transparent);
+	pointer-events: none;
+}
+/* HUD corner bracket in amber, for feature panels (BRAND §5). */
+.mp-panel--bracket::after {
+	content: "";
+	position: absolute;
+	top: 11px;
+	left: 11px;
+	width: 15px;
+	height: 15px;
+	border-top: 2px solid var(--mp-accent);
+	border-left: 2px solid var(--mp-accent);
+	border-radius: 5px 0 0 0;
+	opacity: 0.65;
+	pointer-events: none;
+}
+/* Hover lift + brand glow for interactive panels. */
+.mp-panel--lift {
+	transition: transform .18s var(--mp-ease), border-color .18s ease, box-shadow .22s ease;
+}
+.mp-panel--lift:hover {
+	transform: translateY(-2px);
+	border-color: color-mix(in srgb, var(--mp-brand) 44%, var(--mp-edge));
+	box-shadow: var(--mp-shadow-panel), 0 0 30px -14px var(--mp-glow), inset 0 1px 0 var(--mp-hair);
+}
+
+/* Primary CTA — AA-safe deep teal gradient, ripple host, press punch. */
+.mp-cta {
+	position: relative;
+	overflow: hidden;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	background: var(--mp-grad-cta);
+	color: #fff;
+	font-weight: 700;
+	text-decoration: none;
+	padding: 0.85rem 1.6rem;
+	border: 0;
+	border-radius: var(--mp-radius);
+	box-shadow: 0 6px 20px -8px var(--mp-glow), inset 0 1px 0 rgba(255, 255, 255, .18);
+	transition: transform .15s var(--mp-ease), box-shadow .15s ease, filter .15s ease;
+}
+.mp-cta:hover {
+	color: #fff;
+	transform: translateY(-1px);
+	filter: brightness(1.05);
+	box-shadow: 0 10px 30px -10px var(--mp-glow), inset 0 1px 0 rgba(255, 255, 255, .18);
+}
+.mp-cta:active {
+	transform: scale(0.96);
+}
+.mp-cta--sm { padding: 0.5rem 1rem; font-size: 0.9rem; }
+.mp-cta--lg { padding: 1.05rem 2.2rem; font-size: 1.1rem; }
+.mp-cta--light {
+	background: #fff;
+	color: var(--mp-brand-deep);
+	box-shadow: none;
+}
+.mp-cta--light:hover {
+	color: var(--mp-brand-deep);
+	filter: none;
+	box-shadow: 0 0 26px -10px rgba(255, 255, 255, .8);
+}
+.mp-cta--outline {
+	background: transparent;
+	color: var(--mp-link);
+	border: 2px solid var(--mp-brand-deep);
+	box-shadow: none;
+}
+.mp-cta--outline:hover {
+	color: var(--mp-link-hover);
+	filter: none;
+	background: color-mix(in srgb, var(--mp-brand) 10%, transparent);
+	box-shadow: none;
+}
+:root[data-theme="dusk"] .mp-cta--outline {
+	border-color: var(--mp-brand);
+}
+
+/* Pointerdown ripple (BRAND §6) — spans injected by BaseLayout's script. */
+.mp-ripple {
+	position: absolute;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, .42);
+	transform: translate(-50%, -50%) scale(0);
+	pointer-events: none;
+	mix-blend-mode: screen;
+	animation: mp-rippleanim .6s ease-out forwards;
+}
+
+/* Shine sweep for the hero display heading only (BRAND §6). */
+.mp-shine {
+	background: linear-gradient(110deg, var(--mp-ink) 26%, var(--mp-tshine) 50%, var(--mp-ink) 74%);
+	background-size: 240% 100%;
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	text-shadow: var(--mp-tshadow);
+	animation: mp-shine 8s ease-in-out infinite;
+}
+
+/* Rise entrance (initial load only — BRAND §6). Stagger via --mp-rise-delay. */
+.mp-rise {
+	animation: mp-rise .8s var(--mp-ease) both;
+	animation-delay: var(--mp-rise-delay, 0s);
+}
+
+/* ---- Keyframes (approved motion set — BRAND §6; reuse, don't invent) ------- */
+@keyframes mp-rise {
+	from { opacity: 0; transform: translateY(18px); }
+	to { opacity: 1; transform: none; }
+}
+@keyframes mp-shine {
+	0%, 100% { background-position: 120% 0; }
+	50% { background-position: -120% 0; }
+}
+@keyframes mp-spin {
+	to { transform: rotate(360deg); }
+}
+@keyframes mp-ringbreathe {
+	0%, 100% { transform: scale(.93); }
+	50% { transform: scale(1.07); }
+}
+@keyframes mp-drift1 {
+	0% { transform: translate3d(0, 0, 0) scale(1); }
+	50% { transform: translate3d(3%, -2%, 0) scale(1.06); }
+	100% { transform: translate3d(-3%, 2%, 0) scale(1.05); }
+}
+@keyframes mp-drift2 {
+	0% { transform: translate3d(0, 0, 0) scale(1.05); }
+	50% { transform: translate3d(-4%, 2.5%, 0) scale(1); }
+	100% { transform: translate3d(3%, -2%, 0) scale(1.07); }
+}
+@keyframes mp-rippleanim {
+	to { transform: translate(-50%, -50%) scale(2.4); opacity: 0; }
 }
 
 /* ---- Starlight (docs) accessibility tweaks ------------------------------- */
@@ -132,4 +437,13 @@ body.mp-marketing {
 	clip: rect(0 0 0 0);
 	white-space: nowrap;
 	border: 0;
+}
+
+/* ---- Reduced motion: kill EVERY animation and transition (BRAND §9) -------- */
+@media (prefers-reduced-motion: reduce) {
+	html { scroll-behavior: auto; }
+	*, *::before, *::after {
+		animation: none !important;
+		transition: none !important;
+	}
 }
