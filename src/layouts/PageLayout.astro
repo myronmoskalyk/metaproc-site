@@ -48,7 +48,14 @@ const { title, description, activePath, lede } = Astro.props;
 	.mp-prose :global(h3) { font-size: 1.2rem; margin: 1.75rem 0 0.5rem; }
 	.mp-prose :global(p),
 	.mp-prose :global(li) { color: color-mix(in srgb, var(--mp-ink) 90%, var(--mp-canvas)); }
-	.mp-prose :global(a) { color: var(--mp-link); font-weight: 500; }
+	/* Prose links are underlined so they don't rely on colour alone
+	   (WCAG 1.4.1 / axe link-in-text-block — same rule as the docs). */
+	.mp-prose :global(a) {
+		color: var(--mp-link);
+		font-weight: 500;
+		text-decoration: underline;
+		text-underline-offset: 0.15em;
+	}
 	.mp-prose :global(a:hover) { color: var(--mp-link-hover); }
 	.mp-prose :global(table) {
 		width: 100%;

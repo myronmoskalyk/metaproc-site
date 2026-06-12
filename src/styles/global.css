@@ -198,10 +198,12 @@ body.mp-marketing::after {
 	will-change: transform;
 }
 
-.mp-marketing a {
+/* Generic link colour — :where(:not(.mp-cta)) keeps specificity at 0-1-1 while
+   excluding CTAs, whose own colour rules (0-1-0) must win. */
+.mp-marketing a:where(:not(.mp-cta)) {
 	color: var(--mp-link);
 }
-.mp-marketing a:hover {
+.mp-marketing a:where(:not(.mp-cta)):hover {
 	color: var(--mp-link-hover);
 }
 
