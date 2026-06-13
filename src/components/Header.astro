@@ -2,6 +2,7 @@
 // Shared site header: a floating glass "island" nav (BRAND §5: glass on chrome).
 // Wordmark + forest-plot tile, primary nav, mood toggle, a single CTA, and a
 // glass mobile sheet (the nav no longer just vanishes on small screens).
+import ThemePicker from './ThemePicker.astro';
 const { activePath = '' } = Astro.props;
 const nav = [
 	{ label: 'Features', href: '/features' },
@@ -36,6 +37,8 @@ const nav = [
 		</nav>
 
 		<div class="mp-header__actions">
+			<ThemePicker />
+
 			<button
 				class="mp-mood"
 				id="mp-mood-toggle"

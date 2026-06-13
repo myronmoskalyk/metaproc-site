@@ -34,21 +34,122 @@ const ANALYTICS_TOKEN = '';
 		<meta name="description" content={description} />
 		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
-		<!-- Mood (Orbital): warm light default, deep dusk opt-in. Applied BEFORE
-		     first paint (inline + blocking on purpose). Persisted under
-		     'mp-site-mood'; first visit honours prefers-color-scheme. -->
+		<!-- Mood + theme preset (Orbital): warm light default, deep dusk opt-in, and
+		     the runtime theme picker's preset. BOTH applied BEFORE first paint
+		     (inline + blocking on purpose) so there is no flash. Mood persists under
+		     'mp-site-mood' (first visit honours prefers-color-scheme); the active
+		     theme preset persists under 'mp-site-theme' (+ a custom seed blob under
+		     'mp-site-theme-custom'). Default theme = Orbital (no attribute).
+		     The custom-theme derivation below mirrors src/scripts/theme.ts; keep
+		     the two in sync. -->
 		<script is:inline>
 			(function () {
+				var html = document.documentElement;
+
+				// ---- mood ----
 				var mood = 'light';
 				try {
-					var stored = localStorage.getItem('mp-site-mood');
-					if (stored === 'light' || stored === 'dusk') {
-						mood = stored;
+					var sm = localStorage.getItem('mp-site-mood');
+					if (sm === 'light' || sm === 'dusk') {
+						mood = sm;
 					} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
 						mood = 'dusk';
 					}
 				} catch (e) { /* storage unavailable, keep light */ }
-				document.documentElement.setAttribute('data-theme', mood);
+				html.setAttribute('data-theme', mood);
+
+				// ---- theme preset ----
+				var preset = 'orbital';
+				var customBlob = null;
+				try {
+					preset = localStorage.getItem('mp-site-theme') || 'orbital';
+					var cb = localStorage.getItem('mp-site-theme-custom');
+					if (cb) customBlob = JSON.parse(cb);
+				} catch (e) { /* keep orbital */ }
+
+				if (preset === 'custom') {
+					applyCustom(html, customBlob || {}, mood);
+				} else if (preset && preset !== 'orbital') {
+					html.setAttribute('data-theme-preset', preset);
+				}
+				/* orbital (or anything unknown that fell through) => no attribute,
+				   the locked :root base wins. */
+
+				// ---- minimal custom-theme derivation (mirror of theme.ts) ----
+				function clamp(n, lo, hi) { return Math.min(hi, Math.max(lo, n)); }
+				function h2r(h) {
+					h = ('' + h).replace('#', '').trim();
+					if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+					return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+				}
+				function r2h(a) {
+					return '#' + a.map(function (v) { return clamp(Math.round(v), 0, 255).toString(16).replace(/^(.)$/, '0$1'); }).join('');
+				}
+				function mix(a, p, b) {
+					var A = h2r(a), B = h2r(b), t = p / 100;
+					return r2h([A[0]*t+B[0]*(1-t), A[1]*t+B[1]*(1-t), A[2]*t+B[2]*(1-t)]);
+				}
+				function lin(c) { c /= 255; return c <= 0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4); }
+				function L(h) { var x = h2r(h); return 0.2126*lin(x[0]) + 0.7152*lin(x[1]) + 0.0722*lin(x[2]); }
+				function cr(f, b) { var a = L(f), c = L(b), hi = a >= c ? a : c, lo = a >= c ? c : a; return (hi+0.05)/(lo+0.05); }
+				function deepen(fg, surf, need, white) {
+					var rgb = h2r(fg), tgt = white ? [255,255,255] : [0,0,0];
+					for (var i = 0; i < 100; i++) {
+						var hex = r2h(rgb), worst = Infinity;
+						for (var j = 0; j < surf.length; j++) { var c = cr(hex, surf[j]); if (c < worst) worst = c; }
+						if (worst >= need) return hex;
+						rgb = [rgb[0]+(tgt[0]-rgb[0])*0.06, rgb[1]+(tgt[1]-rgb[1])*0.06, rgb[2]+(tgt[2]-rgb[2])*0.06];
+					}
+					return r2h(rgb);
+				}
+				function applyCustom(el, blob, m) {
+					var g1 = blob.g1 || '#11C7B4', g2 = blob.g2 || '#11B981',
+						a1 = blob.a1 || '#E08A00', a2 = blob.a2 || '#F2613F', a3 = blob.a3 || '#38BDF8';
+					var brand = mix(g1, 50, g2), N = 4.5, S, set = {};
+					if (m === 'dusk') {
+						var canvas = mix(brand, 7, '#07090e');
+						S = [canvas, '#141C25', '#18222B', mix(brand, 9, mix('#101620', 60, canvas)), mix(brand, 10, mix('#121923', 56, canvas))];
+						set['--mp-canvas'] = canvas;
+						set['--mp-ink'] = mix(brand, 6, '#f4f7fb');
+						set['--mp-brand-deep'] = mix(brand, 78, '#000');
+						set['--mp-muted'] = deepen(mix(brand, 26, '#9aa6b3'), S, N, true);
+						set['--mp-link'] = deepen(g1, S, N, true);
+						set['--mp-link-hover'] = mix(set['--mp-link'], 70, '#ffffff');
+						set['--mp-accent'] = deepen(a1, S, N, true);
+						set['--mp-accent-deep'] = mix(set['--mp-accent'], 80, '#000');
+						set['--mp-accent2'] = deepen(a2, S, N, true);
+						set['--mp-accent2-deep'] = mix(set['--mp-accent2'], 80, '#000');
+						set['--mp-accent3'] = deepen(a3, S, N, true);
+						set['--mp-accent3-deep'] = mix(set['--mp-accent3'], 80, '#000');
+						set['--mp-on-accent'] = cr('#fff', set['--mp-accent']) >= N ? '#fff' : '#10130a';
+						set['--mp-on-accent2'] = cr('#fff', set['--mp-accent2']) >= N ? '#fff' : '#0a0a12';
+						set['--mp-on-accent3'] = cr('#fff', set['--mp-accent3']) >= N ? '#fff' : '#06121f';
+						set['--mp-cta-light-fg'] = deepen(mix(brand, 88, '#000'), ['#ffffff', '#FDFCF8'], N, false);
+					} else {
+						var lc = mix(brand, 6, '#f4f1ea');
+						S = [lc, '#FDFCF8', mix(g1, 7, lc), mix(brand, 10, lc), mix(brand, 6, mix('#ffffff', 74, lc))];
+						set['--mp-canvas'] = lc;
+						set['--mp-ink'] = mix(brand, 8, '#161d27');
+						set['--mp-brand-deep'] = deepen(mix(brand, 88, '#000'), S, N, false);
+						set['--mp-muted'] = deepen(mix(brand, 18, '#54606c'), S, N, false);
+						set['--mp-link'] = set['--mp-brand-deep'];
+						set['--mp-link-hover'] = mix(set['--mp-link'], 80, '#000');
+						set['--mp-accent'] = deepen(a1, S, N, false);
+						set['--mp-accent-deep'] = set['--mp-accent'];
+						set['--mp-accent2'] = deepen(a2, S, N, false);
+						set['--mp-accent2-deep'] = set['--mp-accent2'];
+						set['--mp-accent3'] = deepen(a3, S, N, false);
+						set['--mp-accent3-deep'] = set['--mp-accent3'];
+						set['--mp-on-accent'] = '#fff';
+						set['--mp-on-accent2'] = '#fff';
+						set['--mp-on-accent3'] = '#fff';
+						set['--mp-cta-light-fg'] = set['--mp-brand-deep'];
+					}
+					set['--mp-g1'] = g1; set['--mp-g2'] = g2; set['--mp-brand'] = brand;
+					set['--mp-plot-teal'] = g1; set['--mp-code-fg'] = mix(g1, 55, '#dfe9ee');
+					for (var k in set) el.style.setProperty(k, set[k]);
+					el.setAttribute('data-theme-preset', 'custom');
+				}
 			})();
 		</script>
 

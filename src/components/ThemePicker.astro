@@ -1,0 +1,485 @@
+---
+// Runtime theme picker (BRAND/themes.md): a compact header control that swaps
+// the WHOLE site between the 10 presets in metaproc-deploy/design/themes.md plus
+// a live "Custom" option. A preset just sets [data-theme-preset] on <html>; the
+// seed-override blocks in global.css re-derive every surface. The light/dusk
+// MOOD toggle (the sibling button) stays orthogonal. Choice persists in
+// localStorage ('mp-site-theme' + 'mp-site-theme-custom') and is applied before
+// first paint by the inline script in BaseLayout (no flash).
+//
+// PRESETS here is the swatch source of truth (name + label + the LIGHT brand
+// gradient stops and 3 accent dots shown on each swatch). The token values
+// themselves live in global.css; keep the two in sync when adding a preset.
+const PRESETS = [
+	{ id: 'orbital',  label: 'Orbital',  g1: '#11C7B4', g2: '#11B981', dots: ['#E08A00', '#F2613F', '#38BDF8'] },
+	{ id: 'indigo',   label: 'Indigo',   g1: '#4F6FF2', g2: '#6366F1', dots: ['#E08A00', '#E0457B', '#0E7490'] },
+	{ id: 'ember',    label: 'Ember',    g1: '#F2613F', g2: '#F59E0B', dots: ['#0E9F8E', '#DB2777', '#B45309'] },
+	{ id: 'forest',   label: 'Forest',   g1: '#2F9E44', g2: '#66A80F', dots: ['#B45309', '#C2410C', '#0369A1'] },
+	{ id: 'royal',    label: 'Royal',    g1: '#7C3AED', g2: '#C026D3', dots: ['#B45309', '#DB2777', '#0369A1'] },
+	{ id: 'graphite', label: 'Graphite', g1: '#475569', g2: '#64748B', dots: ['#2563EB', '#B45309', '#0E7490'] },
+	{ id: 'ocean',    label: 'Ocean',    g1: '#0891B2', g2: '#0EA5E9', dots: ['#B45309', '#4F46E5', '#E0533A'] },
+	{ id: 'rose',     label: 'Rose',     g1: '#E11D74', g2: '#DB2777', dots: ['#B45309', '#7C3AED', '#0E7490'] },
+	{ id: 'atelier',  label: 'Atelier',  g1: '#B7791F', g2: '#D97706', dots: ['#0E7490', '#7C4A1E', '#BE185D'] },
+	{ id: 'crimson',  label: 'Crimson',  g1: '#DC2626', g2: '#E11D48', dots: ['#B45309', '#475569', '#0E7490'] },
+];
+---
+<div class="mp-themepicker" data-themepicker>
+	<button
+		class="mp-theme-btn"
+		id="mp-theme-toggle"
+		type="button"
+		aria-haspopup="dialog"
+		aria-expanded="false"
+		aria-controls="mp-theme-pop"
+		aria-label="Choose colour theme"
+		title="Colour theme"
+	>
+		<!-- swatch glyph: brand gradient ring + a centre dot, recoloured by the
+		     active theme via tokens, so the button itself previews the theme. -->
+		<span class="mp-theme-btn__chip" aria-hidden="true">
+			<span class="mp-theme-btn__chip-dot"></span>
+		</span>
+	</button>
+
+	<div
+		class="mp-theme-pop mp-island"
+		id="mp-theme-pop"
+		role="dialog"
+		aria-label="Colour theme"
+		data-open="false"
+		hidden
+	>
+		<p class="mp-theme-pop__title" id="mp-theme-pop-title">Theme</p>
+		<div class="mp-theme-grid" role="radiogroup" aria-labelledby="mp-theme-pop-title">
+			{PRESETS.map((p) => (
+				<button
+					class="mp-swatch"
+					type="button"
+					role="radio"
+					aria-checked="false"
+					data-preset={p.id}
+					title={p.label}
+				>
+					<span
+						class="mp-swatch__grad"
+						aria-hidden="true"
+						style={`background:linear-gradient(135deg, ${p.g1}, ${p.g2});`}
+					></span>
+					<span class="mp-swatch__dots" aria-hidden="true">
+						{p.dots.map((d) => (
+							<span class="mp-swatch__dot" style={`background:${d};`}></span>
+						))}
+					</span>
+					<span class="mp-swatch__name">{p.label}</span>
+				</button>
+			))}
+
+			<!-- Custom entry: opens the colour inputs below. -->
+			<button
+				class="mp-swatch mp-swatch--custom"
+				type="button"
+				role="radio"
+				aria-checked="false"
+				data-preset="custom"
+				aria-expanded="false"
+				aria-controls="mp-theme-custom"
+				title="Custom theme"
+			>
+				<span class="mp-swatch__grad mp-swatch__grad--custom" aria-hidden="true">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<circle cx="12" cy="12" r="3.2" />
+						<path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" />
+					</svg>
+				</span>
+				<span class="mp-swatch__name">Custom</span>
+			</button>
+		</div>
+
+		<!-- Custom colour inputs: brand g1/g2 + the 3 role-locked accents. Applied
+		     live; surfaces re-derive; persisted as a JSON blob. -->
+		<form class="mp-theme-custom" id="mp-theme-custom" data-open="false" hidden>
+			<p class="mp-theme-custom__hint">Brand gradient + 3 accents. Text colours auto-deepen for AA.</p>
+			<div class="mp-theme-custom__row">
+				<label>
+					<span>Brand 1</span>
+					<input type="color" data-custom="g1" value="#11C7B4" aria-label="Brand gradient start" />
+				</label>
+				<label>
+					<span>Brand 2</span>
+					<input type="color" data-custom="g2" value="#11B981" aria-label="Brand gradient end" />
+				</label>
+			</div>
+			<div class="mp-theme-custom__row">
+				<label>
+					<span>Active</span>
+					<input type="color" data-custom="a1" value="#E08A00" aria-label="Accent 1, active / now" />
+				</label>
+				<label>
+					<span>Second</span>
+					<input type="color" data-custom="a2" value="#F2613F" aria-label="Accent 2, secondary" />
+				</label>
+				<label>
+					<span>Data</span>
+					<input type="color" data-custom="a3" value="#38BDF8" aria-label="Accent 3, data / links" />
+				</label>
+			</div>
+			<button class="mp-theme-custom__reset" type="button" data-custom-reset>Reset to Orbital</button>
+		</form>
+	</div>
+</div>
+
+<style>
+	.mp-themepicker { position: relative; display: inline-flex; }
+
+	/* Trigger button matches the mood toggle (icon button on glass). */
+	.mp-theme-btn {
+		width: 36px;
+		height: 36px;
+		flex: none;
+		display: grid;
+		place-items: center;
+		cursor: pointer;
+		background: transparent;
+		border: 1px solid var(--mp-edge);
+		border-radius: 11px;
+		color: var(--mp-ink);
+		padding: 0;
+		transition: border-color .2s ease, transform .12s var(--mp-ease), background-color .2s ease;
+	}
+	.mp-theme-btn:hover {
+		border-color: var(--mp-brand);
+		background: color-mix(in srgb, var(--mp-brand) 8%, transparent);
+	}
+	.mp-theme-btn:active { transform: scale(.9); }
+	/* The chip previews the active theme: a brand-gradient ring with an amber
+	   (active-accent) centre dot. Pure decoration, recolours with the theme. */
+	.mp-theme-btn__chip {
+		width: 18px;
+		height: 18px;
+		border-radius: 50%;
+		display: grid;
+		place-items: center;
+		background: var(--mp-grad);
+		box-shadow: inset 0 0 0 1px var(--mp-hi-30);
+	}
+	.mp-theme-btn__chip-dot {
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: var(--mp-accent);
+		box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--mp-canvas) 70%, transparent);
+	}
+
+	/* Popover panel (glass island). Anchored to the right edge of the trigger. */
+	.mp-theme-pop {
+		position: absolute;
+		top: calc(100% + 0.6rem);
+		right: 0;
+		z-index: 50;
+		width: min(20rem, 78vw);
+		padding: 0.9rem;
+		border-radius: 18px;
+		transform-origin: top right;
+		opacity: 0;
+		transform: translateY(-6px) scale(.97);
+		transition: opacity .2s var(--mp-ease), transform .2s var(--mp-ease);
+	}
+	.mp-theme-pop[data-open='true'] { opacity: 1; transform: none; }
+	.mp-theme-pop__title {
+		margin: 0 0 0.6rem;
+		font-size: 0.7rem;
+		font-weight: 800;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--mp-link);
+	}
+
+	.mp-theme-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 0.45rem;
+	}
+
+	/* A swatch: brand gradient bar + 3 accent dots + the theme name. Real button. */
+	.mp-swatch {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		grid-template-areas: 'grad name' 'grad name';
+		align-items: center;
+		gap: 0.1rem 0.55rem;
+		padding: 0.4rem 0.5rem;
+		cursor: pointer;
+		text-align: left;
+		background: color-mix(in srgb, var(--mp-ink) 4%, transparent);
+		border: 1px solid var(--mp-hair);
+		border-radius: 12px;
+		color: var(--mp-ink);
+		transition: border-color .15s ease, background-color .15s ease, transform .12s var(--mp-ease);
+	}
+	.mp-swatch:hover {
+		border-color: var(--mp-brand);
+		background: color-mix(in srgb, var(--mp-brand) 10%, transparent);
+	}
+	.mp-swatch:active { transform: scale(.97); }
+	.mp-swatch[aria-checked='true'] {
+		border-color: var(--mp-brand);
+		background: color-mix(in srgb, var(--mp-brand) 14%, transparent);
+		box-shadow: 0 0 0 1px var(--mp-brand), 0 0 18px -10px var(--mp-glow);
+	}
+	.mp-swatch__grad {
+		grid-area: grad;
+		width: 30px;
+		height: 30px;
+		border-radius: 9px;
+		box-shadow: inset 0 1px 0 var(--mp-hi-25), inset 0 0 0 1px var(--mp-hi-14);
+	}
+	.mp-swatch__grad--custom {
+		display: grid;
+		place-items: center;
+		background: color-mix(in srgb, var(--mp-ink) 10%, transparent);
+		color: var(--mp-link);
+	}
+	.mp-swatch__grad--custom svg { width: 16px; height: 16px; }
+	.mp-swatch__dots {
+		grid-area: grad;
+		align-self: end;
+		justify-self: center;
+		display: flex;
+		gap: 2px;
+		margin-bottom: 2px;
+	}
+	.mp-swatch__dot {
+		width: 5px;
+		height: 5px;
+		border-radius: 50%;
+		box-shadow: 0 0 0 1px var(--mp-hi-30);
+	}
+	.mp-swatch__name {
+		grid-area: name;
+		font-size: 0.82rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+	}
+
+	/* Custom colour inputs panel. */
+	.mp-theme-custom {
+		margin-top: 0.7rem;
+		padding-top: 0.7rem;
+		border-top: 1px solid var(--mp-hair);
+		display: grid;
+		gap: 0.55rem;
+	}
+	.mp-theme-custom__hint {
+		margin: 0;
+		font-size: 0.72rem;
+		line-height: 1.4;
+		color: var(--mp-muted);
+	}
+	.mp-theme-custom__row {
+		display: flex;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+	}
+	.mp-theme-custom label {
+		display: grid;
+		gap: 0.2rem;
+		font-size: 0.66rem;
+		font-weight: 700;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: var(--mp-muted);
+	}
+	.mp-theme-custom input[type='color'] {
+		width: 100%;
+		min-width: 3rem;
+		height: 28px;
+		padding: 0;
+		border: 1px solid var(--mp-edge);
+		border-radius: 8px;
+		background: transparent;
+		cursor: pointer;
+	}
+	.mp-theme-custom input[type='color']::-webkit-color-swatch-wrapper { padding: 2px; }
+	.mp-theme-custom input[type='color']::-webkit-color-swatch { border: none; border-radius: 5px; }
+	.mp-theme-custom__reset {
+		justify-self: start;
+		font-size: 0.74rem;
+		font-weight: 600;
+		color: var(--mp-link);
+		background: transparent;
+		border: 1px solid var(--mp-edge);
+		border-radius: 8px;
+		padding: 0.3rem 0.7rem;
+		cursor: pointer;
+		transition: border-color .15s ease, background-color .15s ease;
+	}
+	.mp-theme-custom__reset:hover {
+		border-color: var(--mp-brand);
+		background: color-mix(in srgb, var(--mp-brand) 8%, transparent);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.mp-theme-pop { transition: none; }
+	}
+</style>
+
+<script>
+	import { applyTheme, deriveCustom, THEME_KEY, CUSTOM_KEY } from '../scripts/theme.ts';
+
+	const root = document.querySelector<HTMLElement>('[data-themepicker]');
+	const btn = document.getElementById('mp-theme-toggle');
+	const pop = document.getElementById('mp-theme-pop');
+	const customForm = document.getElementById('mp-theme-custom') as HTMLFormElement | null;
+	const customBtn = pop?.querySelector<HTMLElement>('.mp-swatch--custom') ?? null;
+	if (root && btn && pop) {
+		const swatches = Array.from(pop.querySelectorAll<HTMLElement>('.mp-swatch'));
+		const colorInputs = customForm
+			? Array.from(customForm.querySelectorAll<HTMLInputElement>('input[type="color"]'))
+			: [];
+
+		// Reflect the active selection in the radio group + the custom inputs.
+		function syncSelection(preset: string) {
+			swatches.forEach((s) =>
+				s.setAttribute('aria-checked', s.dataset.preset === preset ? 'true' : 'false'),
+			);
+			const showCustom = preset === 'custom';
+			if (customForm && customBtn) {
+				customForm.hidden = !showCustom;
+				customForm.setAttribute('data-open', showCustom ? 'true' : 'false');
+				customBtn.setAttribute('aria-expanded', showCustom ? 'true' : 'false');
+			}
+		}
+
+		// Read the persisted custom seeds (or the Orbital defaults) into the inputs.
+		function loadCustomInputs() {
+			let blob: Record<string, string> | null = null;
+			try {
+				const raw = localStorage.getItem(CUSTOM_KEY);
+				if (raw) blob = JSON.parse(raw);
+			} catch {
+				/* ignore */
+			}
+			colorInputs.forEach((inp) => {
+				const k = inp.dataset.custom;
+				if (k && blob && blob[k]) inp.value = blob[k];
+			});
+		}
+
+		function currentCustomBlob(): Record<string, string> {
+			const blob: Record<string, string> = {};
+			colorInputs.forEach((inp) => {
+				if (inp.dataset.custom) blob[inp.dataset.custom] = inp.value;
+			});
+			return blob;
+		}
+
+		function persist(preset: string, customBlob?: Record<string, string>) {
+			try {
+				localStorage.setItem(THEME_KEY, preset);
+				if (customBlob) localStorage.setItem(CUSTOM_KEY, JSON.stringify(customBlob));
+			} catch {
+				/* storage unavailable, theme still applies for this page */
+			}
+		}
+
+		// ---- open / close the popover -------------------------------------------
+		function setOpen(open: boolean) {
+			btn!.setAttribute('aria-expanded', open ? 'true' : 'false');
+			if (open) {
+				pop!.hidden = false;
+				requestAnimationFrame(() => pop!.setAttribute('data-open', 'true'));
+			} else {
+				pop!.setAttribute('data-open', 'false');
+				window.setTimeout(() => {
+					if (pop!.getAttribute('data-open') === 'false') pop!.hidden = true;
+				}, 220);
+			}
+		}
+
+		btn.addEventListener('click', () =>
+			setOpen(btn.getAttribute('aria-expanded') !== 'true'),
+		);
+		// Close on outside click + Escape.
+		document.addEventListener('click', (e) => {
+			if (
+				btn.getAttribute('aria-expanded') === 'true' &&
+				!root.contains(e.target as Node)
+			)
+				setOpen(false);
+		});
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
+				setOpen(false);
+				btn.focus();
+			}
+		});
+
+		// ---- preset selection ----------------------------------------------------
+		swatches.forEach((s) => {
+			s.addEventListener('click', () => {
+				const preset = s.dataset.preset!;
+				if (preset === 'custom') {
+					// Apply the custom seeds currently in the inputs.
+					const blob = currentCustomBlob();
+					applyTheme('custom', blob);
+					persist('custom', blob);
+					syncSelection('custom');
+					return;
+				}
+				applyTheme(preset);
+				persist(preset);
+				syncSelection(preset);
+			});
+		});
+
+		// ---- custom colour inputs (live) ----------------------------------------
+		colorInputs.forEach((inp) => {
+			inp.addEventListener('input', () => {
+				const blob = currentCustomBlob();
+				applyTheme('custom', blob);
+				persist('custom', blob);
+				syncSelection('custom');
+			});
+		});
+		customForm?.querySelector<HTMLElement>('[data-custom-reset]')?.addEventListener('click', () => {
+			applyTheme('orbital');
+			persist('orbital');
+			loadCustomInputsToOrbital();
+			syncSelection('orbital');
+		});
+		function loadCustomInputsToOrbital() {
+			const o: Record<string, string> = {
+				g1: '#11C7B4', g2: '#11B981', a1: '#E08A00', a2: '#F2613F', a3: '#38BDF8',
+			};
+			colorInputs.forEach((inp) => {
+				const k = inp.dataset.custom;
+				if (k && o[k]) inp.value = o[k];
+			});
+		}
+
+		// ---- initial sync: reflect what the pre-paint script already applied -----
+		let active = 'orbital';
+		try {
+			active = localStorage.getItem(THEME_KEY) || 'orbital';
+		} catch {
+			/* keep orbital */
+		}
+		loadCustomInputs();
+		syncSelection(active);
+
+		// Keep the custom inputs live across MOOD changes (so re-derived AA reflects
+		// the new canvas): re-apply custom when the mood toggle flips data-theme.
+		const moodObserver = new MutationObserver(() => {
+			if ((localStorage.getItem(THEME_KEY) || 'orbital') === 'custom') {
+				applyTheme('custom', currentCustomBlob());
+			}
+		});
+		moodObserver.observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['data-theme'],
+		});
+
+		// expose nothing globally; deriveCustom is imported by the module only.
+		void deriveCustom;
+	}
+</script>

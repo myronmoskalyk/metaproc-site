@@ -25,6 +25,13 @@
 	--mp-g2: #11B981;          /* gradient end, decorative/glow only */
 	--mp-brand: #12BBA0;       /* mid reference; borders, icons on dark */
 	--mp-brand-deep: #0A7A68;  /* AA-safe: white-text buttons, links on light */
+	/* Brand-deep AS TEXT on a WHITE button (.mp-cta--light, which sits on the
+	   always-dark code band in BOTH moods). Mood-INDEPENDENT on purpose: the
+	   button bg is white regardless of mood, so this must stay the dark, AA-on-
+	   white value even in dusk (where --mp-brand-deep itself goes lighter for the
+	   dark canvas). Orbital's brand-deep is already mood-independent, so it tracks
+	   it; each preset restates this as its LIGHT brand-deep literal. */
+	--mp-cta-light-fg: var(--mp-brand-deep);
 	--mp-grad: linear-gradient(135deg, var(--mp-g1), var(--mp-g2));
 	/* CTA gradient: brand-deep lightened ≤4% toward brand so WHITE text stays
 	   ≥4.5:1 across the whole surface (computed: #fff on #0B8170 ≈ 4.8:1,
@@ -202,6 +209,324 @@
 	color-scheme: dark;
 }
 
+/* ========================================================================== *
+   RUNTIME THEME PRESETS (2026-06-13)
+   --------------------------------------------------------------------------
+   The default "Orbital" identity above is the locked base (:root warm-light +
+   [data-theme="dusk"]). A *preset* is a small set of SEED overrides keyed by
+   [data-theme-preset="<name>"] on <html>; everything else (surfaces, glass,
+   edges, glow, tints, shadows) re-derives from brand + canvas via the
+   color-mix formulas already used above, so a preset only needs to restate the
+   seeds. The light/dusk MOOD toggle ([data-theme]) stays orthogonal: it picks
+   the light vs dusk variant WITHIN the active preset.
+
+   Seeds match metaproc-deploy/design/themes.md EXACTLY so the site and the app
+   render identical themes. Text-bearing tokens (brand-deep, each accent*-deep,
+   link, muted) are computed for WCAG AA on each theme's canvas/panels and the
+   worst-case drifting-aurora composite, then deepened until they clear 4.5:1
+   (3:1 for accents used only on lines/borders/icons). The AA math + the
+   auto-deepen that produced these exact hexes lives in e2e/theme-aa.mjs; the
+   in-page axe run (e2e/axe-run.mjs, both moods) is the authoritative gate.
+
+   Orbital is the DEFAULT and intentionally has NO override block here: its
+   rendered values must not change (golden 96/0 stays), so selecting "Orbital"
+   simply removes the preset attribute and the locked base above wins again.
+
+   To ADD a preset: copy a pair of blocks below, set the 7 light seeds (g1, g2,
+   brand, brand-deep, canvas, ink, the 3 accents + on-accent) plus link/muted,
+   and the dusk seeds; run e2e/theme-aa.mjs to confirm/deepen the -deep/link/
+   muted text tokens; add it to PRESETS in src/components/ThemePicker.astro so a
+   swatch renders; re-run build + e2e/axe-run.mjs. (Also mirror it in the app's
+   metaproc_palette() so both surfaces match — see themes.md.)
+ * ========================================================================== */
+
+/* Shared preset helpers: derive the CTA gradient and grad from the active
+   theme's seeds. The CTA base = brand-deep (white-on ≥5.25:1 on every preset,
+   computed); the second stop is brand-deep darkened, so white CTA text stays
+   AA across the whole surface regardless of theme. Orbital keeps its own
+   hand-tuned #0B8170→#0A7A68 pair in :root (unchanged). */
+:root[data-theme-preset]:not([data-theme-preset="orbital"]) {
+	--mp-grad: linear-gradient(135deg, var(--mp-g1), var(--mp-g2));
+	--mp-grad-cta: linear-gradient(135deg, var(--mp-brand-deep),
+		color-mix(in srgb, var(--mp-brand-deep) 86%, #000));
+}
+
+/* ---- 2. Indigo — after-hours blue-violet --------------------------------- */
+:root[data-theme-preset="indigo"] {
+	--mp-g1: #4F6FF2; --mp-g2: #6366F1;
+	--mp-brand: #5A63E8; --mp-brand-deep: #3A47B5;
+	--mp-cta-light-fg: #3A47B5;
+	--mp-accent: #E08A00; --mp-accent-deep: #895400; --mp-on-accent: #fff;
+	--mp-accent2: #E0457B; --mp-accent2-deep: #A4335A; --mp-on-accent2: #fff;
+	--mp-accent3: #0E7490; --mp-accent3-deep: #0C667F; --mp-on-accent3: #fff;
+	--mp-canvas: #EEF0F7;
+	--mp-ink: #1A1F2E;
+	--mp-muted: #525F6D;
+	--mp-link: #3A47B5; --mp-link-hover: #2C3691;
+	--mp-plot-teal: #4F6FF2;
+	--mp-code-fg: #B7C2FF;
+}
+:root[data-theme-preset="indigo"][data-theme="dusk"],
+:root[data-theme-preset="indigo"][data-theme="dark"] {
+	--mp-g1: #6E8BFF; --mp-g2: #818CF8;
+	--mp-brand: #7A8AFB; --mp-brand-deep: #4F5FE0;
+	--mp-accent: #F5A524; --mp-accent-deep: #D97706; --mp-on-accent: #1c1206;
+	--mp-accent2: #F472B6; --mp-accent2-deep: #C9477E; --mp-on-accent2: #1c0a14;
+	--mp-accent3: #38BDF8; --mp-accent3-deep: #2D7FF0; --mp-on-accent3: #06121f;
+	--mp-canvas: #080B14;
+	--mp-ink: #EDF0FB;
+	--mp-muted: #9DB0C3;
+	--mp-link: #6E8BFF; --mp-link-hover: #A9B8FF;
+	--mp-plot-teal: #6E8BFF;
+	--mp-code-fg: #B7C2FF;
+}
+
+/* ---- 3. Ember — warm coral → amber sunrise -------------------------------- */
+:root[data-theme-preset="ember"] {
+	--mp-g1: #F2613F; --mp-g2: #F59E0B;
+	--mp-brand: #EE6A2C; --mp-brand-deep: #B63D0B;
+	--mp-cta-light-fg: #B63D0B;
+	--mp-accent: #0E9F8E; --mp-accent-deep: #0A6E62; --mp-on-accent: #fff;
+	--mp-accent2: #DB2777; --mp-accent2-deep: #C22269; --mp-on-accent2: #fff;
+	--mp-accent3: #B45309; --mp-accent3-deep: #9F4908; --mp-on-accent3: #fff;
+	--mp-canvas: #F7F1EA;
+	--mp-ink: #2A1A12;
+	--mp-muted: #5B5048;
+	--mp-link: #B63D0B; --mp-link-hover: #93310A;
+	--mp-plot-teal: #0E9F8E;
+	--mp-code-fg: #FFC9A8;
+}
+:root[data-theme-preset="ember"][data-theme="dusk"],
+:root[data-theme-preset="ember"][data-theme="dark"] {
+	--mp-g1: #FB7A52; --mp-g2: #FBBF24;
+	--mp-brand: #FB9A3B; --mp-brand-deep: #E06A2E;
+	--mp-accent: #2DD4BF; --mp-accent-deep: #14B8A6; --mp-on-accent: #06140f;
+	--mp-accent2: #F472B6; --mp-accent2-deep: #C9477E; --mp-on-accent2: #fff;
+	--mp-accent3: #F5A524; --mp-accent3-deep: #D97706; --mp-on-accent3: #1c1206;
+	--mp-canvas: #0F0A08;
+	--mp-ink: #FBEDE4;
+	--mp-muted: #B3A79D;
+	--mp-link: #FB7A52; --mp-link-hover: #FDA585;
+	--mp-plot-teal: #2DD4BF;
+	--mp-code-fg: #FFC9A8;
+}
+
+/* ---- 4. Forest — deep canopy green ---------------------------------------- */
+:root[data-theme-preset="forest"] {
+	--mp-g1: #2F9E44; --mp-g2: #66A80F;
+	--mp-brand: #3F9A2E; --mp-brand-deep: #287328;
+	--mp-cta-light-fg: #287328;
+	--mp-accent: #B45309; --mp-accent-deep: #9F4908; --mp-on-accent: #fff;
+	--mp-accent2: #C2410C; --mp-accent2-deep: #AB390B; --mp-on-accent2: #fff;
+	--mp-accent3: #0369A1; --mp-accent3-deep: #0369A1; --mp-on-accent3: #fff;
+	--mp-canvas: #F0F2E9;
+	--mp-ink: #16220F;
+	--mp-muted: #535B49;
+	--mp-link: #287328; --mp-link-hover: #1F5A1F;
+	--mp-plot-teal: #2F9E44;
+	--mp-code-fg: #A7E8AE;
+}
+:root[data-theme-preset="forest"][data-theme="dusk"],
+:root[data-theme-preset="forest"][data-theme="dark"] {
+	--mp-g1: #51CF66; --mp-g2: #94D82D;
+	--mp-brand: #6BD34A; --mp-brand-deep: #46B53C;
+	--mp-accent: #F5A524; --mp-accent-deep: #D97706; --mp-on-accent: #1c1206;
+	--mp-accent2: #A3E635; --mp-accent2-deep: #84CC16; --mp-on-accent2: #0d1a06;
+	--mp-accent3: #38BDF8; --mp-accent3-deep: #2D7FF0; --mp-on-accent3: #06121f;
+	--mp-canvas: #08110A;
+	--mp-ink: #E9F7EC;
+	--mp-muted: #9DB3A2;
+	--mp-link: #51CF66; --mp-link-hover: #84E394;
+	--mp-plot-teal: #51CF66;
+	--mp-code-fg: #A7E8AE;
+}
+
+/* ---- 5. Royal — regal violet → magenta ------------------------------------ */
+:root[data-theme-preset="royal"] {
+	--mp-g1: #7C3AED; --mp-g2: #C026D3;
+	--mp-brand: #9B30D0; --mp-brand-deep: #6B21A8;
+	--mp-cta-light-fg: #6B21A8;
+	--mp-accent: #B45309; --mp-accent-deep: #964507; --mp-on-accent: #fff;
+	--mp-accent2: #DB2777; --mp-accent2-deep: #B62063; --mp-on-accent2: #fff;
+	--mp-accent3: #0369A1; --mp-accent3-deep: #036397; --mp-on-accent3: #fff;
+	--mp-canvas: #F2EFF7;
+	--mp-ink: #221530;
+	--mp-muted: #56506A;
+	--mp-link: #6B21A8; --mp-link-hover: #571A88;
+	--mp-plot-teal: #7C3AED;
+	--mp-code-fg: #D6B8FF;
+}
+:root[data-theme-preset="royal"][data-theme="dusk"],
+:root[data-theme-preset="royal"][data-theme="dark"] {
+	--mp-g1: #A78BFA; --mp-g2: #E879F9;
+	--mp-brand: #C582FB; --mp-brand-deep: #9B5FE0;
+	--mp-accent: #F5A524; --mp-accent-deep: #D97706; --mp-on-accent: #1c1206;
+	--mp-accent2: #F472B6; --mp-accent2-deep: #C9477E; --mp-on-accent2: #fff;
+	--mp-accent3: #38BDF8; --mp-accent3-deep: #2D7FF0; --mp-on-accent3: #06121f;
+	--mp-canvas: #0B0814;
+	--mp-ink: #F1ECFB;
+	--mp-muted: #A99FC0;
+	--mp-link: #A78BFA; --mp-link-hover: #C5B3FF;
+	--mp-plot-teal: #A78BFA;
+	--mp-code-fg: #D6B8FF;
+}
+
+/* ---- 6. Graphite — minimal slate + electric blue -------------------------- */
+:root[data-theme-preset="graphite"] {
+	--mp-g1: #475569; --mp-g2: #64748B;
+	--mp-brand: #556173; --mp-brand-deep: #334155;
+	--mp-cta-light-fg: #334155;
+	--mp-accent: #2563EB; --mp-accent-deep: #2157D0; --mp-on-accent: #fff;
+	--mp-accent2: #B45309; --mp-accent2-deep: #9F4908; --mp-on-accent2: #fff;
+	--mp-accent3: #0E7490; --mp-accent3-deep: #0C667F; --mp-on-accent3: #fff;
+	--mp-canvas: #F1F1EF;
+	--mp-ink: #1B2129;
+	--mp-muted: #535B63;
+	--mp-link: #334155; --mp-link-hover: #232E3D;
+	--mp-plot-teal: #2563EB;
+	--mp-code-fg: #C7D2E0;
+}
+:root[data-theme-preset="graphite"][data-theme="dusk"],
+:root[data-theme-preset="graphite"][data-theme="dark"] {
+	--mp-g1: #94A3B8; --mp-g2: #CBD5E1;
+	--mp-brand: #AEBBCB; --mp-brand-deep: #8593A6;
+	--mp-accent: #4DA3FF; --mp-accent-deep: #2D7FF0; --mp-on-accent: #06121f;
+	--mp-accent2: #F5A524; --mp-accent2-deep: #D97706; --mp-on-accent2: #1c1206;
+	--mp-accent3: #2DD4BF; --mp-accent3-deep: #14B8A6; --mp-on-accent3: #06140f;
+	--mp-canvas: #0A0C10;
+	--mp-ink: #EDF1F6;
+	--mp-muted: #9DA9B5;
+	--mp-link: #94A3B8; --mp-link-hover: #C2CDD9;
+	--mp-plot-teal: #94A3B8;
+	--mp-code-fg: #C7D2E0;
+}
+
+/* ---- 7. Ocean — azure → cyan deep sea ------------------------------------- */
+:root[data-theme-preset="ocean"] {
+	--mp-g1: #0891B2; --mp-g2: #0EA5E9;
+	--mp-brand: #0A9BCD; --mp-brand-deep: #0D6D87;
+	--mp-cta-light-fg: #0D6D87;
+	--mp-accent: #B45309; --mp-accent-deep: #9F4908; --mp-on-accent: #fff;
+	--mp-accent2: #4F46E5; --mp-accent2-deep: #4F46E5; --mp-on-accent2: #fff;
+	--mp-accent3: #E0533A; --mp-accent3-deep: #A43D2B; --mp-on-accent3: #fff;
+	--mp-canvas: #ECF2F4;
+	--mp-ink: #102029;
+	--mp-muted: #4E5C63;
+	--mp-link: #0D6D87; --mp-link-hover: #0A586E;
+	--mp-plot-teal: #0891B2;
+	--mp-code-fg: #A8E4F2;
+}
+:root[data-theme-preset="ocean"][data-theme="dusk"],
+:root[data-theme-preset="ocean"][data-theme="dark"] {
+	--mp-g1: #22D3EE; --mp-g2: #38BDF8;
+	--mp-brand: #2DC8F3; --mp-brand-deep: #1AA3CC;
+	--mp-accent: #F5A524; --mp-accent-deep: #D97706; --mp-on-accent: #1c1206;
+	--mp-accent2: #818CF8; --mp-accent2-deep: #6366F1; --mp-on-accent2: #fff;
+	--mp-accent3: #FB7A52; --mp-accent3-deep: #E06A2E; --mp-on-accent3: #1c0a06;
+	--mp-canvas: #060C12;
+	--mp-ink: #E7F5FB;
+	--mp-muted: #9DB0BD;
+	--mp-link: #22D3EE; --mp-link-hover: #67E3F5;
+	--mp-plot-teal: #22D3EE;
+	--mp-code-fg: #A8E4F2;
+}
+
+/* ---- 8. Rose — blush pink → magenta --------------------------------------- */
+:root[data-theme-preset="rose"] {
+	--mp-g1: #E11D74; --mp-g2: #DB2777;
+	--mp-brand: #D81F6E; --mp-brand-deep: #A4194F;
+	--mp-cta-light-fg: #A4194F;
+	--mp-accent: #B45309; --mp-accent-deep: #964507; --mp-on-accent: #fff;
+	--mp-accent2: #7C3AED; --mp-accent2-deep: #7537DF; --mp-on-accent2: #fff;
+	--mp-accent3: #0E7490; --mp-accent3-deep: #0C667F; --mp-on-accent3: #fff;
+	--mp-canvas: #F7EEF1;
+	--mp-ink: #2A1620;
+	--mp-muted: #5E505A;
+	--mp-link: #A4194F; --mp-link-hover: #861440;
+	--mp-plot-teal: #E11D74;
+	--mp-code-fg: #FFB3D4;
+}
+:root[data-theme-preset="rose"][data-theme="dusk"],
+:root[data-theme-preset="rose"][data-theme="dark"] {
+	--mp-g1: #F472B6; --mp-g2: #FB7185;
+	--mp-brand: #F871A0; --mp-brand-deep: #E0548A;
+	--mp-accent: #F5A524; --mp-accent-deep: #D97706; --mp-on-accent: #1c1206;
+	--mp-accent2: #A78BFA; --mp-accent2-deep: #8B6DF0; --mp-on-accent2: #fff;
+	--mp-accent3: #2DD4BF; --mp-accent3-deep: #14B8A6; --mp-on-accent3: #06140f;
+	--mp-canvas: #120810;
+	--mp-ink: #FBE9F1;
+	--mp-muted: #B89FAE;
+	--mp-link: #F472B6; --mp-link-hover: #F9A3CF;
+	--mp-plot-teal: #F472B6;
+	--mp-code-fg: #FFB3D4;
+}
+
+/* ---- 9. Atelier — warm bronze → gold luxury ------------------------------- */
+:root[data-theme-preset="atelier"] {
+	--mp-g1: #B7791F; --mp-g2: #D97706;
+	--mp-brand: #C07A14; --mp-brand-deep: #895A0D;
+	--mp-cta-light-fg: #895A0D;
+	--mp-accent: #0E7490; --mp-accent-deep: #0D6D87; --mp-on-accent: #fff;
+	--mp-accent2: #7C4A1E; --mp-accent2-deep: #7C4A1E; --mp-on-accent2: #fff;
+	--mp-accent3: #BE185D; --mp-accent3-deep: #BE185D; --mp-on-accent3: #fff;
+	--mp-canvas: #F5F0E6;
+	--mp-ink: #271E10;
+	--mp-muted: #5C5240;
+	--mp-link: #895A0D; --mp-link-hover: #6F480B;
+	--mp-plot-teal: #B7791F;
+	--mp-code-fg: #F2D79B;
+}
+:root[data-theme-preset="atelier"][data-theme="dusk"],
+:root[data-theme-preset="atelier"][data-theme="dark"] {
+	--mp-g1: #E0A93B; --mp-g2: #F5A524;
+	--mp-brand: #EBAB30; --mp-brand-deep: #C98A1E;
+	--mp-accent: #2DD4BF; --mp-accent-deep: #14B8A6; --mp-on-accent: #06140f;
+	--mp-accent2: #D9C089; --mp-accent2-deep: #BFA86F; --mp-on-accent2: #1a1406;
+	--mp-accent3: #F472B6; --mp-accent3-deep: #C9477E; --mp-on-accent3: #fff;
+	--mp-canvas: #100C06;
+	--mp-ink: #F7EEDD;
+	--mp-muted: #B3A88F;
+	--mp-link: #E0A93B; --mp-link-hover: #EFC56B;
+	--mp-plot-teal: #E0A93B;
+	--mp-code-fg: #F2D79B;
+}
+
+/* ---- 10. Crimson — deep red → rose ---------------------------------------- */
+:root[data-theme-preset="crimson"] {
+	--mp-g1: #DC2626; --mp-g2: #E11D48;
+	--mp-brand: #DD2237; --mp-brand-deep: #B91C1C;
+	--mp-cta-light-fg: #B91C1C;
+	--mp-accent: #B45309; --mp-accent-deep: #964507; --mp-on-accent: #fff;
+	--mp-accent2: #475569; --mp-accent2-deep: #475569; --mp-on-accent2: #fff;
+	--mp-accent3: #0E7490; --mp-accent3-deep: #0C667F; --mp-on-accent3: #fff;
+	--mp-canvas: #F5EEEC;
+	--mp-ink: #2A1413;
+	--mp-muted: #5E504E;
+	--mp-link: #B91C1C; --mp-link-hover: #971717;
+	--mp-plot-teal: #DC2626;
+	--mp-code-fg: #FFB3AE;
+}
+:root[data-theme-preset="crimson"][data-theme="dusk"],
+:root[data-theme-preset="crimson"][data-theme="dark"] {
+	--mp-g1: #F87171; --mp-g2: #FB7185;
+	--mp-brand: #F97179; --mp-brand-deep: #E0545C;
+	--mp-accent: #F5A524; --mp-accent-deep: #D97706; --mp-on-accent: #1c1206;
+	--mp-accent2: #94A3B8; --mp-accent2-deep: #788699; --mp-on-accent2: #0a0f17;
+	--mp-accent3: #2DD4BF; --mp-accent3-deep: #14B8A6; --mp-on-accent3: #06140f;
+	--mp-canvas: #120808;
+	--mp-ink: #FBE7E6;
+	--mp-muted: #B89F9D;
+	--mp-link: #F87171; --mp-link-hover: #FBA3A3;
+	--mp-plot-teal: #F87171;
+	--mp-code-fg: #FFB3AE;
+}
+
+/* ---- Custom theme: seeds come from JS-applied inline custom properties on
+   <html> (data-theme-preset="custom"). The pre-paint script writes the brand
+   g1/g2 + 3 accents the user picked; brand/brand-deep/link/muted are derived
+   in the same script (auto-deepened for AA on the chosen canvas) and written as
+   inline vars too. Nothing to declare here beyond reusing the shared grad. */
+
 /* Expose tokens to Tailwind's utility theme (Tailwind v4 @theme). */
 @theme {
 	--color-brand: #12BBA0;
@@ -281,17 +606,27 @@ body.mp-marketing::after {
 	border-radius: 10px;
 }
 
-/* Skip link */
+/* Skip link. Background is the always-dark --mp-cta-light-fg (the AA-on-white
+   dark brand-deep, dark in EVERY theme + mood) so white text stays AA even on
+   themes whose dusk --mp-brand-deep goes light. The .mp-marketing a.mp-skip
+   selector (0-2-1) also out-specifies the generic link-colour rule (0-1-1) so
+   the text is white, not the link colour. */
+.mp-marketing a.mp-skip,
 .mp-skip {
 	position: absolute;
 	left: -9999px;
 	top: 0;
-	background: var(--mp-brand-deep);
+	background: var(--mp-cta-light-fg);
 	color: var(--mp-on-brand);
 	font-weight: 800;
 	padding: 0.6rem 1rem;
 	z-index: 100;
 	border-radius: 0 0 var(--mp-radius) 0;
+	text-decoration: none;
+}
+.mp-marketing a.mp-skip:hover,
+.mp-marketing a.mp-skip:focus {
+	color: var(--mp-on-brand);
 }
 .mp-skip:focus {
 	left: 0;
@@ -390,11 +725,11 @@ body.mp-marketing::after {
 .mp-cta--lg { padding: 1.05rem 2.2rem; font-size: 1.1rem; }
 .mp-cta--light {
 	background: var(--mp-on-brand);
-	color: var(--mp-brand-deep);
+	color: var(--mp-cta-light-fg);
 	box-shadow: none;
 }
 .mp-cta--light:hover {
-	color: var(--mp-brand-deep);
+	color: var(--mp-cta-light-fg);
 	filter: none;
 	box-shadow: 0 0 26px -10px var(--mp-glow-white);
 }
