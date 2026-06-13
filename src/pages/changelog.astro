@@ -1,7 +1,7 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 
-// Stub — fuller history will be generated from release tags at Stage 8.
+// Stub: fuller history will be generated from release tags at Stage 8.
 const releases = [
 	{
 		version: 'v0.2.x',
@@ -9,7 +9,7 @@ const releases = [
 		highlights: [
 			'Eleven analysis templates, from pairwise binary/continuous to three-level, HR, and IRR.',
 			'Network meta-analysis (netmeta): network plot, league table, P-scores, net-split.',
-			'Reproducibility bundle — runnable analysis.R + data + sessionInfo() + renv.lock.',
+			'Reproducibility bundle: runnable analysis.R + data + sessionInfo() + renv.lock.',
 			'GRADE summary-of-findings row populated from the live analysis.',
 			'Real-world data robustness: combine grain guard, multi-arm handling, biological-range and consistency checks.',
 			'Resolved licensing: metaproc is now GPL-3.0-or-later (2026-06-11).',
@@ -20,31 +20,78 @@ const releases = [
 <PageLayout
 	title="Changelog"
 	activePath="/changelog"
-	lede="What is new in MetaProc. This is an early stub — a fuller, tag-driven history arrives with the public release."
-	description="MetaProc changelog — release highlights for the current beta."
+	lede="What is new in MetaProc. This is an early stub; a fuller, tag-driven history arrives with the public release."
+	description="MetaProc changelog: release highlights for the current beta."
 >
 	{releases.map((r) => (
-		<section class="rel">
-			<h2>{r.version} <span class="rel__label">{r.label}</span></h2>
-			<ul>
-				{r.highlights.map((h) => <li>{h}</li>)}
+		<section class="rel mp-reveal">
+			<div class="rel__head">
+				<h2 class="rel__version">{r.version}</h2>
+				<span class="rel__label">{r.label}</span>
+			</div>
+			<ul class="rel__list">
+				{r.highlights.map((h, i) => (
+					<li class="rel__item mp-reveal" style={`--mp-reveal-delay:${i * 0.04}s`}>
+						<span class="rel__dot" aria-hidden="true"></span>
+						<span>{h}</span>
+					</li>
+				))}
 			</ul>
 		</section>
 	))}
 </PageLayout>
 
 <style>
-	.rel { margin-bottom: 2rem; }
+	.rel {
+		margin-bottom: 2.5rem;
+		padding-left: 1.25rem;
+		border-left: 2px solid color-mix(in srgb, var(--mp-brand) 30%, var(--mp-hair));
+	}
+	.rel__head {
+		display: flex;
+		align-items: center;
+		gap: 0.7rem;
+		margin-bottom: 1.1rem;
+	}
+	.rel__version {
+		font-family: var(--font-mono, monospace);
+		font-size: 1.35rem;
+		font-weight: 700;
+		letter-spacing: -0.01em;
+		margin: 0;
+	}
 	.rel__label {
-		font-size: 0.75rem;
+		font-size: 0.72rem;
 		font-weight: 700;
 		text-transform: uppercase;
-		letter-spacing: 0.04em;
+		letter-spacing: 0.08em;
 		color: #fff;
 		background: var(--mp-grad-cta);
-		padding: 0.15rem 0.5rem;
+		padding: 0.18rem 0.55rem;
 		border-radius: var(--mp-radius-pill);
-		vertical-align: middle;
-		margin-left: 0.5rem;
+		box-shadow: 0 0 18px -8px var(--mp-glow);
 	}
+	.rel__list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.7rem;
+	}
+	.rel__item {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 0.7rem;
+		align-items: start;
+		color: color-mix(in srgb, var(--mp-ink) 90%, var(--mp-canvas));
+	}
+	.rel__dot {
+		width: 7px;
+		height: 7px;
+		margin-top: 0.55rem;
+		border-radius: 2px;
+		background: var(--mp-accent3-deep);
+		box-shadow: 0 0 10px -2px var(--mp-aglow2);
+	}
+	:root[data-theme="dusk"] .rel__dot { background: var(--mp-accent3); }
 </style>

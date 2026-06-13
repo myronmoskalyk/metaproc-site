@@ -1,67 +1,199 @@
 ---
+// Site footer: edge-lit top hairline, a brand block + grouped nav, role-locked
+// accents on the wordmark/hover. No hard card borders; grouped with hairlines
+// and negative space (BRAND §5). Glass stays chrome-only, so the footer is a
+// tinted opaque band, not glass.
 const year = new Date().getFullYear();
+const nav = [
+	{
+		heading: 'Product',
+		links: [
+			{ label: 'Features', href: '/features' },
+			{ label: 'Methods', href: '/methods' },
+			{ label: 'Download', href: '/download' },
+			{ label: 'Changelog', href: '/changelog' },
+		],
+	},
+	{
+		heading: 'Docs',
+		links: [
+			{ label: 'Quickstart', href: '/docs/quickstart' },
+			{ label: 'Product manual', href: '/docs/manual' },
+			{ label: 'Web vs desktop', href: '/docs/web-vs-desktop' },
+		],
+	},
+	{
+		heading: 'Legal',
+		links: [
+			{ label: 'License', href: '/license' },
+			{ label: 'Privacy', href: '/privacy' },
+		],
+	},
+];
 ---
-<footer class="mp-footer">
+<footer class="mp-footer mp-reveal">
 	<div class="mp-container mp-footer__inner">
-		<nav class="mp-footer__links" aria-label="Footer">
-			<a href="/license">License</a>
-			<a href="/privacy">Privacy</a>
-			<a href="/methods">Methods</a>
-			<a href="/docs">Docs</a>
-			<a href="mailto:myron.moskalyk@gmail.com?subject=metaproc%20%E2%80%94%20tell%20us%20what%27s%20missing">
-				Tell us what's missing
+		<div class="mp-footer__brand">
+			<a href="/" class="mp-footer__mark" aria-label="MetaProc home">
+				<span class="mp-footer__tile" aria-hidden="true">
+					<svg viewBox="0 0 24 24" fill="none">
+						<rect x="11" y="4" width="2" height="16" rx="1" fill="#fff" opacity=".45" />
+						<polygon points="12,8 18.5,12 12,16 5.5,12" fill="#fff" />
+					</svg>
+				</span>
+				metaproc
 			</a>
+			<p class="mp-footer__tag">Reproducible meta-analysis in your browser, with the exact R code behind every step.</p>
+			<a class="mp-footer__missing" href="mailto:myron.moskalyk@gmail.com?subject=metaproc%3A%20tell%20us%20what%27s%20missing">
+				Tell us what is missing
+				<svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3l5 5-5 5" /></svg>
+			</a>
+		</div>
+
+		<nav class="mp-footer__cols" aria-label="Footer">
+			{nav.map((col) => (
+				<div class="mp-footer__col">
+					<h2 class="mp-footer__heading">{col.heading}</h2>
+					<ul>
+						{col.links.map((l) => (
+							<li><a href={l.href}>{l.label}</a></li>
+						))}
+					</ul>
+				</div>
+			))}
 		</nav>
+	</div>
+
+	<div class="mp-container mp-footer__base">
 		<p class="mp-footer__legal">
-			<span class="mp-footer__mark">metaproc</span> &mdash; reproducible meta-analysis.
-			<br />
 			&copy; {year} Myron Moskalyk. Code under
-			<a href="/license">GPL-3.0-or-later</a>; &ldquo;MetaProc&rdquo; is a trademark.
+			<a href="/license">GPL-3.0-or-later</a>. &ldquo;MetaProc&rdquo; is a trademark.
 		</p>
 	</div>
 </footer>
 
 <style>
 	.mp-footer {
+		position: relative;
 		margin-top: 5rem;
 		border-top: 1px solid var(--mp-edge);
 		background: var(--mp-tint);
 	}
+	/* Edge-lit top hairline (secondary accent), matching .mp-panel chrome. */
+	.mp-footer::before {
+		content: "";
+		position: absolute;
+		inset: 0 0 auto 0;
+		height: 1px;
+		background: linear-gradient(90deg, transparent,
+			color-mix(in srgb, var(--mp-accent2) 70%, transparent) 30% 70%, transparent);
+		pointer-events: none;
+	}
 	.mp-footer__inner {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 1.5rem 2.5rem;
-		justify-content: space-between;
-		align-items: flex-start;
-		padding-block: 2.5rem;
+		display: grid;
+		grid-template-columns: 1.3fr 1.7fr;
+		gap: 2.5rem 3rem;
+		padding-block: clamp(2.5rem, 5vw, 3.5rem) 1.75rem;
 	}
-	.mp-footer__links {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 1rem 1.5rem;
-	}
-	.mp-footer__links a {
-		color: var(--mp-link);
+
+	/* Brand block */
+	.mp-footer__mark {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.55rem;
+		font-weight: 800;
+		font-size: 1.25rem;
+		letter-spacing: -0.03em;
+		color: var(--mp-ink);
 		text-decoration: none;
-		font-weight: 500;
 	}
-	.mp-footer__links a:hover {
-		text-decoration: underline;
+	.mp-footer__mark:hover { color: var(--mp-ink); }
+	.mp-footer__tile {
+		width: 28px;
+		height: 28px;
+		flex: none;
+		border-radius: 8px;
+		display: grid;
+		place-items: center;
+		background: linear-gradient(160deg, var(--mp-g1), var(--mp-g2));
+		box-shadow: 0 0 20px -7px var(--mp-glow), inset 0 1px 0 rgba(255, 255, 255, .25);
+		transition: transform .3s var(--mp-ease);
+	}
+	.mp-footer__mark:hover .mp-footer__tile { transform: rotate(-6deg) scale(1.05); }
+	.mp-footer__tile svg { width: 18px; height: 18px; display: block; }
+	.mp-footer__tag {
+		margin: 0.9rem 0 1.1rem;
+		color: var(--mp-muted);
+		font-size: 0.92rem;
+		max-width: 26rem;
+		line-height: 1.55;
+	}
+	.mp-footer__missing {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		color: var(--mp-link);
+		font-weight: 600;
+		text-decoration: none;
+		font-size: 0.92rem;
+	}
+	.mp-footer__missing svg { transition: transform .2s var(--mp-ease); }
+	.mp-footer__missing:hover { color: var(--mp-link-hover); }
+	.mp-footer__missing:hover svg { transform: translateX(3px); }
+
+	/* Nav columns */
+	.mp-footer__cols {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.5rem 2rem;
+	}
+	/* Small uppercase headings use the eyebrow text token (--mp-link): the only
+	   accent that clears AA at this size on the tinted footer in both moods
+	   (computed: link 4.86 on light tint, 8.16 on dusk; sky-deep would be 3.41). */
+	.mp-footer__heading {
+		font-size: 0.7rem;
+		font-weight: 800;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--mp-link);
+		margin: 0 0 0.85rem;
+	}
+	.mp-footer__col ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.55rem;
+	}
+	.mp-footer__col a {
+		color: var(--mp-muted);
+		text-decoration: none;
+		font-size: 0.95rem;
+		transition: color .15s ease;
+	}
+	.mp-footer__col a:hover { color: var(--mp-link); }
+
+	/* Base legal row */
+	.mp-footer__base {
+		border-top: 1px solid var(--mp-hair);
+		padding-block: 1.25rem 1.75rem;
 	}
 	.mp-footer__legal {
 		margin: 0;
 		color: var(--mp-muted);
-		font-size: 0.9rem;
-		max-width: 30rem;
+		font-size: 0.88rem;
 	}
 	/* Inline link inside running text: underline so it does not rely on colour
 	   alone (WCAG 1.4.1 / axe link-in-text-block). */
 	.mp-footer__legal a {
+		color: var(--mp-link);
 		text-decoration: underline;
 		text-underline-offset: 0.15em;
 	}
-	.mp-footer__mark {
-		font-weight: 800;
-		color: var(--mp-link);
+	.mp-footer__legal a:hover { color: var(--mp-link-hover); }
+
+	@media (max-width: 760px) {
+		.mp-footer__inner { grid-template-columns: 1fr; gap: 2rem; }
+		.mp-footer__cols { grid-template-columns: repeat(2, 1fr); }
 	}
 </style>

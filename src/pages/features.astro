@@ -12,7 +12,7 @@ import shotReportBuilder from '../assets/proof/report-builder.png';
 import shotGradeSof from '../assets/proof/grade-sof.png';
 import shotCodePanel from '../assets/proof/code-panel.png';
 
-// Poster frame (extracted from demo.webm at 12 s) — optimized to WebP at build.
+// Poster frame (extracted from demo.webm at 12 s), optimized to WebP at build.
 // 960w keeps the LCP request small (~30 kB); it's swapped out the moment playback starts.
 const demoPoster = await getImage({ src: demoPosterPng, width: 960, format: 'webp' });
 
@@ -22,61 +22,64 @@ const SHOT_WIDTHS = [480, 800, 1200, 1600];
 
 const groups = [
 	{
-		title: 'Import & prepare',
-		blurb: 'Get messy real-world extraction workbooks into shape — without leaving the browser.',
+		n: '01',
+		title: 'Import and prepare',
+		blurb: 'Get messy real-world extraction workbooks into shape, without leaving the browser.',
 		shots: [],
 		more: [
-			{ label: 'Data import', caption: 'CSV / Excel upload, multi-sheet workbooks, automatic header detection, value boxes.' },
-			{ label: 'Edit & clean', caption: 'Editable grid, per-column retype/rename, row include/exclude — each emitting its exact R.' },
+			{ label: 'Data import', caption: 'CSV and Excel upload, multi-sheet workbooks, automatic header detection, value boxes.' },
+			{ label: 'Edit and clean', caption: 'Editable grid, per-column retype and rename, row include or exclude, each emitting its exact R.' },
 			{ label: 'Combine', caption: 'Join or stack worksheets with auto-detected keys, a grain guard, and fan-out warnings.' },
 			{ label: 'Quality checks', caption: 'Duplicate study-ID detection, biological-range checks, configurable consistency rules.' },
 		],
 	},
 	{
-		title: 'Explore & analyze',
+		n: '02',
+		title: 'Explore and analyze',
 		blurb: 'Eleven templates, a six-view EDA, network meta-analysis, and a drag-to-build pipeline.',
 		shots: [
 			{
 				image: shotPlotsStudio,
 				alt: 'Plots studio: a ten-study forest plot of risk ratios with a random-effects pooled estimate of 0.69 (0.62 to 0.78), plot-type and drawing-engine controls (native metafor or ggplot2) on the left, and a Reproducible R panel underneath labelled "the exact code that drew the preview".',
-				caption: 'Plots studio — forest & funnel plots with prediction intervals, re-drawn from your saved analysis and verified against its snapshot. The exact R that drew the preview sits right below.',
+				caption: 'Plots studio: forest and funnel plots with prediction intervals, re-drawn from your saved analysis and verified against its snapshot. The exact R that drew the preview sits right below.',
 			},
 			{
 				image: shotCodePanel,
-				alt: 'Live R code panel beside its raw output: a metafor script — library(metafor), escalc effect-size computation, an rma REML model, forest() and funnel() calls — next to the printed random-effects model results with tau-squared, I-squared and the Q test.',
-				caption: 'Every analysis shows the exact R code it ran — metafor calls included — next to the raw model output it produced. Copy it, audit it, re-run it.',
+				alt: 'Live R code panel beside its raw output: a metafor script (library(metafor), escalc effect-size computation, an rma REML model, forest() and funnel() calls) next to the printed random-effects model results with tau-squared, I-squared and the Q test.',
+				caption: 'Every analysis shows the exact R code it ran, metafor calls included, next to the raw model output it produced. Copy it, audit it, re-run it.',
 			},
 			{
 				image: shotWorkflowStore,
 				alt: 'The Workflow panel open over the home screen, holding a saved risk-ratio analysis card with buttons to send it to the Plots studio or the Report, and a note that it is saved with your project.',
-				caption: 'The workflow store collects results across tabs — reorder them, send them to the Plots studio or the Report, and they persist with your saved project.',
+				caption: 'The workflow store collects results across tabs: reorder them, send them to the Plots studio or the Report, and they persist with your saved project.',
 			},
 		],
 		more: [
-			{ label: 'EDA studio', caption: 'Summary, distributions, missingness, correlations, by-group, and scatter — each with code.' },
+			{ label: 'EDA studio', caption: 'Summary, distributions, missingness, correlations, by-group, and scatter, each with code.' },
 			{ label: 'Templates', caption: 'Binary, continuous, proportion, correlation, HR, IRR, three-level and more.' },
 			{ label: 'Network MA', caption: 'netmeta network plot, league table, P-scores, and net-split inconsistency.' },
-			{ label: 'Pipeline', caption: 'Drag components — meta-regression, cumulative, trim-and-fill, Baujat — into an ordered run.' },
+			{ label: 'Pipeline', caption: 'Drag components (meta-regression, cumulative, trim-and-fill, Baujat) into an ordered run.' },
 		],
 	},
 	{
-		title: 'Appraise & report',
+		n: '03',
+		title: 'Appraise and report',
 		blurb: 'Risk of bias, GRADE, SWiM, PRISMA, and a reproducibility bundle that re-runs anywhere.',
 		shots: [
 			{
 				image: shotGradeSof,
-				alt: 'GRADE certainty-of-evidence form: study design and outcome fields, the five downgrade domains — risk of bias, inconsistency, indirectness, imprecision, publication bias — and a "suggested from your analysis" box citing the observed I-squared and confidence interval.',
-				caption: 'GRADE — rate certainty across the five domains, with suggestions pre-filled from your live analysis, feeding a Cochrane-style summary-of-findings row.',
+				alt: 'GRADE certainty-of-evidence form: study design and outcome fields, the five downgrade domains (risk of bias, inconsistency, indirectness, imprecision, publication bias) and a "suggested from your analysis" box citing the observed I-squared and confidence interval.',
+				caption: 'GRADE: rate certainty across the five domains, with suggestions pre-filled from your live analysis, feeding a Cochrane-style summary-of-findings row.',
 			},
 			{
 				image: shotReportBuilder,
 				alt: 'Reproducible report builder: title and author fields, include-section checkboxes (methods, PRISMA flow, included studies, pooled result, forest plot, heterogeneity, reproducible code, packages used), HTML / PDF / R Markdown output formats, and a reproducibility-bundle download button.',
-				caption: 'Report builder — choose sections, generate HTML / PDF / .Rmd, or download the reproducibility bundle: a .zip with the exact analysis script, your data, sessionInfo() and renv.lock.',
+				caption: 'Report builder: choose sections, generate HTML, PDF or .Rmd, or download the reproducibility bundle: a .zip with the exact analysis script, your data, sessionInfo() and renv.lock.',
 			},
 		],
 		more: [
-			{ label: 'Risk of bias', caption: 'RoB 2 / ROBINS-I / QUADAS-2 traffic-light and summary plots (robvis).' },
-			{ label: 'SWiM & PRISMA', caption: 'Vote-counting harvest plot and a PRISMA 2020 flow diagram from your screening data.' },
+			{ label: 'Risk of bias', caption: 'RoB 2, ROBINS-I and QUADAS-2 traffic-light and summary plots (robvis).' },
+			{ label: 'SWiM and PRISMA', caption: 'Vote-counting harvest plot and a PRISMA 2020 flow diagram from your screening data.' },
 			{ label: 'Reproducibility bundle', caption: 'A .zip with runnable analysis.R, the data, sessionInfo(), and renv.lock.' },
 			{ label: 'Tools', caption: 'Effect-size converter (12 conversions) and a-priori power analysis.' },
 		],
@@ -86,92 +89,202 @@ const groups = [
 <PageLayout
 	title="Features"
 	activePath="/features"
-	lede="A button-driven, template-based workflow that covers the whole meta-analysis — from a raw extraction workbook to a GRADE summary of findings and a re-runnable bundle."
-	description="The full MetaProc feature tour: import, clean, analyze, appraise, and report — with the exact R code captured at every step."
+	lede="A button-driven, template-based workflow that covers the whole meta-analysis, from a raw extraction workbook to a GRADE summary of findings and a re-runnable bundle."
+	description="The full MetaProc feature tour: import, clean, analyze, appraise, and report, with the exact R code captured at every step."
 >
-	{/* The demo poster is the LCP element on this page — fetch it early and hot. */}
+	{/* The demo poster is the LCP element on this page: fetch it early and hot. */}
 	<link slot="head" rel="preload" as="image" href={demoPoster.src} fetchpriority="high" />
 
-	<section class="demo" id="demo" aria-labelledby="demo-title">
-		<h2 id="demo-title">Watch it run — 73 seconds</h2>
+	<section class="demo mp-reveal" id="demo" aria-labelledby="demo-title">
+		<h2 id="demo-title">Watch it run, 73 seconds</h2>
 		<p class="demo__blurb">
 			A silent screen capture from the live app: the pairwise binary-outcome template
 			loads a worked example, pools ten trials (risk ratio 0.69, I² 0%), gets a GRADE
 			certainty rating, and ends at the report builder and the re-drawn forest plot.
 			Captions describe each step.
 		</p>
-		<!-- MP4 fallback deferred — add H.264 encode at Stage 8 with full ffmpeg -->
-		<video controls preload="none" width="1600" height="1000" poster={demoPoster.src}>
-			<source src={demoVideo} type="video/webm" />
-			<track kind="captions" src="/media/demo-captions.vtt" srclang="en" label="English" default />
-			Your browser can't play WebM video — the <a href="/docs/quickstart">Quickstart</a>
-			walks through the same steps with screenshots.
-		</video>
+		<!-- MP4 fallback deferred: add H.264 encode at Stage 8 with full ffmpeg -->
+		<div class="demo__frame mp-bezel">
+			<div class="mp-bezel__core demo__framecore">
+				<video controls preload="none" width="1600" height="1000" poster={demoPoster.src}>
+					<source src={demoVideo} type="video/webm" />
+					<track kind="captions" src="/media/demo-captions.vtt" srclang="en" label="English" default />
+					Your browser can't play WebM video. The <a href="/docs/quickstart">Quickstart</a>
+					walks through the same steps with screenshots.
+				</video>
+			</div>
+		</div>
 	</section>
 
-	{groups.map((g) => (
-		<section class="ftour">
-			<h2>{g.title}</h2>
-			<p class="ftour__blurb">{g.blurb}</p>
+	{groups.map((g, gi) => (
+		<section class={`ftour ftour--a${gi + 1}`} aria-labelledby={`grp-${g.n}`}>
+			<header class="ftour__head mp-reveal">
+				<span class="ftour__n" aria-hidden="true">{g.n}</span>
+				<div>
+					<h2 id={`grp-${g.n}`} class="ftour__title">{g.title}</h2>
+					<p class="ftour__blurb">{g.blurb}</p>
+				</div>
+			</header>
 			{g.shots.length > 0 && (
 				<div class="ftour__shots">
-					{g.shots.map((s) => (
-						<ProofAsset
-							image={s.image}
-							alt={s.alt}
-							caption={s.caption}
-							sizes={SHOT_SIZES}
-							widths={SHOT_WIDTHS}
-						/>
+					{g.shots.map((s, si) => (
+						<figure class="ftour__shot mp-reveal" style={`--mp-reveal-delay:${si * 0.07}s`}>
+							<div class="ftour__shotframe">
+								<ProofAsset
+									image={s.image}
+									alt={s.alt}
+									sizes={SHOT_SIZES}
+									widths={SHOT_WIDTHS}
+								/>
+							</div>
+							<figcaption>{s.caption}</figcaption>
+						</figure>
 					))}
 				</div>
 			)}
 			<ul class="ftour__list">
-				{g.more.map((m) => (
-					<li><strong>{m.label}.</strong> {m.caption}</li>
+				{g.more.map((m, mi) => (
+					<li class="ftour__item mp-reveal" style={`--mp-reveal-delay:${mi * 0.05}s`}>
+						<span class="ftour__bullet" aria-hidden="true"></span>
+						<span class="ftour__label">{m.label}</span>
+						<span class="ftour__cap">{m.caption}</span>
+					</li>
 				))}
 			</ul>
 		</section>
 	))}
 
-	<p style="margin-top:2rem">
+	<p class="ftour__note mp-reveal">
 		Every screenshot and the demo above are real captures from the live app (June 2026
-		beta) — nothing is mocked up. For the exact, up-to-date capability inventory, see
+		beta); nothing is mocked up. For the exact, up-to-date capability inventory, see
 		the <a href="/docs/manual">generated product manual</a>.
 	</p>
 </PageLayout>
 
 <style>
+	/* Demo: the LCP video sits in a double-bezel enclosure (real elevation). */
 	.demo {
-		margin-bottom: 3rem;
+		margin-bottom: clamp(3rem, 6vw, 4.5rem);
 		scroll-margin-top: 5.5rem; /* clear the sticky header when arriving at /features#demo */
 	}
-	.demo h2 { margin: 0 0 0.25rem; }
-	.demo__blurb { color: var(--mp-muted); margin: 0 0 1.25rem; }
+	.demo h2 { margin: 0 0 0.3rem; }
+	.demo__blurb { color: var(--mp-muted); margin: 0 0 1.5rem; max-width: 46rem; }
+	.demo__framecore { padding: 0; line-height: 0; }
 	.demo video {
 		display: block;
 		width: 100%;
 		height: auto;
-		border: 1px solid var(--mp-edge);
-		border-radius: var(--mp-radius-lg);
+		border: 0;
+		border-radius: 20px;
 		background: var(--mp-code-bg);
 	}
 
-	.ftour { margin-bottom: 3rem; }
-	.ftour h2 { margin-bottom: 0.25rem; }
-	.ftour__blurb { color: var(--mp-muted); margin: 0 0 1.25rem; }
+	/* Feature group: numbered editorial header, framed shots, accent feature grid. */
+	.ftour {
+		margin-bottom: clamp(3rem, 6vw, 4.5rem);
+		padding-top: clamp(2rem, 4vw, 3rem);
+		border-top: 1px solid var(--mp-hair);
+	}
+	.ftour__head {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 1.25rem;
+		align-items: start;
+		margin-bottom: clamp(1.5rem, 3vw, 2rem);
+	}
+	.ftour__n {
+		font-family: var(--font-mono, monospace);
+		/* Large + bold so the 3:1 large-text floor applies to the role accents. */
+		font-size: 1.7rem;
+		line-height: 1;
+		font-weight: 700;
+		letter-spacing: 0.01em;
+	}
+	.ftour--a1 .ftour__n { color: var(--mp-link); }
+	.ftour--a2 .ftour__n { color: var(--mp-accent2-deep); }
+	.ftour--a3 .ftour__n { color: var(--mp-accent3-deep); }
+	.ftour__title { margin: 0 0 0.3rem; font-size: clamp(1.4rem, 2.6vw, 1.7rem); letter-spacing: -0.015em; }
+	.ftour__blurb { color: var(--mp-muted); margin: 0; max-width: 44rem; }
+
 	.ftour__shots {
 		display: grid;
-		gap: 2rem;
-		margin-bottom: 1.5rem;
+		gap: clamp(1.75rem, 3.5vw, 2.5rem);
+		margin-bottom: clamp(1.75rem, 3.5vw, 2.25rem);
 	}
+	.ftour__shot { margin: 0; }
+	.ftour__shotframe {
+		position: relative;
+		border-radius: var(--mp-radius-lg);
+		overflow: hidden;
+		border: 1px solid var(--mp-edge);
+		box-shadow: var(--mp-shadow-panel), inset 0 1px 0 var(--mp-hair);
+		transition: transform .2s var(--mp-ease), box-shadow .22s ease, border-color .2s ease;
+	}
+	.ftour__shotframe::after {
+		content: "";
+		position: absolute;
+		inset: 0 0 auto 0;
+		height: 1px;
+		background: linear-gradient(90deg, transparent,
+			color-mix(in srgb, var(--mp-accent2) 70%, transparent) 28% 72%, transparent);
+		pointer-events: none;
+		z-index: 1;
+	}
+	.ftour__shot:hover .ftour__shotframe {
+		transform: translateY(-3px);
+		border-color: color-mix(in srgb, var(--mp-brand) 44%, var(--mp-edge));
+		box-shadow: var(--mp-shadow-panel), 0 0 34px -14px var(--mp-glow), inset 0 1px 0 var(--mp-hair);
+	}
+	.ftour__shotframe :global(.mp-proof) { margin: 0; }
+	.ftour__shotframe :global(.mp-proof img) {
+		border: 0;
+		border-radius: 0;
+		box-shadow: none;
+		transition: none;
+	}
+	.ftour__shot:hover .ftour__shotframe :global(.mp-proof img) { transform: none; }
+	.ftour__shot figcaption { margin-top: 0.7rem; color: var(--mp-muted); font-size: 0.92rem; line-height: 1.55; }
+
+	/* "More" items: a 2-col feature grid (no plain bullets), hairline-separated. */
 	.ftour__list {
+		list-style: none;
 		margin: 0;
-		padding-left: 1.2rem;
+		padding: 0;
 		display: grid;
-		gap: 0.5rem;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 0;
 	}
-	.ftour__list li { color: var(--mp-muted); }
-	.ftour__list li::marker { color: var(--mp-accent2-deep); }
-	.ftour__list strong { color: var(--mp-ink); }
+	.ftour__item {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		column-gap: 0.75rem;
+		align-content: start;
+		padding: 1.1rem 1.25rem 1.1rem 0;
+		border-top: 1px solid var(--mp-hair);
+	}
+	.ftour__bullet {
+		width: 7px;
+		height: 7px;
+		border-radius: 2px;
+		margin-top: 0.5rem;
+		background: var(--mp-brand);
+		box-shadow: 0 0 10px -2px var(--mp-glow);
+	}
+	.ftour--a1 .ftour__bullet { background: var(--mp-link); }
+	.ftour--a2 .ftour__bullet { background: var(--mp-accent2-deep); }
+	.ftour--a3 .ftour__bullet { background: var(--mp-accent3-deep); }
+	.ftour__label { font-weight: 700; color: var(--mp-ink); }
+	.ftour__cap { grid-column: 2; color: var(--mp-muted); font-size: 0.93rem; margin-top: 0.15rem; line-height: 1.5; }
+
+	.ftour__note {
+		margin-top: clamp(2rem, 4vw, 3rem);
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--mp-hair);
+		color: var(--mp-muted);
+	}
+
+	@media (max-width: 640px) {
+		.ftour__list { grid-template-columns: 1fr; }
+		.ftour__item { padding-right: 0; }
+	}
 </style>

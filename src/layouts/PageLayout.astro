@@ -14,11 +14,12 @@ const { title, description, activePath, lede } = Astro.props;
 	<article class="mp-page">
 		<div class="mp-container">
 			<header class="mp-page__head mp-rise">
+				<span class="mp-page__rule" aria-hidden="true"></span>
 				<h1>{title}</h1>
 				{lede && <p class="mp-page__lede">{lede}</p>}
 				<slot name="banner" />
 			</header>
-			<div class="mp-prose">
+			<div class="mp-prose mp-reveal">
 				<slot />
 			</div>
 		</div>
@@ -26,30 +27,62 @@ const { title, description, activePath, lede } = Astro.props;
 </BaseLayout>
 
 <style>
-	.mp-page { padding-block: clamp(2.5rem, 5vw, 4rem); }
-	.mp-page__head { max-width: 48rem; margin-bottom: 2rem; }
+	.mp-page { padding-block: clamp(2.75rem, 5vw, 4.25rem); }
+	.mp-page__head { max-width: 50rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
+	/* Short brand-gradient rule above the page title (replaces a generic eyebrow). */
+	.mp-page__rule {
+		display: block;
+		width: 2.75rem;
+		height: 3px;
+		border-radius: 999px;
+		background: var(--mp-grad);
+		box-shadow: 0 0 16px -4px var(--mp-glow);
+		margin-bottom: 1.1rem;
+	}
 	.mp-page__head h1 {
-		font-size: clamp(2rem, 4vw, 2.8rem);
-		letter-spacing: -0.02em;
+		font-size: clamp(2.1rem, 4vw, 2.9rem);
+		letter-spacing: -0.025em;
+		line-height: 1.08;
 		font-weight: 800;
-		margin: 0 0 0.75rem;
+		margin: 0 0 0.85rem;
 	}
 	.mp-page__lede {
-		font-size: 1.2rem;
+		font-size: clamp(1.12rem, 1.8vw, 1.28rem);
 		color: var(--mp-muted);
 		margin: 0;
+		line-height: 1.55;
+		max-width: 44rem;
 	}
 	.mp-prose { max-width: 48rem; }
+	/* H2s carry a short leading accent bar instead of a templated eyebrow. */
 	.mp-prose :global(h2) {
-		font-size: 1.5rem;
-		margin: 2.5rem 0 0.75rem;
-		letter-spacing: -0.01em;
+		position: relative;
+		font-size: clamp(1.4rem, 2.4vw, 1.6rem);
+		margin: clamp(2.5rem, 4vw, 3rem) 0 0.85rem;
+		letter-spacing: -0.015em;
+		padding-left: 1rem;
 	}
-	.mp-prose :global(h3) { font-size: 1.2rem; margin: 1.75rem 0 0.5rem; }
+	.mp-prose :global(h2)::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0.18em;
+		bottom: 0.18em;
+		width: 3px;
+		border-radius: 999px;
+		background: linear-gradient(var(--mp-brand), color-mix(in srgb, var(--mp-accent2) 80%, var(--mp-brand)));
+	}
+	.mp-prose :global(h3) { font-size: 1.2rem; margin: 1.75rem 0 0.5rem; letter-spacing: -0.01em; }
 	.mp-prose :global(p),
 	.mp-prose :global(li) { color: color-mix(in srgb, var(--mp-ink) 90%, var(--mp-canvas)); }
+	.mp-prose :global(li) { margin-bottom: 0.35rem; }
+	/* List markers take the tertiary accent (links/data role). */
+	.mp-prose :global(ul) { padding-left: 1.2rem; }
+	.mp-prose :global(li)::marker { color: var(--mp-accent3-deep); }
+	:root[data-theme="dusk"] .mp-prose :global(li)::marker { color: var(--mp-accent3); }
+	.mp-prose :global(strong) { color: var(--mp-ink); font-weight: 700; }
 	/* Prose links are underlined so they don't rely on colour alone
-	   (WCAG 1.4.1 / axe link-in-text-block — same rule as the docs). */
+	   (WCAG 1.4.1 / axe link-in-text-block, same rule as the docs). */
 	.mp-prose :global(a) {
 		color: var(--mp-link);
 		font-weight: 500;
@@ -57,48 +90,80 @@ const { title, description, activePath, lede } = Astro.props;
 		text-underline-offset: 0.15em;
 	}
 	.mp-prose :global(a:hover) { color: var(--mp-link-hover); }
+	/* Reference tables: a rounded hairline enclosure with a tinted header and
+	   light row dividers (no hard border on every cell, none on the last row). */
 	.mp-prose :global(table) {
 		width: 100%;
-		border-collapse: collapse;
-		margin: 1.25rem 0;
+		border-collapse: separate;
+		border-spacing: 0;
+		margin: 1.5rem 0;
 		font-size: 0.95rem;
+		border: 1px solid var(--mp-hair);
+		border-radius: var(--mp-radius);
+		overflow: hidden;
+		box-shadow: inset 0 1px 0 var(--mp-hair);
 	}
 	.mp-prose :global(th),
 	.mp-prose :global(td) {
 		text-align: left;
-		padding: 0.6rem 0.8rem;
-		border-bottom: 1px solid var(--mp-edge);
+		padding: 0.7rem 0.9rem;
 		vertical-align: top;
 	}
-	.mp-prose :global(th) { background: var(--mp-cap); font-weight: 700; }
+	.mp-prose :global(td) { border-top: 1px solid var(--mp-hair); }
+	.mp-prose :global(thead th) {
+		background: var(--mp-cap);
+		font-weight: 700;
+		font-size: 0.72rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--mp-link);
+	}
+	.mp-prose :global(tbody tr:hover td) { background: color-mix(in srgb, var(--mp-brand) 5%, transparent); }
 	.mp-prose :global(code) {
 		font-family: var(--font-mono, monospace);
-		background: color-mix(in srgb, var(--mp-brand) 9%, var(--mp-panel));
-		border: 1px solid var(--mp-hair);
-		padding: 0.12em 0.35em;
-		border-radius: 4px;
-		font-size: 0.9em;
+		background: color-mix(in srgb, var(--mp-accent3) 11%, var(--mp-panel));
+		border: 1px solid color-mix(in srgb, var(--mp-accent3) 22%, var(--mp-hair));
+		padding: 0.12em 0.38em;
+		border-radius: 5px;
+		font-size: 0.88em;
+		color: var(--mp-ink);
 	}
 	/* Banners: draft = amber (the "attention/current" accent), info = the
-	   mood's partner accent — tints over panel, text tokens computed for AA. */
+	   mood's partner accent. Tints over panel, text tokens computed for AA. */
 	.mp-prose :global(.mp-banner),
 	:global(.mp-page__head .mp-banner) {
+		position: relative;
 		border-radius: var(--mp-radius);
-		padding: 0.85rem 1.1rem;
+		padding: 0.9rem 1.15rem 0.9rem 1.3rem;
 		font-weight: 600;
+		overflow: hidden;
 	}
-	.mp-prose :global(.mp-banner) { margin: 1.25rem 0 0; }
-	:global(.mp-page__head .mp-banner) { margin-top: 1.25rem; }
+	/* Edge-lit left bar on banners (accent-coded). */
+	.mp-prose :global(.mp-banner)::before,
+	:global(.mp-page__head .mp-banner)::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		width: 3px;
+	}
+	.mp-prose :global(.mp-banner) { margin: 1.5rem 0 0; }
+	:global(.mp-page__head .mp-banner) { margin-top: 1.5rem; }
 	.mp-prose :global(.mp-banner--draft),
 	:global(.mp-page__head .mp-banner--draft) {
 		background: color-mix(in srgb, var(--mp-accent) 14%, var(--mp-panel));
 		border: 1px solid color-mix(in srgb, var(--mp-accent) 50%, transparent);
 		color: var(--mp-banner-draft-fg);
 	}
+	.mp-prose :global(.mp-banner--draft)::before,
+	:global(.mp-page__head .mp-banner--draft)::before { background: var(--mp-accent); }
 	.mp-prose :global(.mp-banner--info),
 	:global(.mp-page__head .mp-banner--info) {
 		background: color-mix(in srgb, var(--mp-accent2) 12%, var(--mp-panel));
 		border: 1px solid color-mix(in srgb, var(--mp-accent2) 45%, transparent);
 		color: var(--mp-banner-info-fg);
 	}
+	.mp-prose :global(.mp-banner--info)::before,
+	:global(.mp-page__head .mp-banner--info)::before { background: var(--mp-accent2); }
 </style>
