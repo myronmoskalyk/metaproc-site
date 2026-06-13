@@ -17,6 +17,22 @@ missed a warm-light-only regression where the `--mp-link` text token `#0A7A68` m
 text token to `#097264`; see PROJECT_LOG.) Lighthouse **/** 99/100/100/100 (LCP 1.81 s, CLS 0)
 · **/features** 99/100/100/100 (LCP 1.96 s, CLS 0).
 
+**Premium overhaul 2026-06-13 (commits d4768c4, f45c0b6, e4a7489):** every section below the
+hero and all 6 content pages + the footer are now rebuilt to the hero's bar. Homepage de-boxed
+into 6+ distinct layout families (timeline / asymmetric bento / offset glass band / editorial
+numbered stack / dark hairline-row methods / two-column docs+FAQ); footer is a brand block +
+grouped hairline nav; `PageLayout` carries a brand rule, accent-barred headings, reshaped
+hairline-enclosure tables, tertiary code and `.mp-reveal`; `features.astro` is numbered editorial
+groups + framed shots + a 2-col accent feature grid. Every em-dash and separator en-dash is gone
+from all visible copy (rendered marketing HTML = 0; only the out-of-scope `content/docs/**` still
+has them). Role-locked accents applied throughout (amber active, violet/coral secondary, electric
+blue/sky data+links+focus), each at its computed AA tier. Gates re-run: **build green (11 pages);
+in-page axe 0 violations, all rules, both moods, all 7 marketing routes** (the authoritative
+gate); Lighthouse **/** 100/100 perf+a11y (LCP 1.7 s, CLS 0), **/features** 99/100 (LCP 1.8 s,
+CLS 0). The `@axe-core/cli` selenium runner still over-reports `color-contrast` on aurora-backed
+text in both the baseline and now (chromedriver over-samples the gradient); the in-page method
+and computed worst-case both pass. See the PROJECT_LOG redesign entry.
+
 **Remaining before public:**
 1. **Recapture proof assets** — **DONE 2026-06-13** for the six screenshots + the poster
    frame: `src/assets/proof/hero-app-overview.png`, `workflow-store.png`, `plots-studio.png`,

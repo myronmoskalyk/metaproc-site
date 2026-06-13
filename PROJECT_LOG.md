@@ -153,3 +153,50 @@ contradicting it.
   `sync-docs.mjs` re-runs — unchanged here.
 - `npm run build` **green: 11 pages**, all proof assets resolve (the AVIF/WebP variants were
   re-derived from the new PNGs — "before" sizes in the build log match the recaptured files).
+
+## [2026-06-13] redesign | Premium overhaul of every page below the hero + all content pages
+Brought the rest of the marketing site up to the rebuilt hero's bar (the hero, the 3-accent
+tokens, the glass island nav and the premium utilities were already done at cf17f8d). Three
+commits:
+- **d4768c4 homepage below the hero.** Replaced the two skill-banned 3-equal-card rows and the
+  generic tour grid with distinct layout families (no family repeats; 6+ across the page):
+  How-it-works is now a **vertical connected timeline** (gradient number nodes on a teal-fading
+  rail); the workspace tour is an **asymmetric bento** (wide code-panel feature tile + a 2x2
+  grid, each shot edge-lit and hover-lifted); See-it-run is an **offset glass band**; the
+  audiences are an **editorial numbered stack** with hairline separators and role-locked accent
+  index numbers (01 teal / 02 coral / 03 sky); the methods band keeps the dark code anchor but
+  the engines became **hairline rows** (mono name + role) instead of chips; docs + FAQ became a
+  **two-column** sticky docs-rail + accordion. Added `.mp-reveal` with staggered delays on every
+  block, double-bezel on the overview shot, button-in-button trailing icons on the section CTAs.
+  Cut the over-used eyebrows to the rationed allowance (hero + 2). Audience/feature index numbers
+  sized to the **AA large-text floor** (>=24px bold) so coral/sky/violet -deep clear 3:1 on
+  canvas in both moods (computed light: coral 4.00, sky 3.60; dusk: violet 3.80, elec 5.10). The
+  docs rail switched from `<aside>` to `<div>` to clear `landmark-complementary-is-top-level`.
+- **f45c0b6 footer + content pages.** Footer rebuilt into a brand block + grouped hairline nav
+  columns with an edge-lit top hairline (no flat link row); all original destinations preserved,
+  product/docs links added. Shared `PageLayout` lifted: brand-gradient rule above each title,
+  accent-barred section headings, reference tables reshaped into rounded hairline enclosures with
+  tinted uppercase headers (`--mp-link`, computed 5.14 light / 6.63 dusk) and light row dividers,
+  tertiary-tinted inline code (ink on it 14.4 / 13.0), edge-lit banners, `.mp-reveal` on prose.
+  `features.astro` reshaped into numbered editorial groups (role-locked accents), framed hover
+  screenshots, and a 2-col accent-bulleted feature grid (no plain `<ul>`). `changelog.astro` got
+  a left-bordered release block with accent-marked highlight rows.
+- **e4a7489 em-dash sweep.** Removed every em-dash and separator en-dash from all visible copy on
+  every page/component (ledes, body, meta + OG descriptions, banners, captions, alt text, engine
+  roles), and from the non-rendered comments in the .astro files and `global.css`. **Rendered
+  HTML for all 7 marketing pages now contains zero em or en dashes**; the only remaining
+  occurrences in `src/` are the out-of-scope Starlight docs (`content/docs/**`).
+
+**Gates.** `npm run build` green (11 pages) before each commit. Accessibility verified the same
+way the project's baseline was set: **axe-core in-page (puppeteer-core + system Chrome), all
+rules, both moods, all 7 marketing routes = 0 violations** (this is the authoritative gate; it
+composites the fixed aurora the way real browsers do). Lighthouse: **/** Perf 100 / A11y 100
+(LCP 1.7 s, CLS 0), **/features** Perf 99 / A11y 100 (LCP 1.8 s, CLS 0). NOTE: the
+`@axe-core/cli` selenium runner (`npx axe ./dist`) reports phantom `color-contrast` flags on
+text over the aurora in BOTH the pre-work baseline and now (e.g. /download 10, h1/lede/banner/
+prose) because chromedriver over-samples the radial-gradient saturation; computed worst-case
+over the densest aurora centre still clears AA (prose body 9.4-10.2, links 4.55-4.90, only
+`--mp-muted` on the densest emerald centre dips to 4.44 at a pixel text never lands on), and the
+in-page method reports 0. Treated as the documented tooling artifact, not a regression. CLS 0
+confirms the bento/timeline/reveal add no layout shift; `.mp-reveal` animates transform/opacity
+only and is killed under reduced-motion globally.
