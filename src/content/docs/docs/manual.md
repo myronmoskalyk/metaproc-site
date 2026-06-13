@@ -8,7 +8,7 @@ description: Full MetaProc capability inventory, synced from the app repository.
      .exe / desktop menu) are filtered out for the web docs. -->
 
 :::note
-This page is **generated** from the MetaProc app repository (last synced 2026-06-11).
+This page is **generated** from the MetaProc app repository (last synced 2026-06-13).
 Do not edit it here — changes will be overwritten. Update `PRODUCT_MANUAL.md` in the
 app repo and re-run `scripts/sync-docs.mjs`.
 :::
@@ -60,7 +60,7 @@ caveats) which are rendered HTML summaries rather than re-runnable code.
 Motion (inter-tab transitions, plot-render shimmer loaders, value-box count-up) is gated behind
 `prefers-reduced-motion`. Icon-only controls and the ⓘ info-tips carry ARIA labels and are
 keyboard-operable (Enter/Space); slide-out panels are `role="dialog"`; focus shows a consistent
-`:focus-visible` ring. Body text meets WCAG-AA contrast on the violet theme. A navbar
+`:focus-visible` ring. Body text meets WCAG-AA contrast on the Orbital theme. A navbar
 **colourblind-safe** switch swaps the plot palette — the static forest (study squares/CIs) and
 funnel contour shading, the ggiraph forest/funnel, the EDA plots (distributions / missingness /
 correlations / by-group / scatter), SWiM harvest, PRISMA flow, and leave-one-out — to the Okabe–Ito set. A navbar **light/dark toggle** recolours the **entire** UI (page canvas, sidebars, cards, panels, tables, chips, inputs) via a scoped `[data-bs-theme="dark"]` palette with a reduced-motion-safe crossfade, while plots keep a white publication "paper"; the UI font is a modern sans-serif with a robust offline fallback (never a browser serif). (A full axe/Lighthouse + screen-reader audit is still recommended.) A **first-run guided
@@ -97,9 +97,20 @@ info-panel** (102 plain-language term definitions opened by ⓘ icons — the mo
 across tabs); scroll-down cue; keyboard nav (Ctrl+←/→ cycle tabs, Backspace
 back / Shift+Backspace forward).
 
-**Theme** (`app_theme.R`): Bootstrap 5, primary violet `#7C3AED`, secondary blue
-`#2563EB`, lavender canvas `#E9E3F6`; fonts **Inter** (UI) + **IBM Plex Mono**
-(code panels, dark `#14101F` with neon-purple text).
+**Theme** (`app_theme.R` + `inst/app/www/custom.css`): Bootstrap 5 in the **"Orbital"**
+brand (teal → emerald; see `C:\dev\metaproc-deploy\design\BRAND.md`, the locked source of
+truth). Primary is an AA-safe deep teal `#0A7A68`; secondary a muted slate `#5B6877`;
+amber-deep `#D97706` is the on-brand warning accent. The default **warm-light** mood uses a
+warm parchment canvas `#F3F0E9` (deliberately never pure white) with soft teal/emerald radial
+tints and a dark blue-slate ink `#19222C`; the navbar light/dark toggle switches to **deep
+dusk** (canvas `#060A11`, dusk surfaces `#141C25`/`#18222B`) scoped under
+`[data-bs-theme="dark"]`. Two mood-paired accents (shared amber + a partner — violet in dusk,
+coral in light) carry active-state and informational highlights. Code/results panels stay a
+dark navy (`#0D141B` bg, teal-tinted `#9FE8DC` text) in **both** moods as a contrast anchor.
+Fonts **Inter** (UI + headings) + **IBM Plex Mono** (code). All decorative motion respects
+`prefers-reduced-motion` and the in-app Motion toggle. The plot palette (`mp_plot_palette()`)
+follows suit — teal `#0E9F8E` / deep teal `#0A7A68` / amber `#E08A00` — while the
+colourblind-safe **Okabe–Ito** palette is unchanged.
 
 ---
 
@@ -343,6 +354,68 @@ cluster design-effect SE adjustment are now covered — see above).
 
 These are advisory/navigational — Plan/Guide do not themselves fit models, but the
 worked-example buttons drive a real analysis on Templates/Network.
+
+### 5.8 Review progress stepper (Home)
+A slim horizontal pipeline on the Home tab — **Protocol → Data → Analyses → GRADE →
+Report** — that shows, at a glance, how far the current review has progressed. It is
+purely additive and **read-only**: the status is derived from the existing in-session
+stores (no new persistent state, no computation), so it changes no analysis numbers
+and is golden-safe. The strip persists with a project `.rds` exactly as much as the
+session state it reflects.
+
+- **Status derivation** lives in `mp_stepper_status()` (`fct_stepper.R`), a pure
+  function (no Shiny) that reads the same state the Summary-of-Findings table does:
+  the review protocol (Plan), the active data, the outcomes list, the workflow store,
+  per-outcome GRADE ratings, and the report blocks. Each step resolves to one of
+  *done* / *now* (the single active frontier) / *todo*, plus a short status line —
+  e.g. "Scope set", "28 studies · 3 outcomes", "2 of 3 run", "1 of 3 rated", "Not
+  started". With no outcomes defined yet, Analyses degrades to "any analysis run?" and
+  GRADE reads "Needs outcomes".
+- **Navigation**: each step is a real `<button>` that jumps to its tab (Protocol →
+  Plan, Analyses → Templates, etc.) via the same Home `goto` path every other Home
+  button uses, so it reaches menu-nested panes (GRADE, Report) by their stable pane
+  value.
+- **Styling / a11y** (`.mp-stepper` in `custom.css`, Orbital skin): brand-gradient
+  done dots and connectors, an amber active dot with a beating glow ring; per-step
+  `aria-label` carrying the status, `aria-current="step"` on the active step, the
+  shared `:focus-visible` ring, and every animation disabled under
+  `prefers-reduced-motion`.
+
+### 5.9 Recent projects (Home, on-device)
+A "pick up where you left off" list on the Home tab — saved/opened projects shown
+as cards (a hexagonal initial badge, the project name, a meta line, and a relative
+time). It is **client-side only** (decision B4 option (a)): the list lives in the
+browser's `localStorage` under `mp-recent-projects`, **never on the server**, so it
+adds no data-at-rest, no backups, and no privacy-policy obligations. The card
+carries the honest limitation in its copy and an explicit privacy line — *"Stored
+only in this browser — never uploaded to the server."* (the same wording the portal
+uses; the two share this localStorage key, which the portal reads read-only).
+
+- **What gets recorded** — after a *successful* project **save** or **load**,
+  `mod_home` sends the client a small metadata record via
+  `session$sendCustomMessage("mp-recent-project", …)`: the project name (the review
+  protocol's title if set, else the active dataset, else a generic fallback), the
+  study count *k* (rows of the active data), the analysis kind (the latest analysis
+  item's measure label, when known), and an ISO-8601 timestamp. The record is built
+  by the **pure** `mp_recent_project_meta()` (`fct_recents.R`) from cheap reads of
+  existing in-session state — no model is fitted and **the save/load logic itself is
+  not touched**; the notification is appended only after success, so a rejected
+  (foreign) `.rds` records nothing.
+- **The list** (`metaproc.js`) — keeps the newest 8 entries, newest first, deduped
+  by name (case-insensitive). Because a browser **cannot re-read a file path**
+  (a hard security boundary), clicking a recent card re-opens the existing
+  *Load project* file dialog (a real `.click()` on the file input, inside the user
+  gesture) and shows a small hint — *"Re-select <name>.rds"* — so reopening is one
+  click but the user still chooses the file. A clean empty state shows when the list
+  is empty, and a server-rendered fallback keeps the card sensible without JS.
+- **Scope** — purely additive chrome; it works identically in **desktop and web
+  mode** (no `METAPROC_MODE` gating) and changes no analysis numbers (golden-safe).
+- **Styling / a11y** (`.mp-recent-*` in `custom.css`, Orbital skin): each card is a
+  real `<button>` (so it carries the shared ripple and `:focus-visible` ring) with a
+  descriptive `aria-label`; the hint toast is an `aria-live` status; the hexagonal
+  badge is the brand mark's shape (decorative, `aria-hidden`); colours ride on
+  `--mp-*` tokens so the card reads in both warm-light and deep-dusk, and all motion
+  is disabled under `prefers-reduced-motion`.
 
 ---
 
