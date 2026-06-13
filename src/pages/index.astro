@@ -13,16 +13,21 @@ import shotCodePanel from '../assets/proof/code-panel.png';
 const steps = [
 	{
 		n: '1',
+		title: 'Plan',
+		body: "Frame your review first: the question, the studies you'll include, and the analyses you intend to run.",
+	},
+	{
+		n: '2',
 		title: 'Import',
 		body: 'Upload a CSV or Excel workbook, or load a bundled example. MetaProc detects headers and flags duplicate or out-of-range studies as you go.',
 	},
 	{
-		n: '2',
+		n: '3',
 		title: 'Analyze',
 		body: 'Choose a template, map your columns, and run. Forest and funnel plots, heterogeneity, subgroups, and sensitivity analyses appear instantly.',
 	},
 	{
-		n: '3',
+		n: '4',
 		title: 'Report',
 		body: 'Build a reproducible report with a GRADE summary, then export a bundle that re-runs in a clean R session and reproduces your pooled estimate.',
 	},
@@ -121,7 +126,7 @@ const faqs = [
 	<section class="section how" aria-labelledby="how">
 		<div class="mp-container">
 			<header class="lede mp-reveal">
-				<h2 id="how" class="section__title">A blank workspace to a defensible report, in three moves.</h2>
+				<h2 id="how" class="section__title">A blank workspace to a defensible report, in four moves.</h2>
 			</header>
 			<div class="how__grid">
 				<ol class="timeline">
