@@ -4,7 +4,7 @@ import ForestPlot from '../components/ForestPlot.astro';
 import ProofAsset from '../components/ProofAsset.astro';
 
 // Real screenshots from the live Orbital app (recaptured 2026-06-13 from the
-// native app on 127.0.0.1:7991 — teal/amber Orbital UI, not the old violet era).
+// native app on 127.0.0.1:7991, teal/amber Orbital UI, not the old violet era).
 import shotAppOverview from '../assets/proof/hero-app-overview.png';
 import shotWorkflowStore from '../assets/proof/workflow-store.png';
 import shotPlotsStudio from '../assets/proof/plots-studio.png';
@@ -16,7 +16,7 @@ const steps = [
 	{
 		n: '1',
 		title: 'Import',
-		body: 'Upload a CSV or Excel workbook — or load a bundled example. MetaProc detects headers, flags duplicate study IDs, and runs biological-range and consistency checks as you go.',
+		body: 'Upload a CSV or Excel workbook, or load a bundled example. MetaProc detects headers, flags duplicate study IDs, and runs biological-range and consistency checks as you go.',
 	},
 	{
 		n: '2',
@@ -30,46 +30,57 @@ const steps = [
 	},
 ];
 
+// Bento tour: the code panel leads as a wide feature tile (it carries the
+// product's whole thesis), the rest fall into a rhythmic asymmetric grid.
 const tour = [
+	{
+		image: shotCodePanel,
+		alt: 'Live R code panel: a metafor script with escalc effect-size, rma model, forest and funnel calls beside the raw random-effects model output it produced.',
+		title: 'Live R code panel',
+		caption: 'Every analysis shows the exact R it ran, metafor calls included. Copy it, audit it, re-run it.',
+		feature: true,
+	},
 	{
 		image: shotWorkflowStore,
 		alt: 'MetaProc home screen with the Workflow panel open on the right, holding a saved risk-ratio analysis with buttons to send it to the Plots studio or the Report.',
-		caption: 'Workflow store — every result you collect across tabs, reorderable and sendable to Plots or Report, saved with your project.',
+		title: 'Workflow store',
+		caption: 'Every result you collect across tabs, reorderable and sendable to Plots or Report, saved with your project.',
 	},
 	{
 		image: shotPlotsStudio,
 		alt: 'Plots studio: a ten-study forest plot of risk ratios with a random-effects pooled estimate of 0.69, plot-type and drawing-engine controls on the left, and a Reproducible R panel underneath.',
-		caption: 'Plots studio — forest & funnel plots re-drawn from your saved analysis, with the exact R that drew the preview shown beneath.',
+		title: 'Plots studio',
+		caption: 'Forest and funnel plots re-drawn from your saved analysis, with the exact R that drew the preview shown beneath.',
 	},
 	{
 		image: shotReportBuilder,
 		alt: 'Reproducible report builder with checkboxes for methods, PRISMA flow, included studies, pooled result, forest plot, heterogeneity, reproducible code and packages used, plus HTML, PDF and R Markdown output formats.',
-		caption: 'Report builder — choose sections, export HTML / PDF / .Rmd, or download a reproducibility bundle that re-runs anywhere.',
+		title: 'Report builder',
+		caption: 'Choose sections, export HTML, PDF or .Rmd, or download a reproducibility bundle that re-runs anywhere.',
 	},
 	{
 		image: shotGradeSof,
-		alt: 'GRADE certainty-of-evidence form with the five downgrade domains — risk of bias, inconsistency, indirectness, imprecision, publication bias — and suggestions derived from the live analysis.',
-		caption: 'GRADE — rate certainty across the five domains, with suggestions pre-filled from your own analysis.',
-	},
-	{
-		image: shotCodePanel,
-		alt: 'Live R code panel: a metafor script with escalc effect-size, rma model, forest and funnel calls beside the raw random-effects model output it produced.',
-		caption: 'Live R code panel — every analysis shows the exact R it ran, metafor calls included. Copy it, audit it, re-run it.',
+		alt: 'GRADE certainty-of-evidence form with the five downgrade domains (risk of bias, inconsistency, indirectness, imprecision, publication bias) and suggestions derived from the live analysis.',
+		title: 'GRADE',
+		caption: 'Rate certainty across the five domains, with suggestions pre-filled from your own analysis.',
 	},
 ];
 
 const audiences = [
 	{
+		n: '01',
 		title: 'Clinical researchers',
-		body: 'Run a defensible pairwise or network meta-analysis without writing R. RoB 2 / ROBINS-I / QUADAS-2, GRADE, and PRISMA flow are built in.',
+		body: 'Run a defensible pairwise or network meta-analysis without writing R. RoB 2, ROBINS-I, QUADAS-2, GRADE, and PRISMA flow are built in.',
 	},
 	{
-		title: 'Students & educators',
-		body: 'Learn by doing: guided tour, one-click worked examples, and a plain-language interpretation on every result. The generated R is a teaching tool in itself.',
+		n: '02',
+		title: 'Students and educators',
+		body: 'Learn by doing: a guided tour, one-click worked examples, and a plain-language interpretation on every result. The generated R is a teaching tool in itself.',
 	},
 	{
+		n: '03',
 		title: 'Methodologists',
-		body: 'Three-level models, cluster-robust SEs, meta-regression, trim-and-fill, leave-one-out and influence diagnostics — with the exact code captured for every step.',
+		body: 'Three-level models, cluster-robust SEs, meta-regression, trim-and-fill, leave-one-out and influence diagnostics, with the exact code captured for every step.',
 	},
 ];
 
@@ -80,11 +91,11 @@ const faqs = [
 	},
 	{
 		q: 'Is my data private?',
-		a: 'Analyses run in ephemeral, RAM-backed isolated containers hosted in the EU and destroyed at the end of your session. Please do not upload patient-level identifiable data — MetaProc works on the aggregate, study-level data a meta-analysis needs.',
+		a: 'Analyses run in ephemeral, RAM-backed isolated containers hosted in the EU and destroyed at the end of your session. Please do not upload patient-level identifiable data; MetaProc works on the aggregate, study-level data a meta-analysis needs.',
 	},
 	{
 		q: 'Can I see the code my analysis ran?',
-		a: 'Yes — that is the whole point. Every model, table, and figure is produced by building R code from your choices, running that exact code, and showing you the same text in a copyable panel. What you see is what ran.',
+		a: 'Yes, that is the whole point. Every model, table, and figure is produced by building R code from your choices, running that exact code, and showing you the same text in a copyable panel. What you see is what ran.',
 	},
 	{
 		q: 'Web or desktop?',
@@ -92,7 +103,7 @@ const faqs = [
 	},
 	{
 		q: 'How do I cite it?',
-		a: 'A citation and the exact package versions ship in every report and reproducibility bundle (via sessionInfo() and renv.lock), so your write-up names metaproc and the underlying engines — metafor, netmeta and friends — with the versions you actually used.',
+		a: 'A citation and the exact package versions ship in every report and reproducibility bundle (via sessionInfo() and renv.lock), so your write-up names metaproc and the underlying engines (metafor, netmeta and friends) with the versions you actually used.',
 	},
 	{
 		q: 'What is the license?',
@@ -137,83 +148,115 @@ const faqs = [
 		</div>
 	</section>
 
-	<!-- ===================== HOW IT WORKS ===================== -->
-	<section class="section" aria-labelledby="how">
+	<!-- ===================== HOW IT WORKS (vertical connected timeline) ======= -->
+	<section class="section how" aria-labelledby="how">
 		<div class="mp-container">
-			<h2 id="how" class="section__title">How it works</h2>
-			<ol class="steps">
-				{steps.map((s) => (
-					<li class="step mp-panel mp-panel--bracket mp-panel--lift">
-						<span class="step__n" aria-hidden="true">{s.n}</span>
-						<h3>{s.title}</h3>
-						<p>{s.body}</p>
+			<header class="lede mp-reveal">
+				<p class="mp-eyebrow">How it works</p>
+				<h2 id="how" class="section__title">Three moves, blank workspace to defensible report.</h2>
+			</header>
+			<ol class="timeline">
+				{steps.map((s, i) => (
+					<li class="tl mp-reveal" style={`--mp-reveal-delay:${i * 0.09}s`}>
+						<div class="tl__rail" aria-hidden="true">
+							<span class="tl__n">{s.n}</span>
+						</div>
+						<div class="tl__body">
+							<h3>{s.title}</h3>
+							<p>{s.body}</p>
+						</div>
 					</li>
 				))}
 			</ol>
-			<div class="how__shot">
-				<ProofAsset
-					image={shotAppOverview}
-					alt="MetaProc home screen: a welcome banner with Start: import your data and Plan my analysis buttons, above a five-step Your workflow strip — import data, explore (EDA), run an analysis, plan a pipeline, build a report."
-					caption="The home screen mirrors those steps — import, explore, analyze, pipeline, report — and your whole project saves to a file you can reload later."
-					sizes="(min-width: 78rem) 72rem, 96vw"
-					widths={[800, 1200, 1600, 2000]}
-				/>
-			</div>
+			<figure class="how__shot mp-bezel mp-reveal" style="--mp-reveal-delay:.12s">
+				<div class="mp-bezel__core how__shotcore">
+					<ProofAsset
+						image={shotAppOverview}
+						alt="MetaProc home screen: a welcome banner with Start: import your data and Plan my analysis buttons, above a five-step Your workflow strip (import data, explore (EDA), run an analysis, plan a pipeline, build a report)."
+						caption="The home screen mirrors those steps (import, explore, analyze, pipeline, report) and your whole project saves to a file you can reload later."
+						sizes="(min-width: 78rem) 68rem, 94vw"
+						widths={[800, 1200, 1600, 2000]}
+					/>
+				</div>
+			</figure>
 		</div>
 	</section>
 
-	<!-- ===================== FEATURE TOUR ===================== -->
-	<section class="section section--tint" aria-labelledby="tour">
+	<!-- ===================== FEATURE TOUR (asymmetric bento with rhythm) ====== -->
+	<section class="section section--tint tour" aria-labelledby="tour">
 		<div class="mp-container">
-			<h2 id="tour" class="section__title">A tour of the workspace</h2>
-			<p class="section__lead">
-				Every surface in MetaProc — from the workflow store to the live R code panel.
-			</p>
-			<div class="tour__grid">
-				{tour.map((t) => (
-					<ProofAsset image={t.image} alt={t.alt} caption={t.caption} />
+			<header class="tour__head mp-reveal">
+				<h2 id="tour" class="section__title">A tour of the workspace</h2>
+				<a class="tour__more" href="/features">
+					See the full feature tour
+					<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3l5 5-5 5"/></svg>
+				</a>
+			</header>
+			<div class="bento">
+				{tour.map((t, i) => (
+					<figure class={`bento__cell mp-reveal${t.feature ? ' bento__cell--feature' : ''}`} style={`--mp-reveal-delay:${i * 0.07}s`}>
+						<div class="bento__shot">
+							<ProofAsset
+								image={t.image}
+								alt={t.alt}
+								sizes={t.feature ? '(min-width: 64rem) 44rem, 92vw' : '(min-width: 64rem) 22rem, 92vw'}
+								widths={[480, 800, 1200, 1600]}
+							/>
+						</div>
+						<figcaption class="bento__cap">
+							<span class="bento__title">{t.title}</span>
+							<span class="bento__text">{t.caption}</span>
+						</figcaption>
+					</figure>
 				))}
 			</div>
-			<p class="section__more"><a href="/features">See the full feature tour →</a></p>
 		</div>
 	</section>
 
-	<!-- ===================== DEMO TEASER ===================== -->
+	<!-- ===================== DEMO TEASER (offset editorial band) ============== -->
 	<section class="section demo-teaser" aria-labelledby="demo-teaser-title">
-		<div class="mp-container demo-teaser__inner">
-			<div>
-				<h2 id="demo-teaser-title" class="section__title">See it run</h2>
-				<p>
-					A 73-second screen capture from the live app: a worked binary-outcome example
-					pools ten trials, gets a GRADE rating, and exports a reproducible report.
-				</p>
-			</div>
-			<a class="mp-cta mp-cta--outline" href="/features#demo">
-				<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M4 2.5v11l9-5.5-9-5.5z"/></svg>
-				Watch the demo
-			</a>
-		</div>
-	</section>
-
-	<!-- ===================== AUDIENCE CARDS ===================== -->
-	<section class="section" aria-labelledby="who">
 		<div class="mp-container">
-			<h2 id="who" class="section__title">Built for the people who do the work</h2>
-			<div class="cards">
-				{audiences.map((a) => (
-					<article class="card mp-panel mp-panel--bracket mp-panel--lift">
-						<h3>{a.title}</h3>
-						<p>{a.body}</p>
-					</article>
-				))}
+			<div class="demo-teaser__inner mp-island mp-reveal">
+				<div class="demo-teaser__copy">
+					<h2 id="demo-teaser-title" class="section__title">See it run</h2>
+					<p>
+						A 73-second screen capture from the live app: a worked binary-outcome example
+						pools ten trials, gets a GRADE rating, and exports a reproducible report.
+					</p>
+				</div>
+				<a class="mp-cta demo-teaser__cta" href="/features#demo">
+					Watch the demo
+					<span class="mp-cta__ico" aria-hidden="true">
+						<svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11l9-5.5-9-5.5z"/></svg>
+					</span>
+				</a>
 			</div>
 		</div>
 	</section>
 
-	<!-- ===================== METHODS ===================== -->
-	<section class="section section--code" aria-labelledby="methods">
+	<!-- ===================== AUDIENCE (editorial numbered stack, hairlines) === -->
+	<section class="section who" aria-labelledby="who">
+		<div class="mp-container">
+			<header class="lede mp-reveal">
+				<h2 id="who" class="section__title">Built for the people who do the work</h2>
+			</header>
+			<ul class="rolelist">
+				{audiences.map((a, i) => (
+					<li class={`role role--a${i + 1} mp-reveal`} style={`--mp-reveal-delay:${i * 0.08}s`}>
+						<span class="role__n" aria-hidden="true">{a.n}</span>
+						<h3 class="role__title">{a.title}</h3>
+						<p class="role__body">{a.body}</p>
+					</li>
+				))}
+			</ul>
+		</div>
+	</section>
+
+	<!-- ===================== METHODS (dark code anchor, split) ================ -->
+	<section class="section section--code methods-sec" aria-labelledby="methods">
 		<div class="mp-container methods">
-			<div>
+			<div class="methods__copy mp-reveal">
+				<p class="mp-eyebrow mp-eyebrow--code">Validated, not improvised</p>
 				<h2 id="methods" class="section__title section__title--light">Methods you can defend</h2>
 				<p class="methods__lead">
 					MetaProc does not reinvent the statistics. It drives the same gold-standard R
@@ -221,59 +264,71 @@ const faqs = [
 					of <strong>2,600+ automated tests</strong> checks that every result matches the
 					reference engine, byte for byte.
 				</p>
-				<a class="mp-cta mp-cta--light" href="/methods">How we validate</a>
+				<a class="mp-cta mp-cta--light" href="/methods">
+					How we validate
+					<span class="mp-cta__ico mp-cta__ico--dark" aria-hidden="true">
+						<svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l5 5-5 5"/></svg>
+					</span>
+				</a>
 			</div>
-			<ul class="engines" aria-label="Underlying engines">
-				<li>metafor</li>
-				<li>netmeta</li>
-				<li>meta</li>
-				<li>robvis</li>
-				<li>esc</li>
+			<ul class="engines mp-reveal" style="--mp-reveal-delay:.1s" aria-label="Underlying engines">
+				<li><span class="engines__name">metafor</span><span class="engines__role">pooling and diagnostics</span></li>
+				<li><span class="engines__name">netmeta</span><span class="engines__role">network meta-analysis</span></li>
+				<li><span class="engines__name">meta</span><span class="engines__role">reference dependency</span></li>
+				<li><span class="engines__name">robvis</span><span class="engines__role">risk-of-bias figures</span></li>
+				<li><span class="engines__name">esc</span><span class="engines__role">effect-size conversions</span></li>
 			</ul>
 		</div>
 	</section>
 
-	<!-- ===================== DOCS TEASER ===================== -->
-	<section class="section" aria-labelledby="docs-teaser">
-		<div class="mp-container docs-teaser">
-			<div>
-				<h2 id="docs-teaser" class="section__title">Read the docs</h2>
+	<!-- ===================== DOCS + FAQ (two-column: docs rail + accordion) === -->
+	<section class="section section--tint faqdocs" id="faq" aria-labelledby="faq-title">
+		<div class="mp-container faqdocs__grid">
+			<div class="docs-rail mp-panel mp-panel--bracket mp-reveal">
+				<h2 id="docs-teaser" class="docs-rail__title">Read the docs</h2>
 				<p>
 					New to meta-analysis or new to MetaProc? The Quickstart walks you from a blank
 					workspace to a finished forest plot, GRADE summary, and exported report in about
 					ten minutes.
 				</p>
+				<a class="mp-cta mp-cta--outline docs-rail__cta" href="/docs/quickstart">
+					Open the Quickstart
+					<span class="mp-cta__ico mp-cta__ico--ghost" aria-hidden="true">
+						<svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l5 5-5 5"/></svg>
+					</span>
+				</a>
 			</div>
-			<a class="mp-cta mp-cta--outline" href="/docs/quickstart">Open the Quickstart</a>
+			<div class="faq mp-reveal" style="--mp-reveal-delay:.08s">
+				<h2 id="faq-title" class="section__title faq__heading">Frequently asked</h2>
+				<div class="faq__list">
+					{faqs.map((f) => (
+						<details class="faq__item">
+							<summary>{f.q}</summary>
+							<div class="faq__answer"><p>{f.a}</p></div>
+						</details>
+					))}
+				</div>
+			</div>
 		</div>
 	</section>
 
-	<!-- ===================== FAQ ===================== -->
-	<section class="section section--tint" id="faq" aria-labelledby="faq-title">
-		<div class="mp-container faq">
-			<h2 id="faq-title" class="section__title">Frequently asked</h2>
-			<div class="faq__list">
-				{faqs.map((f) => (
-					<details class="faq__item">
-						<summary>{f.q}</summary>
-						<div class="faq__answer"><p>{f.a}</p></div>
-					</details>
-				))}
-			</div>
-		</div>
-	</section>
-
-	<!-- ===================== FINAL CTA ===================== -->
+	<!-- ===================== FINAL CTA (centered manifesto) =================== -->
 	<section class="section final-cta" aria-labelledby="final">
-		<div class="mp-container">
+		<div class="mp-container final-cta__inner mp-reveal">
 			<h2 id="final">Your next meta-analysis starts in the browser.</h2>
-			<a class="mp-cta mp-cta--lg" href="#" data-placeholder="app-url">Launch MetaProc free</a>
+			<p class="final-cta__sub">No install, no setup. Free while in beta.</p>
+			<a class="mp-cta mp-cta--lg" href="#" data-placeholder="app-url">
+				Launch MetaProc free
+				<span class="mp-cta__ico" aria-hidden="true">
+					<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l5 5-5 5"/></svg>
+				</span>
+			</a>
 		</div>
 	</section>
 </BaseLayout>
 
 <style>
-	/* Hero — transparent over the aurora canvas; rise entrance + shine heading. */
+	/* Hero: transparent over the aurora canvas; rise entrance + shine heading. */
 	.hero {
 		padding-block: clamp(3rem, 7vw, 5.5rem);
 	}
@@ -325,7 +380,7 @@ const faqs = [
 
 	/* Visual column: the ring lives BEHIND the panel and is contained within this
 	   column's own box (inset:0, pointer-events:none) so it can never overlap the
-	   launch CTA in the copy column — the reported bug. */
+	   launch CTA in the copy column (the reported bug). */
 	.hero__visual {
 		position: relative;
 		isolation: isolate;
@@ -376,12 +431,12 @@ const faqs = [
 	}
 
 	/* Generic section scaffolding */
-	.section { padding-block: clamp(3rem, 6vw, 5rem); }
+	.section { padding-block: clamp(3.25rem, 6.5vw, 5.5rem); }
 	.section--tint {
 		background: var(--mp-tint);
 		border-block: 1px solid var(--mp-hair);
 	}
-	/* Dark "code anchor" band — stays dusk in BOTH moods (BRAND §3). */
+	/* Dark "code anchor" band: stays dusk in BOTH moods (BRAND §3). */
 	.section--code {
 		background:
 			radial-gradient(60% 90% at 85% 10%, color-mix(in srgb, var(--mp-g2) 12%, transparent), transparent 60%),
@@ -390,140 +445,273 @@ const faqs = [
 	}
 	.section__title {
 		font-size: clamp(1.6rem, 3vw, 2.2rem);
-		letter-spacing: -0.01em;
-		margin: 0 0 0.5rem;
+		letter-spacing: -0.018em;
+		line-height: 1.12;
+		margin: 0;
+		max-width: 22ch;
 	}
 	.section__title--light { color: #EEF4FB; }
-	.section__lead, .section__more { color: var(--mp-muted); }
-	.section__lead { margin: 0 0 2rem; font-size: 1.05rem; }
-	.section__more { margin-top: 1.5rem; }
-	.section__more a { color: var(--mp-link); font-weight: 600; text-decoration: none; }
-	.section__more a:hover { text-decoration: underline; }
 
-	/* Steps */
-	.steps {
+	/* Section ledes (headline blocks) share one rhythm. */
+	.lede { margin-bottom: clamp(2rem, 4vw, 3rem); max-width: 44rem; }
+	.lede .section__title { margin-top: 0.35rem; }
+	.mp-eyebrow--code { color: var(--mp-accent); }
+
+	/* ---- How it works: vertical connected timeline ------------------------- */
+	.timeline {
 		list-style: none;
-		margin: 1.5rem 0 0;
+		margin: 0;
 		padding: 0;
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 1.5rem;
-		counter-reset: step;
+		gap: 0;
+		max-width: 46rem;
 	}
-	.step {
-		padding: 1.5rem;
+	.tl {
+		display: grid;
+		grid-template-columns: 3.4rem 1fr;
+		gap: 1.4rem;
+		padding-bottom: 2.2rem;
 	}
-	.step__n {
-		display: inline-flex;
-		align-items: center;
+	.tl:last-child { padding-bottom: 0; }
+	.tl__rail {
+		position: relative;
+		display: flex;
 		justify-content: center;
-		width: 2.2rem;
-		height: 2.2rem;
+	}
+	/* The connector line runs down the rail between the numbered nodes. */
+	.tl__rail::before {
+		content: "";
+		position: absolute;
+		top: 3.4rem;
+		bottom: -2.2rem;
+		width: 2px;
+		background: linear-gradient(var(--mp-edge), color-mix(in srgb, var(--mp-brand) 26%, transparent));
+	}
+	.tl:last-child .tl__rail::before { display: none; }
+	.tl__n {
+		position: relative;
+		z-index: 1;
+		display: grid;
+		place-items: center;
+		width: 3.1rem;
+		height: 3.1rem;
 		border-radius: 50%;
 		background: var(--mp-grad-cta);
-		box-shadow: 0 0 18px -6px var(--mp-glow);
 		color: #fff;
 		font-weight: 800;
-		margin-bottom: 0.75rem;
+		font-size: 1.2rem;
+		font-family: var(--font-mono, monospace);
+		box-shadow: 0 0 22px -7px var(--mp-glow), inset 0 1px 0 rgba(255, 255, 255, .25);
 	}
-	.step h3 { margin: 0 0 0.4rem; font-size: 1.25rem; }
-	.step p { margin: 0; color: var(--mp-muted); }
+	.tl__body { padding-top: 0.35rem; }
+	.tl__body h3 { margin: 0 0 0.4rem; font-size: 1.3rem; letter-spacing: -0.01em; }
+	.tl__body p { margin: 0; color: var(--mp-muted); max-width: 38rem; }
 
-	/* App overview shot under How-it-works */
-	.how__shot {
-		margin-top: 2rem;
+	/* App overview shot: a double-bezel enclosure (real elevation). */
+	.how__shot { margin: clamp(2.5rem, 5vw, 3.5rem) 0 0; }
+	.how__shotcore { padding: 0; line-height: 0; }
+	.how__shotcore :global(.mp-proof img) {
+		border: 0;
+		border-radius: 20px;
+		box-shadow: none;
+	}
+	.how__shotcore :global(.mp-proof figcaption) {
+		padding: 0.85rem 1.1rem 0.1rem;
+		line-height: 1.5;
 	}
 
-	/* Feature tour grid */
-	.tour__grid {
+	/* ---- Feature tour: asymmetric bento with rhythm ------------------------ */
+	.tour__head {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 1.5rem;
+		flex-wrap: wrap;
+		margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+	}
+	.tour__more {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		color: var(--mp-link);
+		font-weight: 600;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+	.tour__more svg { transition: transform .2s var(--mp-ease); }
+	.tour__more:hover svg { transform: translateX(3px); }
+
+	.bento {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
-		gap: 1.75rem;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1.25rem;
 	}
+	/* The feature tile (code panel) spans the full first row. */
+	.bento__cell--feature { grid-column: 1 / -1; }
+	.bento__cell {
+		display: flex;
+		flex-direction: column;
+		gap: 0.85rem;
+	}
+	.bento__shot {
+		position: relative;
+		border-radius: var(--mp-radius-lg);
+		overflow: hidden;
+		border: 1px solid var(--mp-edge);
+		box-shadow: var(--mp-shadow-panel), inset 0 1px 0 var(--mp-hair);
+		transition: transform .2s var(--mp-ease), box-shadow .22s ease, border-color .2s ease;
+	}
+	.bento__shot::after {
+		content: "";
+		position: absolute;
+		inset: 0 0 auto 0;
+		height: 1px;
+		background: linear-gradient(90deg, transparent,
+			color-mix(in srgb, var(--mp-accent2) 70%, transparent) 28% 72%, transparent);
+		pointer-events: none;
+		z-index: 1;
+	}
+	.bento__cell:hover .bento__shot {
+		transform: translateY(-3px);
+		border-color: color-mix(in srgb, var(--mp-brand) 44%, var(--mp-edge));
+		box-shadow: var(--mp-shadow-panel), 0 0 34px -14px var(--mp-glow), inset 0 1px 0 var(--mp-hair);
+	}
+	.bento__shot :global(.mp-proof) { margin: 0; }
+	.bento__shot :global(.mp-proof img) {
+		border: 0;
+		border-radius: 0;
+		box-shadow: none;
+		transition: none;
+	}
+	.bento__cell:hover .bento__shot :global(.mp-proof img) { transform: none; }
+	.bento__cap { display: flex; flex-direction: column; gap: 0.2rem; padding: 0 0.2rem; }
+	.bento__title {
+		font-weight: 700;
+		font-size: 1.02rem;
+		color: var(--mp-ink);
+		letter-spacing: -0.01em;
+	}
+	.bento__text { color: var(--mp-muted); font-size: 0.92rem; line-height: 1.5; }
 
-	/* Demo teaser */
-	.demo-teaser {
-		padding-block: clamp(2rem, 4vw, 3rem);
-		border-block: 1px solid var(--mp-hair);
-	}
+	/* ---- Demo teaser: offset glass band ------------------------------------ */
+	.demo-teaser { padding-block: clamp(1.5rem, 3vw, 2.5rem); }
 	.demo-teaser__inner {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: 2rem;
+		gap: 1.75rem 2.5rem;
 		flex-wrap: wrap;
+		padding: clamp(1.4rem, 3vw, 2.1rem) clamp(1.5rem, 3.5vw, 2.4rem);
+		border-radius: var(--mp-radius-lg);
 	}
-	.demo-teaser p {
-		color: var(--mp-muted);
-		max-width: 38rem;
-		margin: 0.5rem 0 0;
-	}
+	.demo-teaser__copy { max-width: 40rem; }
+	.demo-teaser__inner .section__title { margin-bottom: 0.4rem; }
+	.demo-teaser p { color: var(--mp-muted); margin: 0; }
+	.demo-teaser__cta { flex: none; }
 
-	/* Audience cards */
-	.cards {
+	/* ---- Audience: editorial numbered stack with hairlines ----------------- */
+	.rolelist { list-style: none; margin: 0; padding: 0; }
+	.role {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 1.5rem;
-		margin-top: 1.5rem;
+		grid-template-columns: auto 1fr;
+		grid-template-rows: auto auto;
+		column-gap: 1.4rem;
+		align-items: baseline;
+		padding: 1.75rem 0;
+		border-top: 1px solid var(--mp-hair);
 	}
-	.card {
-		padding: 1.5rem;
+	.role:first-child { border-top: 0; }
+	.role__n {
+		grid-row: 1 / 3;
+		align-self: start;
+		font-family: var(--font-mono, monospace);
+		/* Large + bold (>=24px) so the 3:1 WCAG large-text floor applies: the
+		   coral/sky/violet -deep accents clear 3:1 on canvas in both moods
+		   (computed light: coral 4.00, sky 3.60; dusk: violet 3.80, elec 5.10). */
+		font-size: 1.6rem;
+		line-height: 1;
+		font-weight: 700;
+		letter-spacing: 0.01em;
+		padding-top: 0.15rem;
 	}
-	.card h3 { margin: 0 0 0.5rem; font-size: 1.2rem; }
-	.card p { margin: 0; color: var(--mp-muted); }
+	/* Role markers cycle the three role-locked accents (deep = AA-large on canvas). */
+	.role--a1 .role__n { color: var(--mp-link); }
+	.role--a2 .role__n { color: var(--mp-accent2-deep); }
+	.role--a3 .role__n { color: var(--mp-accent3-deep); }
+	.role__title { margin: 0; font-size: 1.4rem; letter-spacing: -0.015em; }
+	.role__body { margin: 0.4rem 0 0; grid-column: 2; color: var(--mp-muted); max-width: 46rem; }
 
-	/* Methods (dark code anchor) */
+	/* ---- Methods (dark code anchor) ---------------------------------------- */
 	.methods {
 		display: grid;
-		grid-template-columns: 1.6fr 1fr;
-		gap: 2.5rem;
+		grid-template-columns: 1.55fr 1fr;
+		gap: clamp(2rem, 5vw, 3.5rem);
 		align-items: center;
 	}
-	.methods__lead { color: #9DB0C3; font-size: 1.1rem; margin: 0 0 1.5rem; }
+	.methods__copy { max-width: 40rem; }
+	.methods .section__title { margin: 0.35rem 0 0; }
+	.methods__lead { color: #9DB0C3; font-size: 1.08rem; margin: 1rem 0 1.6rem; }
 	.methods__lead strong { color: #EEF4FB; }
+	/* Engines: hairline-separated rows on the dark band, not boxes. */
 	.engines {
 		list-style: none;
 		margin: 0;
 		padding: 0;
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem;
+		display: grid;
+		gap: 0;
 	}
 	.engines li {
-		font-family: var(--font-mono, monospace);
-		font-size: 0.95rem;
-		color: var(--mp-code-fg);
-		background: rgba(255, 255, 255, 0.05);
-		border: 1px solid var(--mp-code-edge);
-		border-radius: var(--mp-radius);
-		padding: 0.5rem 0.9rem;
-	}
-
-	/* Docs teaser */
-	.docs-teaser {
 		display: flex;
-		align-items: center;
+		align-items: baseline;
 		justify-content: space-between;
-		gap: 2rem;
-		flex-wrap: wrap;
+		gap: 1rem;
+		padding: 0.8rem 0.2rem;
+		border-top: 1px solid var(--mp-code-edge);
 	}
-	.docs-teaser p { color: var(--mp-muted); max-width: 38rem; margin: 0.5rem 0 0; }
+	.engines li:first-child { border-top: 0; }
+	.engines__name {
+		font-family: var(--font-mono, monospace);
+		font-size: 1.02rem;
+		color: var(--mp-code-fg);
+		font-weight: 600;
+	}
+	.engines__role {
+		font-size: 0.86rem;
+		color: #8CA0B4;
+		text-align: right;
+	}
+	.mp-cta__ico--dark { background: color-mix(in srgb, var(--mp-brand-deep) 22%, transparent); }
+	.mp-cta__ico--ghost { background: color-mix(in srgb, var(--mp-brand) 16%, transparent); }
 
-	/* FAQ */
-	.faq__list {
-		margin-top: 1.5rem;
+	/* ---- Docs rail + FAQ: two-column ---------------------------------------- */
+	.faqdocs__grid {
 		display: grid;
-		gap: 0.75rem;
-		max-width: 50rem;
+		grid-template-columns: 0.85fr 1.15fr;
+		gap: clamp(2rem, 4vw, 3.25rem);
+		align-items: start;
 	}
+	.docs-rail {
+		padding: clamp(1.6rem, 3vw, 2.1rem);
+		position: sticky;
+		top: 6rem;
+	}
+	.docs-rail__title { margin: 0.2rem 0 0.6rem; font-size: 1.5rem; letter-spacing: -0.015em; }
+	.docs-rail p { margin: 0 0 1.3rem; color: var(--mp-muted); }
+	.docs-rail__cta { width: 100%; }
+
+	.faq__heading { margin-bottom: 1.25rem; }
+	.faq__list { display: grid; gap: 0.6rem; }
 	.faq__item {
 		background: var(--mp-panel);
 		border: 1px solid var(--mp-edge);
 		border-radius: var(--mp-radius);
 		padding: 0 1.25rem;
-		transition: border-color .15s ease;
+		transition: border-color .15s ease, box-shadow .2s ease;
 	}
-	.faq__item:hover { border-color: color-mix(in srgb, var(--mp-brand) 44%, var(--mp-edge)); }
+	.faq__item:hover {
+		border-color: color-mix(in srgb, var(--mp-brand) 44%, var(--mp-edge));
+		box-shadow: 0 0 26px -16px var(--mp-glow);
+	}
 	.faq__item summary {
 		cursor: pointer;
 		font-weight: 600;
@@ -532,26 +720,48 @@ const faqs = [
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		gap: 1rem;
 	}
+	.faq__item summary::-webkit-details-marker { display: none; }
 	.faq__item summary::after {
 		content: '+';
-		font-size: 1.3rem;
-		color: var(--mp-accent-deep);
-		margin-left: 1rem;
+		font-size: 1.4rem;
+		line-height: 1;
+		color: var(--mp-accent3-deep);
+		transition: transform .2s var(--mp-ease);
+		flex: none;
 	}
 	.faq__item[open] summary::after { content: '\2212'; }
 	.faq__answer { padding-bottom: 1rem; }
 	.faq__answer p { margin: 0; color: var(--mp-muted); }
 
-	/* Final CTA */
-	.final-cta { text-align: center; }
+	/* ---- Final CTA ---------------------------------------------------------- */
+	.final-cta__inner { text-align: center; max-width: 40rem; margin-inline: auto; }
 	.final-cta h2 {
-		font-size: clamp(1.7rem, 3.5vw, 2.4rem);
-		margin: 0 0 1.5rem;
+		font-size: clamp(1.8rem, 3.6vw, 2.5rem);
+		letter-spacing: -0.02em;
+		line-height: 1.1;
+		margin: 0 0 0.75rem;
 	}
+	.final-cta__sub { color: var(--mp-muted); margin: 0 0 1.75rem; font-size: 1.05rem; }
 
-	@media (max-width: 820px) {
-		.steps, .cards { grid-template-columns: 1fr; }
+	/* ---- Mobile collapse ---------------------------------------------------- */
+	@media (max-width: 860px) {
+		.bento { grid-template-columns: 1fr; }
+		.bento__cell--feature { grid-column: auto; }
 		.methods { grid-template-columns: 1fr; }
+		.faqdocs__grid { grid-template-columns: 1fr; }
+		.docs-rail { position: static; }
+	}
+	@media (max-width: 560px) {
+		.tl { grid-template-columns: 2.8rem 1fr; gap: 1rem; }
+		.tl__n { width: 2.6rem; height: 2.6rem; font-size: 1.05rem; }
+		.tl__rail::before { top: 2.9rem; }
+		.role { grid-template-columns: 1fr; }
+		.role__n { grid-row: auto; }
+		.role__body { grid-column: 1; }
+		.engines li { flex-direction: column; gap: 0.15rem; }
+		.engines__role { text-align: left; }
+		.demo-teaser__cta { width: 100%; }
 	}
 </style>
