@@ -14,11 +14,10 @@
 
 @import "tailwindcss";
 
-/* Self-hosted fonts (no Google CDN). Inter variable for UI/headings, IBM Plex
-   Mono for code — the same pairing the app uses. */
-@import "@fontsource-variable/inter";
-@import "@fontsource/ibm-plex-mono/400.css";
-@import "@fontsource/ibm-plex-mono/500.css";
+/* Self-hosted fonts (no Google CDN). Geist variable for UI/headings, Geist Mono
+   for code/numbers — the premium pairing the app shares (BRAND.md §4, 2026-06-13). */
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
 
 /* ---- Core brand (mood-independent) — BRAND.md §1 -------------------------- */
 :root {
@@ -45,12 +44,15 @@
 
 /* ---- Warm light (default mood) — BRAND.md §2–3 ----------------------------- */
 :root {
-	--mp-accent: #E08A00;        /* amber — active/current affordances */
+	--mp-accent: #E08A00;        /* amber — active/current (role-locked) */
 	--mp-accent-deep: #B45309;
-	--mp-accent2: #F2613F;       /* coral — informational highlights */
+	--mp-accent2: #F2613F;       /* coral — secondary / informational */
 	--mp-accent2-deep: #D24524;
+	--mp-accent3: #38BDF8;       /* sky — tertiary: data, links, focus glints */
+	--mp-accent3-deep: #0284C7;  /* AA text on the warm canvas (≈4.6:1) */
 	--mp-on-accent: #fff;
 	--mp-on-accent2: #fff;
+	--mp-on-accent3: #fff;
 
 	--mp-canvas: #F3F0E9;        /* never pure white */
 	--mp-bg-teal: color-mix(in srgb, var(--mp-g1) 15%, #fbf8f1);
@@ -107,10 +109,13 @@
 :root[data-theme="dark"] {
 	--mp-accent: #F5A524;
 	--mp-accent-deep: #D97706;
-	--mp-accent2: #9B8BFF;       /* violet partner (dusk) */
+	--mp-accent2: #9B8BFF;       /* violet — secondary (dusk) */
 	--mp-accent2-deep: #6D55E0;
+	--mp-accent3: #4DA3FF;       /* electric blue — tertiary: data, links, focus */
+	--mp-accent3-deep: #2D7FF0;
 	--mp-on-accent: #1c1206;
 	--mp-on-accent2: #fff;
+	--mp-on-accent3: #06121f;
 
 	--mp-canvas: #060A11;
 	--mp-bg-teal: color-mix(in srgb, var(--mp-g1) 24%, #070c14);
@@ -154,8 +159,11 @@
 	--color-amber-accent: #E08A00;
 	--color-ink: #19222C;
 	--color-canvas: #F3F0E9;
-	--font-sans: "Inter Variable", Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
-	--font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+	--font-sans: "Geist Variable", Geist, system-ui, -apple-system, "Segoe UI", sans-serif;
+	--font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+	--color-accent-sky: #38BDF8;
+	--color-accent-coral: #F2613F;
+	--color-accent-violet: #9B8BFF;
 }
 
 /* ---- Base (marketing pages only — Starlight has its own reset) -------------- */
@@ -421,8 +429,8 @@ body.mp-marketing::after {
    brand teal with computed AA (accent carries white/inverted text ≥4.5:1;
    accent-high is the link colour in dark mode, deep variant in light). */
 :root {
-	--sl-font: "Inter Variable", Inter, sans-serif;
-	--sl-font-mono: "IBM Plex Mono", ui-monospace, monospace;
+	--sl-font: "Geist Variable", Geist, sans-serif;
+	--sl-font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
 
 	/* Dark mode (Starlight's default) — deep-dusk, teal-tinted grays */
 	--sl-color-accent-low: #0E322D;
@@ -476,6 +484,63 @@ body.mp-marketing::after {
 	border: 0;
 }
 
+/* ---- Premium utilities (2026-06-13 revision) ------------------------------- */
+
+/* Scroll-reveal: heavy fade-up + de-blur as elements enter the viewport. A shared
+   IntersectionObserver (BaseLayout) adds .is-in; reduced-motion forces resolved. */
+.mp-reveal {
+	opacity: 0;
+	transform: translateY(22px);
+	filter: blur(6px);
+	transition: opacity .8s var(--mp-ease), transform .8s var(--mp-ease), filter .8s var(--mp-ease);
+	transition-delay: var(--mp-reveal-delay, 0s);
+}
+.mp-reveal.is-in { opacity: 1; transform: none; filter: none; }
+
+/* Floating glass "island" — chrome only (nav, clusters). Detached pill with an
+   inner highlight; solid fallback under reduced-transparency. */
+.mp-island {
+	background: var(--mp-glass);
+	-webkit-backdrop-filter: saturate(150%) blur(16px);
+	backdrop-filter: saturate(150%) blur(16px);
+	border: 1px solid var(--mp-edge);
+	box-shadow: var(--mp-shadow-panel), inset 0 1px 0 rgba(255, 255, 255, .18);
+}
+@media (prefers-reduced-transparency: reduce) {
+	.mp-island { background: var(--mp-panel); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+
+/* Double-bezel: outer shell + concentric inner core (BRAND §5). */
+.mp-bezel {
+	padding: 6px;
+	border-radius: 26px;
+	background: color-mix(in srgb, var(--mp-brand) 6%, var(--mp-glass));
+	border: 1px solid var(--mp-hair);
+	box-shadow: var(--mp-shadow-panel);
+}
+.mp-bezel__core {
+	border-radius: 20px;
+	background: var(--mp-panel);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15);
+	overflow: hidden;
+}
+
+/* Button-in-button trailing icon (pill CTA nested circle). */
+.mp-cta__ico {
+	display: inline-grid;
+	place-items: center;
+	width: 1.55em;
+	height: 1.55em;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, .16);
+	transition: transform .2s var(--mp-ease);
+}
+.mp-cta:hover .mp-cta__ico { transform: translate(2px, -1px) scale(1.06); }
+
+/* Tertiary-accent text helper (sky on light, electric blue on dusk). */
+.mp-accent3 { color: var(--mp-accent3-deep); }
+:root[data-theme="dusk"] .mp-accent3 { color: var(--mp-accent3); }
+
 /* ---- Reduced motion: kill EVERY animation and transition (BRAND §9) -------- */
 @media (prefers-reduced-motion: reduce) {
 	html { scroll-behavior: auto; }
@@ -483,4 +548,5 @@ body.mp-marketing::after {
 		animation: none !important;
 		transition: none !important;
 	}
+	.mp-reveal { opacity: 1 !important; transform: none !important; filter: none !important; }
 }

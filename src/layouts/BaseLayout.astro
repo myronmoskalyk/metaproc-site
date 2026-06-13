@@ -3,9 +3,9 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
-// Self-hosted Inter variable font file, for an LCP-light <link rel="preload">.
+// Self-hosted Geist variable font file, for an LCP-light <link rel="preload">.
 // Resolved at build time so the hashed asset URL is correct.
-import interWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import geistWoff2 from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
 
 interface Props {
 	title: string;
@@ -55,7 +55,7 @@ const ANALYTICS_TOKEN = '';
 		<!-- LCP: preload the variable UI font so the hero headline paints fast. -->
 		<link
 			rel="preload"
-			href={interWoff2}
+			href={geistWoff2}
 			as="font"
 			type="font/woff2"
 			crossorigin
@@ -110,6 +110,33 @@ const ANALYTICS_TOKEN = '';
 			document.querySelectorAll<HTMLElement>('.mp-cta').forEach((b) => {
 				b.addEventListener('pointerdown', ripple as EventListener);
 			});
+		</script>
+
+		<!-- Scroll-reveal: heavy fade-up as .mp-reveal elements enter the viewport
+		     (IntersectionObserver, never a scroll listener). Under reduced motion the
+		     elements resolve immediately (CSS) and the observer is skipped. -->
+		<script>
+			(function () {
+				const reduce =
+					window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+				const nodes = document.querySelectorAll<HTMLElement>('.mp-reveal');
+				if (reduce || !('IntersectionObserver' in window)) {
+					nodes.forEach((n) => n.classList.add('is-in'));
+					return;
+				}
+				const io = new IntersectionObserver(
+					(entries) => {
+						entries.forEach((e) => {
+							if (e.isIntersecting) {
+								e.target.classList.add('is-in');
+								io.unobserve(e.target);
+							}
+						});
+					},
+					{ threshold: 0.16, rootMargin: '0px 0px -8% 0px' },
+				);
+				nodes.forEach((n) => io.observe(n));
+			})();
 		</script>
 	</body>
 </html>
