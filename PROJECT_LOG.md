@@ -101,3 +101,23 @@ Both inside the gates (≥95 ×4, LCP <2 s, CLS ≈0). /features BP dropped noth
 vs 2026-06-11 (aurora/ring compositing + slightly larger CSS) — not chased further; re-check
 at proof-asset recapture. Reports: `lighthouse-report/home-orbital.json`,
 `features-orbital.json` (gitignored).
+
+## [2026-06-12] qa | Warm-light AA regression found + fixed (axe both moods)
+Re-ran axe **in both `prefers-color-scheme` states** (previous post-retheme run only hit deep
+dusk — the test host was in OS dark mode, so the warm-light default never got exercised).
+- **Deep dusk:** still 0 violations on all 10 routes (7 marketing + 3 docs).
+- **Warm light (the marketing default):** 7–8 `color-contrast` violations *per marketing page* —
+  all the **`--mp-link` text token** (`#0A7A68`) on tinted surfaces: footer/section tint
+  `#E3EDE5` = **4.38:1**, download banner `#FCE9E2` = **4.47:1** (both below AA 4.5). Footer
+  links, footer wordmark, section "more" links, hero secondary link, eyebrow. Docs clean
+  (Starlight's light accent `#084B40` is deeper). The retheme's documented "≈4.6:1 on warm
+  canvas" was the pure-canvas figure; real surfaces are tinted and the hero sits over the
+  aurora layers, so the composited ratio lands lower.
+- **Fix** (`src/styles/global.css`, commit on this date): warm-light `--mp-link` deepened
+  `#0A7A68 → #097264` (derived per BRAND.md §1, text role only — buttons/gradients keep
+  `#0A7A68`). Computed `#097264`: canvas 5.12, footer tint 4.86, download banner 4.97, white-on
+  5.83 — all ≥4.5 with margin. `--mp-muted` (#5B6877, ≥4.74) and `--mp-ink` (≥13) re-checked, fine.
+- **Re-verified** with axe-core 4.11 driven in-page (puppeteer-core + system Chrome) across all
+  10 routes under light AND dark: **0 violations in both moods.** `npm run build` green (11
+  pages). Lighthouse re-run unchanged: **/** 99/100/100/100 (LCP 1.8 s, CLS 0), **/features**
+  99/100/100/100 (a11y now genuinely 100 in the default mood, not just dusk).

@@ -9,9 +9,13 @@ amber HUD brackets, AA-safe teal CTA gradient with ripple + press punch, hero ri
 CSS-only launch-core ring miniature, forest-plot hero recoloured to the teal/amber plot palette,
 Starlight docs mapped to Orbital in both of its modes, teal forest-plot favicon + regenerated
 512px Auth0 logo PNG (`public/brand/metaproc-logo.png`). `npm run build` green.
-Post-retheme gates re-run 2026-06-12: **axe 0 violations on all 11 pages** (after fixing a
-latent CTA-text-colour specificity bug + underlining in-text links); Lighthouse
-**/** 99/100/100/100 (LCP 1.81 s, CLS 0) · **/features** 99/100/100/100 (LCP 1.96 s, CLS 0).
+Post-retheme gates 2026-06-12: **axe 0 violations on all 11 pages in BOTH moods** — verified
+in-page across every route under `prefers-color-scheme: light` *and* `dark`. (The first
+post-retheme run only exercised deep dusk, because the test host was in OS dark mode; that
+missed a warm-light-only regression where the `--mp-link` text token `#0A7A68` measured
+4.38–4.48:1 on tinted surfaces — below AA. Fixed by deepening the warm-light link/eyebrow
+text token to `#097264`; see PROJECT_LOG.) Lighthouse **/** 99/100/100/100 (LCP 1.81 s, CLS 0)
+· **/features** 99/100/100/100 (LCP 1.96 s, CLS 0).
 
 **Remaining before public:**
 1. **Recapture proof assets** — all current captures show the **old violet app UI**
@@ -32,7 +36,10 @@ Orbital-tinted) in 5 markdown image slots — fill with real shots at recapture.
 
 **Standing rules:**
 - Brand source of truth: `metaproc-deploy/design/BRAND.md` (+ app `R/app_theme.R`). Derived
-  shades documented in README ("Rules"): CTA gradient `#0B8170 → #0A7A68` (white text ≥4.5:1).
+  shades documented in README ("Rules"): CTA gradient `#0B8170 → #0A7A68` (white text ≥4.5:1)
+  and warm-light link/eyebrow text token `#097264` (brand-deep `#0A7A68` as text is only
+  4.38–4.48:1 on tinted surfaces). When checking AA, test BOTH moods — the warm-light default
+  and deep dusk resolve different tokens on different canvases.
   Accessibility floor per BRAND §9: computed AA, 2px partner-accent `:focus-visible` (the
   `-deep` coral variant in warm light for ≥3:1), reduced-motion kills every animation/transition.
 - Mood toggles are **not unified**: marketing pages use `mp-site-mood` (`light`/`dusk` on
