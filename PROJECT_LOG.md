@@ -121,3 +121,35 @@ dusk — the test host was in OS dark mode, so the warm-light default never got 
   10 routes under light AND dark: **0 violations in both moods.** `npm run build` green (11
   pages). Lighthouse re-run unchanged: **/** 99/100/100/100 (LCP 1.8 s, CLS 0), **/features**
   99/100/100/100 (a11y now genuinely 100 in the default mood, not just dusk).
+
+## [2026-06-13] build | Proof screenshots recaptured in the Orbital app
+Replaced the six violet-era proof screenshots + the demo poster with fresh **Orbital** (teal/
+amber, light mode) captures from the live app. They now match the rethemed site instead of
+contradicting it.
+- **Refreshed** (`src/assets/proof/`, same filenames/dimensions, so no component edits needed —
+  `ProofAsset`/`<Picture>` read intrinsic dims and `features.astro`'s `<video>` poster stays
+  1600×1000): `hero-app-overview.png`, `workflow-store.png`, `plots-studio.png`,
+  `report-builder.png`, `grade-sof.png`, `code-panel.png` (all **3200×2000**) + `demo-poster.png`
+  (**1600×1000**). Same content/views as the originals: home overview, Workflow tray open, the
+  ten-study RR forest (pooled 0.69 [0.62, 0.78], I² 0%) with the Reproducible-R panel, Templates
+  value boxes, GRADE five-domain form, the report builder. Removed the "stale violet UI" comment
+  atop `src/pages/index.astro`.
+- **Capture harness** (new, `e2e/recapture/`): adapted from the deploy repo's
+  `palette-*`/`capture.mjs` pattern — boots the app **bare** on 127.0.0.1:7991 via native
+  `runApp` (no ShinyProxy iframe), dismisses the `#mp-tour` overlay, clicks
+  `button[data-worked-example="binary"]`, waits for `#templates-forest img`, adds the result to
+  the Workflow, then walks the tabs. Playwright drives it at viewport 1600×1000 (DSF 2 → 3200×
+  2000 shots; a second DSF-1 context → the 1600×1000 poster). **Rscript path fixed to the
+  R-4.5.1 install present on this machine** (the deploy-repo scripts hardcode R-4.5.3 — that
+  binary also exists here, but per the run-book the R home is 4.5.1; the deploy repo was **not**
+  modified, only this local copy). Playwright is resolved by absolute file URL from
+  `metaproc-deploy/node_modules` (it isn't installed in the site repo; ESM ignores NODE_PATH).
+  App was started and **stopped** cleanly (port 7991 freed, no stray Rscript).
+- **Out of scope / still to do:** the demo **VIDEO** (`demo.webm`) still shows the violet UI —
+  recapturing it is a **Stage-8 follow-up**, bundled with the pending H.264 MP4 fallback so both
+  encodes come from one fresh Orbital recording (the poster is already Orbital). The Quickstart
+  docs' 5 `placeholder.svg` slots were also out of scope (not part of the home/features proof
+  set). `manual.md` remains generated-from-app and still describes the violet theme until
+  `sync-docs.mjs` re-runs — unchanged here.
+- `npm run build` **green: 11 pages**, all proof assets resolve (the AVIF/WebP variants were
+  re-derived from the new PNGs — "before" sizes in the build log match the recaptured files).

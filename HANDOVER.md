@@ -18,10 +18,16 @@ text token to `#097264`; see PROJECT_LOG.) Lighthouse **/** 99/100/100/100 (LCP 
 · **/features** 99/100/100/100 (LCP 1.96 s, CLS 0).
 
 **Remaining before public:**
-1. **Recapture proof assets** — all current captures show the **old violet app UI**
-   (stale — recapture pending, after the app repo is rethemed to Orbital):
-   `src/assets/proof/hero-app-overview.png`, `workflow-store.png`, `plots-studio.png`,
-   `report-builder.png`, `grade-sof.png`, `code-panel.png`, `demo.webm`, `demo-poster.png`.
+1. **Recapture proof assets** — **DONE 2026-06-13** for the six screenshots + the poster
+   frame: `src/assets/proof/hero-app-overview.png`, `workflow-store.png`, `plots-studio.png`,
+   `report-builder.png`, `grade-sof.png`, `code-panel.png`, `demo-poster.png` all now show the
+   **Orbital** teal/amber app (light mode), recaptured from the native app on 127.0.0.1:7991
+   (Playwright, same content/views and exact dimensions as before — 3200×2000 shots, 1600×1000
+   poster). Harness lives in `e2e/recapture/` (Rscript path fixed to the R-4.5.1 install present
+   on this box; deploy-repo harness was *not* modified). **Still stale: `demo.webm`** — the demo
+   VIDEO still shows the violet UI; recapturing it is a **Stage-8 follow-up** (see Stage 8 below).
+   Its current poster (`demo-poster.png`) is fresh, so the /features hero frame is Orbital even
+   though the clip behind it is not yet.
 2. **Re-run quality gates** (Lighthouse + axe) after recapture — no npm script exists;
    use the devDependency CLIs against `astro preview` as on 2026-06-11.
 3. **H6 — Myron's copy approval** (privacy/ToS draft banners stay until then).
@@ -30,9 +36,16 @@ text token to `#097264`; see PROJECT_LOG.) Lighthouse **/** 99/100/100/100 (LCP 
    un-gating (public repo + tag match, GPL §6), and an **H.264 MP4 fallback** for
    `src/assets/proof/demo.webm` (needs full ffmpeg — Playwright's bundled build decodes VP8
    but can't encode H.264; see HTML comment next to the `<video>` in `src/pages/features.astro`).
+   **Also recapture `demo.webm` in the Orbital UI** (out of scope for the 2026-06-13 screenshot
+   refresh — the clip still shows the violet app). Do it alongside the H.264 encode so the WebM
+   and the MP4 fallback are produced from the same fresh Orbital recording; the poster is already
+   Orbital. The `e2e/recapture/` harness boots the app the same way the old video capture did.
 
 **Nice-to-have (not blocking):** the docs Quickstart still uses `placeholder.svg` (now
-Orbital-tinted) in 5 markdown image slots — fill with real shots at recapture.
+Orbital-tinted) in 5 markdown image slots — fill with real Orbital shots when convenient
+(these were *out of scope* for the 2026-06-13 screenshot refresh, which only covered the
+home/features proof assets). The `e2e/recapture/` harness can capture the Data / Templates /
+forest+code / GRADE / Report views these slots want.
 
 **Standing rules:**
 - Brand source of truth: `metaproc-deploy/design/BRAND.md` (+ app `R/app_theme.R`). Derived
