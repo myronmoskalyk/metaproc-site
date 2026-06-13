@@ -38,8 +38,35 @@
 
 	/* Code panel stays dark in BOTH moods, premium contrast anchor (BRAND §3) */
 	--mp-code-bg: #0D141B;
+	--mp-code-bg2: #101A22;    /* second stop of the dark "code anchor" band gradient */
 	--mp-code-fg: #9FE8DC;
 	--mp-code-edge: #22303B;
+
+	/* Text/marks that sit on brand-gradient or dark surfaces (mood-independent).
+	   The dark "code anchor" band and every brand/gradient fill stay dark in BOTH
+	   moods, so the ink/muted that ride on them are fixed dusk-side values. */
+	--mp-on-brand: #fff;        /* white text/marks on a brand or gradient surface */
+	--mp-ink-on-dark: #EEF4FB;  /* primary ink on the dark code band (= dusk ink) */
+	--mp-muted-on-dark: #9DB0C3;/* muted body on the dark code band (= dusk muted) */
+	--mp-faint-on-dark: #8CA0B4;/* faint meta (engine roles) on the dark code band */
+
+	/* Inner-highlight whites (top-edge sheen on raised/gradient surfaces). One
+	   semantic scale so the literal lives only here, not in component styles. */
+	--mp-hi-14: rgba(255, 255, 255, .14);
+	--mp-hi-16: rgba(255, 255, 255, .16);
+	--mp-hi-18: rgba(255, 255, 255, .18);
+	--mp-hi-20: rgba(255, 255, 255, .20);
+	--mp-hi-24: rgba(255, 255, 255, .24);
+	--mp-hi-25: rgba(255, 255, 255, .25);
+	--mp-hi-30: rgba(255, 255, 255, .30);
+
+	/* Mask paint: CSS mask/-webkit-mask uses this purely for alpha/luminance to
+	   carve a shape (it is NOT a rendered colour, and never changes with mood). */
+	--mp-mask: #000;
+
+	/* Plot-series colour shared with the app palette (BRAND §8): primary teal,
+	   used by the decorative forest-plot markers. */
+	--mp-plot-teal: #0E9F8E;
 }
 
 /* ---- Warm light (default mood), BRAND.md §2-3 ----------------------------- */

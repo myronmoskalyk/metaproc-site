@@ -37,8 +37,8 @@ const nav = [
 			<a href="/" class="mp-footer__mark" aria-label="MetaProc home">
 				<span class="mp-footer__tile" aria-hidden="true">
 					<svg viewBox="0 0 24 24" fill="none">
-						<rect x="11" y="4" width="2" height="16" rx="1" fill="#fff" opacity=".45" />
-						<polygon points="12,8 18.5,12 12,16 5.5,12" fill="#fff" />
+						<rect x="11" y="4" width="2" height="16" rx="1" fill="var(--mp-on-brand)" opacity=".45" />
+						<polygon points="12,8 18.5,12 12,16 5.5,12" fill="var(--mp-on-brand)" />
 					</svg>
 				</span>
 				metaproc
@@ -116,7 +116,7 @@ const nav = [
 		display: grid;
 		place-items: center;
 		background: linear-gradient(160deg, var(--mp-g1), var(--mp-g2));
-		box-shadow: 0 0 20px -7px var(--mp-glow), inset 0 1px 0 rgba(255, 255, 255, .25);
+		box-shadow: 0 0 20px -7px var(--mp-glow), inset 0 1px 0 var(--mp-hi-25);
 		transition: transform .3s var(--mp-ease);
 	}
 	.mp-footer__mark:hover .mp-footer__tile { transform: rotate(-6deg) scale(1.05); }

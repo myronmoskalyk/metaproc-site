@@ -245,3 +245,35 @@ reduced-motion path sees). Interaction checks pass: `#faq` anchor lands on the c
 FAQ items toggle, launch core is a focusable `<a>` with aria-label, `data-placeholder="app-url"`
 x4 preserved, rings animation is `none` under reduced motion. Screenshot + probe harness lives in
 `e2e/shoot.mjs` / `e2e/sections.mjs` / `e2e/axe-run.mjs` / `e2e/interact.mjs` (untracked).
+
+## [2026-06-13] refactor | Centralize every colour into one editable palette
+Value-preserving refactor (isolated commit, no rendered colour changed). Goal: editing a small
+central token set re-themes the WHOLE site.
+
+- **Audited** all `.astro` files (page + component `<style>` blocks, plus SVG mark fills) and
+  `global.css` for hardcoded colour literals (hex / rgb()/rgba() / named) used in live styling.
+- **Moved every literal** into the central `:root` token system in `src/styles/global.css`.
+  ~30 literals across 5 files: `index.astro` (dark code-band gradient `#0D141B/#101A22`, on-dark
+  ink `#EEF4FB` / muted `#9DB0C3` / faint `#8CA0B4`, gradient-surface `#fff` + the
+  `rgba(255,255,255,.14….30)` inner-highlights on the launch core and timeline node, SVG mark
+  `#fff`, mask `#000`), `Header.astro` + `Footer.astro` (mark `#fff` + highlight rgba),
+  `changelog.astro` (pill text `#fff`), `ForestPlot.astro` (plot-teal `#0E9F8E`). New semantic
+  tokens: `--mp-on-brand`, `--mp-ink-on-dark`, `--mp-muted-on-dark`, `--mp-faint-on-dark`,
+  `--mp-code-bg2`, `--mp-hi-14…30` (inner-highlight whites), `--mp-mask`, `--mp-plot-teal`.
+- **Result:** NO `.astro` style block or component holds a raw colour literal — all reference
+  `var(--mp-*)`. Colour literals live ONLY in `:root` (warm light) / `:root[data-theme='dusk']`
+  (deep dusk) / `@theme` (Tailwind's static utility mirror) in `global.css`. The two moods still
+  swap by flipping `data-theme`; AA tokens (the `-deep` text, `#097264` link, `#525F6D` muted,
+  `#0369A1` sky text) unchanged.
+- **Theming docs** added: new "## Theming" section in README.md (token groups brand / accents /
+  surfaces / ink-muted-link / edges-glow; how to re-theme; points at BRAND.md) + a matching
+  HANDOVER.md entry.
+
+**Gates.** `npm run build` green (11 pages). **Value-preserving proof:** a frozen full-page
+screenshot diff (both moods, all animation killed, scrolled from y=0) is **pixel-identical to the
+pre-refactor build — max channel delta 0, 0.0000% differing pixels** (the diff covers the hero,
+dark code band, methods band, gradient CTAs, every tokenized hot-spot). In-page axe (Playwright +
+Chrome, full ruleset, both moods, all 7 marketing routes) = **0 violations**. (Hero-only viewport
+crops show ~30-45% delta purely from sub-pixel scroll + ring-rotation jitter across two separate
+page loads; the byte-identical full-page diff is authoritative, and side-by-side inspection shows
+identical hues.) Harness: untracked `e2e/{frozen,diff,diff2,diff3}.mjs`.

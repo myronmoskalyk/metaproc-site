@@ -52,6 +52,28 @@ on the committed HEAD for /changelog + /privacy under stricter aurora sampling. 
 PROJECT_LOG entry. (Verification harness: untracked `e2e/{shoot,sections,axe-run,interact}.mjs`,
 runs Playwright from `metaproc-deploy/node_modules` against `astro preview`.)
 
+**Colour centralization 2026-06-13 (value-preserving refactor, isolated commit).** Every raw
+colour literal that was still living in page/component `<style>` blocks (and the SVG mark fills)
+was moved into the central token system in `src/styles/global.css`. **After this, no `.astro`
+style block or component contains a raw colour literal** — they all reference `var(--mp-*)`; the
+only place colour literals live is the `:root` (warm light) / `:root[data-theme='dusk']` (deep
+dusk) / `@theme` (Tailwind static mirror) blocks in `global.css`. Roughly **30 literals across 5
+files** were tokenized (index.astro: the dark code-band gradient `#0D141B/#101A22`, on-dark ink
+`#EEF4FB` / muted `#9DB0C3` / faint `#8CA0B4`, the gradient-surface whites + inner-highlight
+rgba(255,255,255,…) on the launch core and timeline node, and the SVG mark `#fff`; Header/Footer:
+mark `#fff` + highlight rgba; changelog: pill text `#fff`; ForestPlot: plot-teal `#0E9F8E`). New
+semantic tokens added to `:root`: `--mp-on-brand`, `--mp-ink-on-dark`, `--mp-muted-on-dark`,
+`--mp-faint-on-dark`, `--mp-code-bg2`, the `--mp-hi-14…30` inner-highlight whites, `--mp-mask`
+(mask shape), `--mp-plot-teal`. **Theming docs:** see the new "## Theming" section in README.md
+(token groups: brand / accents / surfaces / ink-muted-link / edges-glow) — editing the `:root` and
+`:root[data-theme='dusk']` tokens re-themes the whole site; conceptual palette is
+`metaproc-deploy/design/BRAND.md`. **Verified value-preserving:** `npm run build` green (11 pages);
+a frozen full-page screenshot diff (both moods, animation killed) is **pixel-identical to the
+pre-refactor build (max channel delta 0, 0.0000% differing px)**; in-page axe **0 violations** on
+all 7 routes × both moods. (The hero-only viewport crops differ ~30-45% purely from sub-pixel
+scroll/ring-rotation jitter between two independent page loads — the full-page byte-identical diff
+is the authoritative check, and visual inspection confirms identical hues.)
+
 **Remaining before public:**
 1. **Recapture proof assets** — **DONE 2026-06-13** for the six screenshots + the poster
    frame: `src/assets/proof/hero-app-overview.png`, `workflow-store.png`, `plots-studio.png`,

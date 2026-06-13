@@ -105,8 +105,8 @@ const faqs = [
 					<span class="launchcore__btn">
 						<span class="launchcore__mark" aria-hidden="true">
 							<svg viewBox="0 0 24 24" fill="none">
-								<rect x="11" y="4" width="2" height="16" rx="1" fill="#fff" opacity=".5" />
-								<polygon points="12,8 18.5,12 12,16 5.5,12" fill="#fff" />
+								<rect x="11" y="4" width="2" height="16" rx="1" fill="var(--mp-on-brand)" opacity=".5" />
+								<polygon points="12,8 18.5,12 12,16 5.5,12" fill="var(--mp-on-brand)" />
 							</svg>
 						</span>
 						<span class="launchcore__label">Launch</span>
@@ -270,8 +270,8 @@ const faqs = [
 			linear-gradient(var(--mp-hair) 1px, transparent 1px),
 			linear-gradient(90deg, var(--mp-hair) 1px, transparent 1px);
 		background-size: 46px 46px;
-		-webkit-mask: radial-gradient(72% 80% at 74% 50%, #000 0%, transparent 76%);
-		mask: radial-gradient(72% 80% at 74% 50%, #000 0%, transparent 76%);
+		-webkit-mask: radial-gradient(72% 80% at 74% 50%, var(--mp-mask) 0%, transparent 76%);
+		mask: radial-gradient(72% 80% at 74% 50%, var(--mp-mask) 0%, transparent 76%);
 		opacity: .55;
 	}
 	.hero__grid {
@@ -377,8 +377,8 @@ const faqs = [
 		aspect-ratio: 1;
 		border-radius: 50%;
 		background: conic-gradient(from 0deg, var(--mp-g1), var(--mp-g2), var(--mp-g1), var(--mp-g2), var(--mp-g1));
-		-webkit-mask: radial-gradient(closest-side, transparent 0 77%, #000 79% 100%);
-		mask: radial-gradient(closest-side, transparent 0 77%, #000 79% 100%);
+		-webkit-mask: radial-gradient(closest-side, transparent 0 77%, var(--mp-mask) 79% 100%);
+		mask: radial-gradient(closest-side, transparent 0 77%, var(--mp-mask) 79% 100%);
 		opacity: .85;
 		animation: mp-spin 16s linear infinite;
 		will-change: transform;
@@ -412,12 +412,12 @@ const faqs = [
 		height: calc(var(--halo) * 0.52);
 		border-radius: 50%;
 		background: var(--mp-grad-cta);
-		color: #fff;
+		color: var(--mp-on-brand);
 		box-shadow:
 			0 24px 52px -24px var(--mp-glow),
 			0 6px 22px -10px var(--mp-glow),
-			inset 0 0 0 1px rgba(255, 255, 255, .14),
-			inset 0 2px 0 rgba(255, 255, 255, .24);
+			inset 0 0 0 1px var(--mp-hi-14),
+			inset 0 2px 0 var(--mp-hi-24);
 		overflow: hidden;
 		transition: transform .25s var(--mp-ease), box-shadow .25s ease, filter .25s ease;
 	}
@@ -427,8 +427,8 @@ const faqs = [
 		box-shadow:
 			0 28px 60px -24px var(--mp-glow),
 			0 6px 22px -10px var(--mp-glow),
-			inset 0 0 0 1px rgba(255, 255, 255, .2),
-			inset 0 2px 0 rgba(255, 255, 255, .3);
+			inset 0 0 0 1px var(--mp-hi-20),
+			inset 0 2px 0 var(--mp-hi-30);
 	}
 	.launchcore:active .launchcore__btn { transform: scale(.97); }
 	.launchcore:hover .launchcore__halo { animation-duration: 8s; }
@@ -436,7 +436,7 @@ const faqs = [
 	.launchcore:focus-visible .launchcore__btn {
 		box-shadow:
 			0 24px 52px -24px var(--mp-glow),
-			inset 0 0 0 1px rgba(255, 255, 255, .14),
+			inset 0 0 0 1px var(--mp-hi-14),
 			0 0 0 4px var(--mp-focus);
 	}
 	.launchcore__mark svg { width: clamp(26px, 3.6vw, 38px); height: auto; display: block; }
@@ -480,8 +480,8 @@ const faqs = [
 		.hero__grid { grid-template-columns: 1fr; }
 		.hero__visual { margin-top: 0.75rem; }
 		.hero__gridbg {
-			-webkit-mask: radial-gradient(94% 56% at 50% 60%, #000, transparent 82%);
-			mask: radial-gradient(94% 56% at 50% 60%, #000, transparent 82%);
+			-webkit-mask: radial-gradient(94% 56% at 50% 60%, var(--mp-mask), transparent 82%);
+			mask: radial-gradient(94% 56% at 50% 60%, var(--mp-mask), transparent 82%);
 		}
 	}
 
@@ -495,7 +495,7 @@ const faqs = [
 	.section--code {
 		background:
 			radial-gradient(60% 90% at 85% 10%, color-mix(in srgb, var(--mp-g2) 12%, transparent), transparent 60%),
-			linear-gradient(135deg, #0D141B 0%, #101A22 100%);
+			linear-gradient(135deg, var(--mp-code-bg) 0%, var(--mp-code-bg2) 100%);
 		border-block: 1px solid var(--mp-code-edge);
 	}
 	.section__title {
@@ -506,7 +506,7 @@ const faqs = [
 		max-width: 24ch;
 		text-wrap: balance;
 	}
-	.section__title--light { color: #EEF4FB; }
+	.section__title--light { color: var(--mp-ink-on-dark); }
 
 	/* Section ledes (headline blocks) share one rhythm. */
 	.lede { margin-bottom: clamp(2.25rem, 4.5vw, 3.25rem); max-width: 44rem; }
@@ -559,11 +559,11 @@ const faqs = [
 		height: 3.1rem;
 		border-radius: 50%;
 		background: var(--mp-grad-cta);
-		color: #fff;
+		color: var(--mp-on-brand);
 		font-weight: 800;
 		font-size: 1.2rem;
 		font-family: var(--font-mono, monospace);
-		box-shadow: 0 0 22px -7px var(--mp-glow), inset 0 1px 0 rgba(255, 255, 255, .25);
+		box-shadow: 0 0 22px -7px var(--mp-glow), inset 0 1px 0 var(--mp-hi-25);
 	}
 	.tl__body { padding-top: 0.35rem; }
 	.tl__body h3 { margin: 0 0 0.4rem; font-size: 1.3rem; letter-spacing: -0.01em; }
@@ -674,8 +674,8 @@ const faqs = [
 	}
 	.methods__copy { max-width: 40rem; }
 	.methods .section__title { margin: 0.4rem 0 0; }
-	.methods__lead { color: #9DB0C3; font-size: 1.08rem; margin: 1rem 0 1.6rem; line-height: 1.6; }
-	.methods__lead strong { color: #EEF4FB; }
+	.methods__lead { color: var(--mp-muted-on-dark); font-size: 1.08rem; margin: 1rem 0 1.6rem; line-height: 1.6; }
+	.methods__lead strong { color: var(--mp-ink-on-dark); }
 	/* Engines: hairline-separated rows on the dark band, not boxes. */
 	.engines {
 		list-style: none;
@@ -701,7 +701,7 @@ const faqs = [
 	}
 	.engines__role {
 		font-size: 0.86rem;
-		color: #8CA0B4;
+		color: var(--mp-faint-on-dark);
 		text-align: right;
 	}
 	.mp-cta__ico--dark { background: color-mix(in srgb, var(--mp-brand-deep) 22%, transparent); }

@@ -70,7 +70,7 @@ const summaryY = top + studies.length * rowH + 14;
 		/* Plot series colours (BRAND §8), tuned per mood so every meaningful
 		   graphic keeps ≥3:1 against the panel surface (computed). */
 		--plot-line: var(--mp-brand-deep);   /* CI whiskers/caps */
-		--plot-marker: #0E9F8E;              /* plot-palette primary teal */
+		--plot-marker: var(--mp-plot-teal);  /* plot-palette primary teal */
 		--plot-diamond: var(--mp-accent-deep); /* pooled = amber (deep on light) */
 	}
 	:global(html[data-theme='dusk']) .mp-forest {
