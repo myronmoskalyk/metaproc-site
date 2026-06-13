@@ -1,5 +1,5 @@
 ---
-// Shared site header — a floating glass "island" nav (BRAND §5: glass on chrome).
+// Shared site header: a floating glass "island" nav (BRAND §5: glass on chrome).
 // Wordmark + forest-plot tile, primary nav, mood toggle, a single CTA, and a
 // glass mobile sheet (the nav no longer just vanishes on small screens).
 const { activePath = '' } = Astro.props;
@@ -163,7 +163,7 @@ const nav = [
 		gap: 0.6rem;
 	}
 
-	/* Mood toggle — icon button on glass. */
+	/* Mood toggle: icon button on glass. */
 	.mp-mood {
 		width: 36px;
 		height: 36px;
@@ -188,7 +188,7 @@ const nav = [
 	:global(html[data-theme='dusk']) .mp-mood__sun { display: none; }
 	:global(html[data-theme='dusk']) .mp-mood__moon { display: block; }
 
-	/* Hamburger (mobile only) — two bars morph to an X when open. */
+	/* Hamburger (mobile only): two bars morph to an X when open. */
 	.mp-burger {
 		display: none;
 		width: 38px;
@@ -285,7 +285,7 @@ const nav = [
 			try {
 				localStorage.setItem(KEY, next);
 			} catch (e) {
-				/* storage unavailable — mood still flips for this page */
+				/* storage unavailable, mood still flips for this page */
 			}
 			syncButton(next);
 		});

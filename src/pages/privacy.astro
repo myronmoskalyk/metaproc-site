@@ -11,17 +11,17 @@ const subprocessors = [
 <PageLayout
 	title="Privacy"
 	activePath="/privacy"
-	lede="How MetaProc handles your data — short version: analyses run in throwaway, EU-hosted containers, and you should never upload identifiable patient-level data."
+	lede="How MetaProc handles your data. Short version: analyses run in throwaway, EU-hosted containers, and you should never upload identifiable patient-level data."
 	description="MetaProc privacy: ephemeral EU-hosted analysis containers, no identifiable patient-level data, and the list of sub-processors."
 >
 	<p slot="banner" class="mp-banner mp-banner--draft">
-		Draft — pending review. This page describes intended practice and will be finalized
+		Draft, pending review. This page describes intended practice and will be finalized
 		before public launch.
 	</p>
 
 	<h2>No identifiable patient-level data</h2>
 	<p>
-		MetaProc is a tool for <strong>aggregate, study-level meta-analysis</strong> — the
+		MetaProc is a tool for <strong>aggregate, study-level meta-analysis</strong>: the
 		summary statistics already published in papers (event counts, means, SDs, effect
 		sizes). It is <strong>not</strong> designed for and you should <strong>not</strong>
 		upload individual patient data or any directly identifiable personal information.
@@ -33,8 +33,8 @@ const subprocessors = [
 		Your analysis runs inside an <strong>isolated, RAM-backed container</strong> that is
 		<strong>destroyed at the end of your session</strong>. Data you upload lives in that
 		container's memory for the duration of your work and is not written to long-term
-		storage by the analysis runtime. When your session ends, the container — and the data
-		in it — is torn down.
+		storage by the analysis runtime. When your session ends, the container (and the data
+		in it) is torn down.
 	</p>
 
 	<h2>Hosting & sub-processors</h2>

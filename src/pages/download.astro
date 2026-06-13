@@ -3,7 +3,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 
 // Stage 8: flip when public repo + tag live.
 // Desktop downloads are gated until a public source repo and a matching release
-// tag exist — GPLv3 §6 requires each shipped installer to have its Corresponding
+// tag exist: GPLv3 §6 requires each shipped installer to have its Corresponding
 // Source available, so we do not link binaries before the tagged source is up.
 const SHOW_DOWNLOADS = false;
 
@@ -12,7 +12,7 @@ const SOURCE_URL = 'https://github.com/myronmoskalyk/metaproc';
 <PageLayout
 	title="Download"
 	activePath="/download"
-	lede="MetaProc runs in your browser today. A bundled desktop build — R, packages and all — is on the way."
+	lede="MetaProc runs in your browser today. A bundled desktop build (R, packages and all) is on the way."
 	description="Download MetaProc desktop builds. Returning soon alongside the public source repository and release tags."
 >
 	{SHOW_DOWNLOADS ? (
@@ -27,7 +27,7 @@ const SOURCE_URL = 'https://github.com/myronmoskalyk/metaproc';
 		</section>
 	) : (
 		<div class="mp-banner mp-banner--info">
-			<strong>Desktop downloads return soon</strong> — together with the public source code
+			<strong>Desktop downloads return soon</strong>, together with the public source code
 			and release tags. The browser app is available now: just
 			<a href="#" data-placeholder="app-url">launch MetaProc</a>.
 		</div>

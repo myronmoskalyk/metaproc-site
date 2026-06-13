@@ -1,9 +1,9 @@
-/* MetaProc site — global styles + brand tokens ("Orbital", locked 2026-06-12).
+/* MetaProc site, global styles + brand tokens ("Orbital", locked 2026-06-12).
    Tailwind v4 is configured in CSS (no tailwind.config.js).
 
    Source of truth for the palette and motion language:
      C:\dev\metaproc-deploy\design\BRAND.md   (the locked Orbital brand spec)
-   mirrored in the app's R/app_theme.R — when a shade is needed that BRAND.md
+   mirrored in the app's R/app_theme.R, when a shade is needed that BRAND.md
    does not list, derive it from these tokens and document the derivation in
    README.md / HANDOVER.md.
 
@@ -15,14 +15,14 @@
 @import "tailwindcss";
 
 /* Self-hosted fonts (no Google CDN). Geist variable for UI/headings, Geist Mono
-   for code/numbers — the premium pairing the app shares (BRAND.md §4, 2026-06-13). */
+   for code/numbers, the premium pairing the app shares (BRAND.md §4, 2026-06-13). */
 @import "@fontsource-variable/geist";
 @import "@fontsource-variable/geist-mono";
 
-/* ---- Core brand (mood-independent) — BRAND.md §1 -------------------------- */
+/* ---- Core brand (mood-independent), BRAND.md §1 -------------------------- */
 :root {
-	--mp-g1: #11C7B4;          /* gradient start — decorative/glow only */
-	--mp-g2: #11B981;          /* gradient end — decorative/glow only */
+	--mp-g1: #11C7B4;          /* gradient start, decorative/glow only */
+	--mp-g2: #11B981;          /* gradient end, decorative/glow only */
 	--mp-brand: #12BBA0;       /* mid reference; borders, icons on dark */
 	--mp-brand-deep: #0A7A68;  /* AA-safe: white-text buttons, links on light */
 	--mp-grad: linear-gradient(135deg, var(--mp-g1), var(--mp-g2));
@@ -32,23 +32,23 @@
 	--mp-grad-cta: linear-gradient(135deg, #0B8170, var(--mp-brand-deep));
 
 	--mp-ease: cubic-bezier(.22, .61, .36, 1);
-	--mp-radius: 12px;         /* controls (BRAND §5: 9–13px) */
-	--mp-radius-lg: 20px;      /* panels (BRAND §5: 18–22px) */
+	--mp-radius: 12px;         /* controls (BRAND §5: 9-13px) */
+	--mp-radius-lg: 20px;      /* panels (BRAND §5: 18-22px) */
 	--mp-radius-pill: 999px;
 
-	/* Code panel stays dark in BOTH moods — premium contrast anchor (BRAND §3) */
+	/* Code panel stays dark in BOTH moods, premium contrast anchor (BRAND §3) */
 	--mp-code-bg: #0D141B;
 	--mp-code-fg: #9FE8DC;
 	--mp-code-edge: #22303B;
 }
 
-/* ---- Warm light (default mood) — BRAND.md §2–3 ----------------------------- */
+/* ---- Warm light (default mood), BRAND.md §2-3 ----------------------------- */
 :root {
-	--mp-accent: #E08A00;        /* amber — active/current (role-locked) */
+	--mp-accent: #E08A00;        /* amber, active/current (role-locked) */
 	--mp-accent-deep: #B45309;
-	--mp-accent2: #F2613F;       /* coral — secondary / informational */
+	--mp-accent2: #F2613F;       /* coral, secondary / informational */
 	--mp-accent2-deep: #D24524;
-	--mp-accent3: #38BDF8;       /* sky — tertiary: data, links, focus glints */
+	--mp-accent3: #38BDF8;       /* sky, tertiary: data, links, focus glints */
 	--mp-accent3-deep: #0284C7;  /* AA text on the warm canvas (≈4.6:1) */
 	--mp-on-accent: #fff;
 	--mp-on-accent2: #fff;
@@ -66,12 +66,12 @@
 
 	--mp-ink: #19222C;
 	--mp-muted: #5B6877;         /* ≥4.5:1 on canvas and panel (computed) */
-	/* Link/eyebrow text on light. brand-deep #0A7A68 measures only 4.38–4.48:1
+	/* Link/eyebrow text on light. brand-deep #0A7A68 measures only 4.38-4.48:1
 	   on the tinted surfaces it actually lands on (footer/section tint #E3EDE5,
-	   download banner #FCE9E2) once aurora compositing is accounted for — below
+	   download banner #FCE9E2) once aurora compositing is accounted for, below
 	   AA. Derived per BRAND.md §1 (deepen the locked brand-deep one notch for the
 	   text role only; buttons/gradients keep #0A7A68 where white-on passes): the
-	   text token is #097264 — computed ≥4.86:1 on every warm-light surface, white
+	   text token is #097264, computed ≥4.86:1 on every warm-light surface, white
 	   on it still 5.83:1. Derivation documented in README/HANDOVER. */
 	--mp-link: #097264;
 	--mp-link-hover: #085D4F;          /* ≈6.9:1 on canvas */
@@ -90,7 +90,7 @@
 	   itself is ≥3:1 against the canvas (coral #F2613F is only ≈2.8:1). */
 	--mp-focus: var(--mp-accent2-deep);
 
-	/* Banners (draft/info) — text colours computed for ≥4.5:1 on their tints */
+	/* Banners (draft/info), text colours computed for ≥4.5:1 on their tints */
 	--mp-banner-draft-fg: #8A5A00;
 	--mp-banner-info-fg: #A8331A;
 
@@ -103,15 +103,15 @@
 	color-scheme: light;
 }
 
-/* ---- Deep dusk — opt-in mood for marketing pages ([data-theme="dusk"]) and
+/* ---- Deep dusk, opt-in mood for marketing pages ([data-theme="dusk"]) and
         token alignment for Starlight's own dark mode ([data-theme="dark"]) --- */
 :root[data-theme="dusk"],
 :root[data-theme="dark"] {
 	--mp-accent: #F5A524;
 	--mp-accent-deep: #D97706;
-	--mp-accent2: #9B8BFF;       /* violet — secondary (dusk) */
+	--mp-accent2: #9B8BFF;       /* violet, secondary (dusk) */
 	--mp-accent2-deep: #6D55E0;
-	--mp-accent3: #4DA3FF;       /* electric blue — tertiary: data, links, focus */
+	--mp-accent3: #4DA3FF;       /* electric blue, tertiary: data, links, focus */
 	--mp-accent3-deep: #2D7FF0;
 	--mp-on-accent: #1c1206;
 	--mp-on-accent2: #fff;
@@ -166,7 +166,7 @@
 	--color-accent-violet: #9B8BFF;
 }
 
-/* ---- Base (marketing pages only — Starlight has its own reset) -------------- */
+/* ---- Base (marketing pages only, Starlight has its own reset) -------------- */
 html {
 	font-family: var(--font-sans, system-ui, sans-serif);
 	scroll-behavior: smooth;
@@ -183,7 +183,7 @@ body.mp-marketing {
 	transition: background .4s ease, color .4s ease;
 }
 
-/* Aurora canvas — two fixed drifting tint layers (BRAND §6 "drift").
+/* Aurora canvas, two fixed drifting tint layers (BRAND §6 "drift").
    Marketing pages only; transform-only animation, composited. */
 body.mp-marketing::before {
 	content: "";
@@ -213,7 +213,7 @@ body.mp-marketing::after {
 	will-change: transform;
 }
 
-/* Generic link colour — :where(:not(.mp-cta)) keeps specificity at 0-1-1 while
+/* Generic link colour, :where(:not(.mp-cta)) keeps specificity at 0-1-1 while
    excluding CTAs, whose own colour rules (0-1-0) must win. */
 .mp-marketing a:where(:not(.mp-cta)) {
 	color: var(--mp-link);
@@ -222,8 +222,7 @@ body.mp-marketing::after {
 	color: var(--mp-link-hover);
 }
 
-/* Accessibility: one consistent focus ring everywhere (BRAND §9 —
-   2px partner-accent outline, 3px offset; -deep variant on light for ≥3:1). */
+/* Accessibility: one consistent focus ring everywhere (BRAND §9, 2px partner-accent outline, 3px offset; -deep variant on light for ≥3:1). */
 :where(a, button, summary, input, select, textarea, [tabindex]):focus-visible {
 	outline: 2px solid var(--mp-focus);
 	outline-offset: 3px;
@@ -256,7 +255,7 @@ body.mp-marketing::after {
 
 /* ---- Orbital shared components --------------------------------------------- */
 
-/* Eyebrow label (BRAND §4) — uses --mp-link so it is AA in both moods. */
+/* Eyebrow label (BRAND §4), uses --mp-link so it is AA in both moods. */
 .mp-eyebrow {
 	font-size: 0.68rem;
 	font-weight: 800;
@@ -308,7 +307,7 @@ body.mp-marketing::after {
 	box-shadow: var(--mp-shadow-panel), 0 0 30px -14px var(--mp-glow), inset 0 1px 0 var(--mp-hair);
 }
 
-/* Primary CTA — AA-safe deep teal gradient, ripple host, press punch. */
+/* Primary CTA, AA-safe deep teal gradient, ripple host, press punch. */
 .mp-cta {
 	position: relative;
 	overflow: hidden;
@@ -363,7 +362,7 @@ body.mp-marketing::after {
 	border-color: var(--mp-brand);
 }
 
-/* Pointerdown ripple (BRAND §6) — spans injected by BaseLayout's script. */
+/* Pointerdown ripple (BRAND §6), spans injected by BaseLayout's script. */
 .mp-ripple {
 	position: absolute;
 	border-radius: 50%;
@@ -385,13 +384,13 @@ body.mp-marketing::after {
 	animation: mp-shine 8s ease-in-out infinite;
 }
 
-/* Rise entrance (initial load only — BRAND §6). Stagger via --mp-rise-delay. */
+/* Rise entrance (initial load only, BRAND §6). Stagger via --mp-rise-delay. */
 .mp-rise {
 	animation: mp-rise .8s var(--mp-ease) both;
 	animation-delay: var(--mp-rise-delay, 0s);
 }
 
-/* ---- Keyframes (approved motion set — BRAND §6; reuse, don't invent) ------- */
+/* ---- Keyframes (approved motion set, BRAND §6; reuse, don't invent) ------- */
 @keyframes mp-rise {
 	from { opacity: 0; transform: translateY(18px); }
 	to { opacity: 1; transform: none; }
@@ -421,9 +420,9 @@ body.mp-marketing::after {
 	to { transform: translate(-50%, -50%) scale(2.4); opacity: 0; }
 }
 
-/* ---- Starlight (docs) — Orbital token mapping ------------------------------ */
+/* ---- Starlight (docs), Orbital token mapping ------------------------------ */
 /* Starlight keeps its OWN light/dark toggle as the docs' mode control (its
-   ThemeSelect, key 'starlight-theme') — distinct from the marketing pages'
+   ThemeSelect, key 'starlight-theme'), distinct from the marketing pages'
    'mp-site-mood' toggle; the two coexist. These blocks recolour BOTH Starlight
    modes to Orbital: surfaces per BRAND.md §3, accent triplet derived from the
    brand teal with computed AA (accent carries white/inverted text ≥4.5:1;
@@ -432,7 +431,7 @@ body.mp-marketing::after {
 	--sl-font: "Geist Variable", Geist, sans-serif;
 	--sl-font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
 
-	/* Dark mode (Starlight's default) — deep-dusk, teal-tinted grays */
+	/* Dark mode (Starlight's default), deep-dusk, teal-tinted grays */
 	--sl-color-accent-low: #0E322D;
 	--sl-color-accent: #0A7A68;
 	--sl-color-accent-high: #7EE8D8;
@@ -446,7 +445,7 @@ body.mp-marketing::after {
 	--sl-color-black: #060A11;
 }
 :root[data-theme='light'] {
-	/* Light mode — warm-light canvas (never pure white), warm grays */
+	/* Light mode, warm-light canvas (never pure white), warm grays */
 	--sl-color-accent-low: #CFE9E2;
 	--sl-color-accent: #0A7A68;
 	--sl-color-accent-high: #084B40;
@@ -497,7 +496,7 @@ body.mp-marketing::after {
 }
 .mp-reveal.is-in { opacity: 1; transform: none; filter: none; }
 
-/* Floating glass "island" — chrome only (nav, clusters). Detached pill with an
+/* Floating glass "island", chrome only (nav, clusters). Detached pill with an
    inner highlight; solid fallback under reduced-transparency. */
 .mp-island {
 	background: var(--mp-glass);

@@ -1,6 +1,6 @@
 ---
 // Signature hero visual: an animated inline-SVG forest plot.
-// Zero JS — CI whiskers draw in via stroke-dashoffset, study markers fade/scale
+// Zero JS: CI whiskers draw in via stroke-dashoffset, study markers fade/scale
 // in staggered, and the amber pooled diamond scales in last.
 // Colours follow the Orbital plot palette (BRAND.md §8): teal series for
 // studies, amber (the "current/pooled" accent) for the summary diamond.
@@ -38,11 +38,11 @@ const summaryY = top + studies.length * rowH + 14;
 			return (
 				<g class="mp-forest__row" style={`--row-delay:${delay}`}>
 					<text class="mp-forest__label" x="64" y={y + 4} text-anchor="end">{s.name}</text>
-					{/* CI whisker — drawn in via dashoffset */}
+					{/* CI whisker: drawn in via dashoffset */}
 					<line class="mp-forest__ci" x1={s.lo} y1={y} x2={s.hi} y2={y} style={`--ci-len:${s.hi - s.lo}`} />
 					<line class="mp-forest__cap" x1={s.lo} y1={y - 5} x2={s.lo} y2={y + 5} />
 					<line class="mp-forest__cap" x1={s.hi} y1={y - 5} x2={s.hi} y2={y + 5} />
-					{/* Square marker — staggered fade/scale in */}
+					{/* Square marker: staggered fade/scale in */}
 					<rect
 						class="mp-forest__marker"
 						x={s.x - s.w / 2}
@@ -55,7 +55,7 @@ const summaryY = top + studies.length * rowH + 14;
 			);
 		})}
 
-		{/* Summary diamond — amber, scales in last */}
+		{/* Summary diamond: amber, scales in last */}
 		<polygon
 			class="mp-forest__diamond"
 			points={`${summary.lo},${summaryY} ${summary.cx},${summaryY - 11} ${summary.hi},${summaryY} ${summary.cx},${summaryY + 11}`}

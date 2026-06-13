@@ -15,7 +15,7 @@ interface Props {
 
 const {
 	title,
-	description = 'Run a complete, reproducible meta-analysis in your browser — data to forest plot to GRADE, with the exact R code for every step.',
+	description = 'Run a complete, reproducible meta-analysis in your browser, from data to forest plot to GRADE, with the exact R code for every step.',
 	activePath = '',
 } = Astro.props;
 
@@ -35,7 +35,7 @@ const ANALYTICS_TOKEN = '';
 		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
 		<!-- Mood (Orbital): warm light default, deep dusk opt-in. Applied BEFORE
-		     first paint — inline + blocking on purpose. Persisted under
+		     first paint (inline + blocking on purpose). Persisted under
 		     'mp-site-mood'; first visit honours prefers-color-scheme. -->
 		<script is:inline>
 			(function () {
@@ -47,7 +47,7 @@ const ANALYTICS_TOKEN = '';
 					} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
 						mood = 'dusk';
 					}
-				} catch (e) { /* storage unavailable — keep light */ }
+				} catch (e) { /* storage unavailable, keep light */ }
 				document.documentElement.setAttribute('data-theme', mood);
 			})();
 		</script>
@@ -66,7 +66,7 @@ const ANALYTICS_TOKEN = '';
 		<meta property="og:type" content="website" />
 
 		{
-			/* Stage 8: Cloudflare Web Analytics — guarded behind an empty token so it
+			/* Stage 8: Cloudflare Web Analytics, guarded behind an empty token so it
 			   renders nothing (and makes no request) until configured. */
 			ANALYTICS_TOKEN && (
 				<script
@@ -88,7 +88,7 @@ const ANALYTICS_TOKEN = '';
 		</main>
 		<Footer />
 
-		<!-- Ripple on primary CTAs (BRAND §6) — skipped under reduced motion. -->
+		<!-- Ripple on primary CTAs (BRAND §6), skipped under reduced motion. -->
 		<script>
 			const reduce = () =>
 				window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
