@@ -74,6 +74,15 @@ all 7 routes × both moods. (The hero-only viewport crops differ ~30-45% purely 
 scroll/ring-rotation jitter between two independent page loads — the full-page byte-identical diff
 is the authoritative check, and visual inspection confirms identical hues.)
 
+**Hero gridlines kept clear of text 2026-06-13.** The faint graph-paper grid in the hero
+(`.hero__gridbg`) is now a texture ONLY in the empty area behind the launch core — its mask was
+retightened to a small ellipse centred on the core (~71%,50% desktop; 50%,72% mobile) that fully
+decays to transparent before it reaches the text column (probed at 1440px: headline/sub/eyebrow
+end at ~49% of the hero, the mask is transparent by ~53%; mobile text ends ~45%, mask transparent
+by ~51%). Verified with a pixel check (`e2e/gridcheck.mjs`): forcing the grid layer to full-opacity
+red, **0 grid pixels land inside any padded text rect** across desktop+mobile × light+dusk (0 of
+~535k sampled). Every character is crisp in both moods.
+
 **Remaining before public:**
 1. **Recapture proof assets** — **DONE 2026-06-13** for the six screenshots + the poster
    frame: `src/assets/proof/hero-app-overview.png`, `workflow-store.png`, `plots-studio.png`,

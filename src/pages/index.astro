@@ -254,8 +254,13 @@ const faqs = [
 </BaseLayout>
 
 <style>
-	/* Hero: transparent over the aurora canvas, with a faint graph-paper grid
-	   (masked to fade at the edges) for a quietly mathematical, statistical feel. */
+	/* Hero: transparent over the aurora canvas, with a faint graph-paper grid for
+	   a quietly mathematical, statistical feel. The grid is a TEXTURE ONLY in the
+	   empty visual area behind the launch core; its mask is tightly centred on the
+	   core (~71%,50%) and fully decays to nothing well before the text column
+	   (headline/sub/eyebrow end at ~49% of the hero; the mask is transparent by
+	   ~53%). So no character ever sits over a gridline. (Probed at 1440px:
+	   text right-edge 48.9%, mask left transparent edge ~53%, core column 53.9-88.6%.) */
 	.hero {
 		position: relative;
 		isolation: isolate;
@@ -270,9 +275,11 @@ const faqs = [
 			linear-gradient(var(--mp-hair) 1px, transparent 1px),
 			linear-gradient(90deg, var(--mp-hair) 1px, transparent 1px);
 		background-size: 46px 46px;
-		-webkit-mask: radial-gradient(72% 80% at 74% 50%, var(--mp-mask) 0%, transparent 76%);
-		mask: radial-gradient(72% 80% at 74% 50%, var(--mp-mask) 0%, transparent 76%);
-		opacity: .55;
+		/* Tight ellipse on the core: solid to 30% of the radius, gone by 66% — the
+		   left edge lands at ~53% width, a clear gap from text (ends ~49%). */
+		-webkit-mask: radial-gradient(ellipse 27% 62% at 71% 50%, var(--mp-mask) 0%, var(--mp-mask) 30%, transparent 66%);
+		mask: radial-gradient(ellipse 27% 62% at 71% 50%, var(--mp-mask) 0%, var(--mp-mask) 30%, transparent 66%);
+		opacity: .6;
 	}
 	.hero__grid {
 		display: grid;
@@ -479,9 +486,12 @@ const faqs = [
 	@media (max-width: 820px) {
 		.hero__grid { grid-template-columns: 1fr; }
 		.hero__visual { margin-top: 0.75rem; }
+		/* Stacked layout: text on top (ends ~45% of the hero), core below (centred
+		   ~72%). Confine the grid to the lower core area; the mask is transparent by
+		   ~51%, so it fades to nothing above the launch core, clear of all text. */
 		.hero__gridbg {
-			-webkit-mask: radial-gradient(94% 56% at 50% 60%, var(--mp-mask), transparent 82%);
-			mask: radial-gradient(94% 56% at 50% 60%, var(--mp-mask), transparent 82%);
+			-webkit-mask: radial-gradient(ellipse 82% 30% at 50% 72%, var(--mp-mask) 0%, var(--mp-mask) 26%, transparent 70%);
+			mask: radial-gradient(ellipse 82% 30% at 50% 72%, var(--mp-mask) 0%, var(--mp-mask) 26%, transparent 70%);
 		}
 	}
 

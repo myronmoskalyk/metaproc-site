@@ -277,3 +277,20 @@ Chrome, full ruleset, both moods, all 7 marketing routes) = **0 violations**. (H
 crops show ~30-45% delta purely from sub-pixel scroll + ring-rotation jitter across two separate
 page loads; the byte-identical full-page diff is authoritative, and side-by-side inspection shows
 identical hues.) Harness: untracked `e2e/{frozen,diff,diff2,diff3}.mjs`.
+
+## [2026-06-13] polish | Hero gridlines never obscure text
+The faint hero graph-paper grid could fade into the headline area; retightened so it is texture
+only behind the launch core.
+
+- `.hero__gridbg` mask retightened to a small ellipse centred on the launch core. Desktop:
+  `radial-gradient(ellipse 27% 62% at 71% 50%, mask 0%, mask 30%, transparent 66%)` — solid to 30%
+  of the radius, fully transparent by ~53% of the hero width, a clear gap from the text column
+  which ends at ~49% (probed at 1440px). Mobile (<=820px, stacked): `ellipse 82% 30% at 50% 72%`
+  centred on the core below the text, transparent by ~51% of hero height (text ends ~45%).
+- **Verified clear:** `e2e/gridcheck.mjs` forces the grid layer to full-opacity red and samples
+  every padded text bounding box — **0 grid pixels inside text** across desktop+mobile x
+  light+dusk (0 of ~535k sampled). Hero screenshots in both moods confirm crisp characters with
+  the grid confined to the core area.
+
+**Gates.** `npm run build` green (11 pages); in-page axe still 0 (grid is decorative,
+`aria-hidden`, unchanged structurally).
