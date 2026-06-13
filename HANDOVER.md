@@ -1,5 +1,34 @@
 # metaproc-site — Handover
 
+**Theme presets expanded to 18 — 2026-06-13.** Added presets **#11–18** to the picker —
+**Nord, Dracula, Solarized, Catppuccin, Tokyo Night, Gruvbox, One Dark, Rosé Pine** — the
+editor-inspired round-2 palettes in `metaproc-deploy/design/themes.md`. Each is the same
+seed-override pattern as presets 2–10 (a `:root[data-theme-preset="<id>"]` light block + its
+`[data-theme="dusk"]`/`[data-theme="dark"]` pairing in `global.css`, restating only the seeds;
+every surface re-derives). Each keeps its **own dusk canvas** (Nord slate `#2E3440`, Tokyo Night
+`#1A1B26`, Solarized petrol `#002B36`, Gruvbox charcoal `#282828`, …) so the dark background
+changes per theme. Eight swatches were added to `PRESETS` in `ThemePicker.astro` (id, label,
+light gradient + 3 light accent dots), in the same order/format as the original 10. Ids + seeds
+match `themes.md` exactly so the site and app render identical themes.
+- **AA:** every text-bearing token (`brand-deep`, each `accent*-deep`, `link`, `muted`,
+  `cta-light-fg`) computed for WCAG AA on the theme's canvas/panels + worst-case aurora composite
+  in BOTH moods (math in `e2e/theme-aa-new.mjs`), then deepened/lightened until ≥4.5:1. Documented
+  deepenings beyond the literal `themes.md` seed: light `brand-deep` Solarized `#1E6FA8→#1C689E`;
+  dusk `accent2` Nord `#B48EAD→#B995B2`, Solarized `#D33682→#DF6BA3`, Gruvbox `#FB4934→#FC6856`;
+  dusk `link` Solarized `#268BD2→#4EA1DA` and dusk `muted` Nord `#95A9B9→#99ACBC` (these last two
+  were lifted a second notch after the **in-page axe** measured 4.3–4.45:1 on brand-tinted
+  bento/tour panels that composite lighter than the bare canvas — the authoritative gate caught
+  what the design-time estimate missed).
+- **Gates (all green):** `npm run build` (11 pages); **in-page axe 0 violations across ALL 18
+  presets × {`/`, `/features`, `/methods`} × {light, dusk} = 108 combos** (`e2e/axe-themes.mjs`,
+  including the 8 new × 6 = 48 new combos); default Orbital still 0 across all 7 routes × both
+  moods (`e2e/axe-run.mjs`); seeds match `themes.md` — `e2e/verify-seeds.mjs` (221 assertions, 0
+  mismatches, 8 documented AA-deepenings). Visual: `e2e/shoot-new-themes.mjs` (Nord/Dracula/Tokyo
+  Night heroes × both moods + the picker open showing all 18). No app/pre-paint changes needed —
+  `BaseLayout.astro` reads any preset id generically and sets `data-theme-preset`, so a new CSS
+  block + swatch is all a preset needs. **Still TODO:** mirror #11–18 in the app's
+  `metaproc_palette()` (`R/app_theme.R`) so the desktop/app surface matches (per `themes.md`).
+
 **Runtime theme picker 2026-06-13.** Added a header **theme picker**: a visitor can switch the
 **whole site** between the **10 preset palettes** in `metaproc-deploy/design/themes.md` (Orbital,
 Indigo, Ember, Forest, Royal, Graphite, Ocean, Rose, Atelier, Crimson) plus a live **Custom**

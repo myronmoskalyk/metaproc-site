@@ -84,8 +84,8 @@ brighter `#38BDF8` sky / `#4DA3FF` electric-blue stay decorative/data only.
 ### Runtime theme presets + the picker
 
 On top of the locked **Orbital** identity, a visitor can switch the **whole site** between
-**10 preset palettes** plus a live **Custom** option, via a compact picker in the header (the
-swatch button next to the mood toggle). The 10 presets are the shared spec in
+**18 preset palettes** plus a live **Custom** option, via a compact picker in the header (the
+swatch button next to the mood toggle). The 18 presets are the shared spec in
 `metaproc-deploy/design/themes.md` — the app uses the same seeds, so the site and the app
 render identical themes. Presets are a web-mode user layer; the default stays **Orbital**.
 
@@ -106,18 +106,31 @@ golden, never change).
 
 | Preset | Light brand | Preset | Light brand |
 |---|---|---|---|
-| **Orbital** (default) | teal → emerald | **Graphite** | slate + electric blue |
-| **Indigo** | blue-violet | **Ocean** | azure → cyan |
-| **Ember** | coral → amber | **Rose** | blush → magenta |
-| **Forest** | canopy green | **Atelier** | bronze → gold |
-| **Royal** | violet → magenta | **Crimson** | deep red → rose |
+| **Orbital** (default) | teal → emerald | **Crimson** | deep red → rose |
+| **Indigo** | blue-violet | **Nord** | arctic blue-grey |
+| **Ember** | coral → amber | **Dracula** | purple → pink |
+| **Forest** | canopy green | **Solarized** | petrol → cyan |
+| **Royal** | violet → magenta | **Catppuccin** | mauve → blue |
+| **Graphite** | slate + electric blue | **Tokyo Night** | blue → violet |
+| **Ocean** | azure → cyan | **Gruvbox** | retro orange |
+| **Rose** | blush → magenta | **One Dark** | editor blue → cyan |
+| **Atelier** | bronze → gold | **Rosé Pine** | muted rose → gold |
+
+The first 10 are the original palettes; presets 11–18 (**Nord, Dracula, Solarized, Catppuccin,
+Tokyo Night, Gruvbox, One Dark, Rosé Pine**) are premium takes on familiar editor themes, each
+keeping its own dusk canvas (Nord slate, Tokyo Night deep blue, Solarized petrol, Gruvbox
+warm-charcoal, …) so the dark background changes per theme.
 
 The seeds match `themes.md` **exactly**. Per-theme, the text-bearing tokens (`brand-deep`, each
 `accent*-deep`, `link`, `muted`) are computed for WCAG AA on that theme's canvas/panels and the
 worst-case drifting-aurora composite, then **auto-deepened** until they clear 4.5:1 (3:1 for
-accents used only on lines/borders/icons). Four light `brand-deep` seeds measured ~4.1:1 and
-were deepened (Ember `#C2410C→#B63D0B`, Forest `#2B7A2B→#287328`, Ocean `#0E7490→#0D6D87`,
-Atelier `#92600E→#895A0D`); `themes.md` explicitly allows this. One mood-independent helper,
+accents used only on lines/borders/icons). Several seeds measured below 4.5:1 on their own
+canvas/aurora and were deepened (light, toward black) or lightened (dusk, toward white), as
+`themes.md` explicitly allows: light `brand-deep` Ember `#C2410C→#B63D0B`, Forest
+`#2B7A2B→#287328`, Ocean `#0E7490→#0D6D87`, Atelier `#92600E→#895A0D`, Solarized
+`#1E6FA8→#1C689E`; dusk `accent2` Nord `#B48EAD→#B995B2`, Solarized `#D33682→#DF6BA3`, Gruvbox
+`#FB4934→#FC6856`; dusk `link` Solarized `#268BD2→#4EA1DA`; dusk `muted` Nord `#95A9B9→#99ACBC`
+(the last two lifted to clear the in-page axe measurement on tinted panels). One mood-independent helper,
 `--mp-cta-light-fg`, exists because `.mp-cta--light` is a white button on the always-dark code
 band in *both* moods, so its text must stay the dark AA-on-white value even in dusk (where a
 theme's `--mp-brand-deep` goes light for the dark canvas).
