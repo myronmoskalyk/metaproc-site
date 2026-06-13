@@ -65,7 +65,14 @@
 	--mp-cap: color-mix(in srgb, var(--mp-brand) 7%, #FAF7F0);
 
 	--mp-ink: #19222C;
-	--mp-muted: #5B6877;         /* ≥4.5:1 on canvas and panel (computed) */
+	/* Muted body text. BRAND.md §3 lists #5B6877; that clears AA on the *static*
+	   canvas/panel but the drifting aurora transiently tints local backgrounds
+	   greener (to ~#E3EDE5), where small antialiased text samples 4.27-4.47:1 (axe,
+	   composited) — below AA on the tinted tour band and the footer. Deepened one
+	   notch to #525F6D per the BRAND §1 derive-and-document rule (same pattern as the
+	   --mp-link #097264 fix): computed ≥5.4:1 on the green-tinted aurora composite,
+	   5.7:1 on canvas, 6.4:1 on panels. Derivation documented in README/HANDOVER. */
+	--mp-muted: #525F6D;
 	/* Link/eyebrow text on light. brand-deep #0A7A68 measures only 4.38-4.48:1
 	   on the tinted surfaces it actually lands on (footer/section tint #E3EDE5,
 	   download banner #FCE9E2) once aurora compositing is accounted for, below
