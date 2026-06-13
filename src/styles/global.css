@@ -64,7 +64,14 @@
 
 	--mp-ink: #19222C;
 	--mp-muted: #5B6877;         /* ≥4.5:1 on canvas and panel (computed) */
-	--mp-link: var(--mp-brand-deep);   /* ≈4.6:1 on canvas, 5.3:1 on white */
+	/* Link/eyebrow text on light. brand-deep #0A7A68 measures only 4.38–4.48:1
+	   on the tinted surfaces it actually lands on (footer/section tint #E3EDE5,
+	   download banner #FCE9E2) once aurora compositing is accounted for — below
+	   AA. Derived per BRAND.md §1 (deepen the locked brand-deep one notch for the
+	   text role only; buttons/gradients keep #0A7A68 where white-on passes): the
+	   text token is #097264 — computed ≥4.86:1 on every warm-light surface, white
+	   on it still 5.83:1. Derivation documented in README/HANDOVER. */
+	--mp-link: #097264;
 	--mp-link-hover: #085D4F;          /* ≈6.9:1 on canvas */
 
 	--mp-edge: color-mix(in srgb, var(--mp-brand) 26%, rgba(20, 28, 40, .12));
