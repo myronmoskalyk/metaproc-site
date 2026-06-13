@@ -57,6 +57,9 @@ Colour literals (`#hex`, `rgb()/rgba()`, etc.) appear in exactly three kinds of 
   with their dusk values; flipping `data-theme` on `<html>` swaps the whole palette. (The
   `[data-theme='dark']`/`[data-theme='light']` blocks do the equivalent for Starlight's own
   docs toggle.)
+- **`:root[data-theme-preset='<id>']`** (+ its `[data-theme='dusk']` pairing) — the **runtime
+  theme presets** (Indigo, Ember, …). Each restates only the SEED tokens for that palette;
+  surfaces re-derive. See "Runtime theme presets + the picker" below.
 - **`@theme`** — Tailwind v4's static utility mirror (it needs literal values at build time;
   it cannot read `var()`). These duplicate a few `:root` brand colours so `bg-brand` etc.
   exist as utilities. They are currently unused by the markup, kept only as the Tailwind hook.
@@ -66,7 +69,7 @@ token groups:
 
 | Group | Tokens |
 |---|---|
-| **Brand** | `--mp-g1` `--mp-g2` (gradient stops), `--mp-brand`, `--mp-brand-deep`, `--mp-grad`, `--mp-grad-cta` |
+| **Brand** | `--mp-g1` `--mp-g2` (gradient stops), `--mp-brand`, `--mp-brand-deep`, `--mp-grad`, `--mp-grad-cta`, `--mp-cta-light-fg` (white-button text, always the dark AA-on-white value) |
 | **Accents** (3 per mood, role-locked) | `--mp-accent`/`-deep` (amber = active), `--mp-accent2`/`-deep` (coral · violet = secondary), `--mp-accent3`/`-deep` (sky · electric-blue = data/links/focus), plus `--mp-on-accent*` |
 | **Surfaces** | `--mp-canvas`, `--mp-panel`, `--mp-cap`, `--mp-glass`, `--mp-tint`, `--mp-bg-teal/-emer/-acc`, and the always-dark code panel `--mp-code-bg`/`-bg2`/`-fg`/`-edge` |
 | **Ink / muted / link** | `--mp-ink`, `--mp-muted`, `--mp-link`/`-hover`; plus the on-dark trio `--mp-on-brand`, `--mp-ink-on-dark`, `--mp-muted-on-dark`, `--mp-faint-on-dark` |
@@ -77,3 +80,64 @@ the BRAND table for AA on the drifting-aurora composite (documented per BRAND §
 derive-and-document rule): warm-light link/eyebrow text `#097264`, muted body `#525F6D`,
 the CTA-gradient pair `#0B8170 → #0A7A68`, and `--mp-accent3-deep #0369A1` (sky text) — the
 brighter `#38BDF8` sky / `#4DA3FF` electric-blue stay decorative/data only.
+
+### Runtime theme presets + the picker
+
+On top of the locked **Orbital** identity, a visitor can switch the **whole site** between
+**10 preset palettes** plus a live **Custom** option, via a compact picker in the header (the
+swatch button next to the mood toggle). The 10 presets are the shared spec in
+`metaproc-deploy/design/themes.md` — the app uses the same seeds, so the site and the app
+render identical themes. Presets are a web-mode user layer; the default stays **Orbital**.
+
+**Two orthogonal axes.** `data-theme` on `<html>` is the **mood** (light vs dusk, owned by the
+mood toggle, also `dark`/`light` for Starlight). `data-theme-preset` on `<html>` is the
+**palette** (the active preset). They compose: the mood toggle switches the light/dusk variant
+*within* the active preset.
+
+**A preset is just seed overrides.** Because every surface (panels, glass, edges, glow, tints,
+shadows) already derives from `brand` + `canvas` via `color-mix`, a preset only needs to
+restate the SEED tokens — `--mp-g1`/`--mp-g2`, `--mp-brand`/`-deep`, `--mp-canvas`, `--mp-ink`,
+`--mp-muted`, `--mp-link`/`-hover`, the three accents + `-deep` + `--mp-on-accent*`, plus
+`--mp-plot-teal` / `--mp-code-fg` / `--mp-cta-light-fg`. Everything else re-derives. The blocks
+live in `global.css` under `:root[data-theme-preset="<id>"]` (light seeds) and
+`:root[data-theme-preset="<id>"][data-theme="dusk"]` (dusk seeds). **Orbital has no block** —
+selecting it removes the attribute so the locked `:root` base wins (its rendered values, incl.
+golden, never change).
+
+| Preset | Light brand | Preset | Light brand |
+|---|---|---|---|
+| **Orbital** (default) | teal → emerald | **Graphite** | slate + electric blue |
+| **Indigo** | blue-violet | **Ocean** | azure → cyan |
+| **Ember** | coral → amber | **Rose** | blush → magenta |
+| **Forest** | canopy green | **Atelier** | bronze → gold |
+| **Royal** | violet → magenta | **Crimson** | deep red → rose |
+
+The seeds match `themes.md` **exactly**. Per-theme, the text-bearing tokens (`brand-deep`, each
+`accent*-deep`, `link`, `muted`) are computed for WCAG AA on that theme's canvas/panels and the
+worst-case drifting-aurora composite, then **auto-deepened** until they clear 4.5:1 (3:1 for
+accents used only on lines/borders/icons). Four light `brand-deep` seeds measured ~4.1:1 and
+were deepened (Ember `#C2410C→#B63D0B`, Forest `#2B7A2B→#287328`, Ocean `#0E7490→#0D6D87`,
+Atelier `#92600E→#895A0D`); `themes.md` explicitly allows this. One mood-independent helper,
+`--mp-cta-light-fg`, exists because `.mp-cta--light` is a white button on the always-dark code
+band in *both* moods, so its text must stay the dark AA-on-white value even in dusk (where a
+theme's `--mp-brand-deep` goes light for the dark canvas).
+
+**Custom.** The picker's Custom entry exposes colour inputs for the brand `g1`/`g2` + the 3
+accents; `src/scripts/theme.ts` derives the rest (brand, brand-deep, canvas, ink, muted, link,
+accent `-deep`, `on-accent`) and **auto-deepens text for AA** on the chosen canvas, writing the
+result as inline custom properties on `<html>` (inline wins over the preset blocks). It persists
+as a JSON blob (`mp-site-theme-custom`).
+
+**Persistence + no flash.** The active preset persists in `localStorage` under `mp-site-theme`
+(+ the custom blob), and is applied **before first paint** by the inline script in
+`BaseLayout.astro` (which already set the mood) — it sets `data-theme-preset` (or, for custom,
+writes the derived inline vars). The picker UI is `src/components/ThemePicker.astro` (a real
+`<button>` trigger + a `role="radio"` swatch grid + the custom form; keyboard + focus-visible).
+
+**To add a preset:** (1) add a light + dusk seed-override block in `global.css` (copy an
+existing pair, set the 7 light seeds + link/muted, and the dusk seeds); (2) run
+`node e2e/theme-aa.mjs` to compute/deepen the `-deep`/`link`/`muted` text tokens and paste the
+AA values in; (3) add the preset to `PRESETS` in `ThemePicker.astro` (id, label, gradient stops,
+3 accent dots) so a swatch renders; (4) mirror it in the app's `metaproc_palette()` so both
+surfaces match (`themes.md`); (5) re-run `npm run build`, `node e2e/verify-seeds.mjs` (seeds
+match `themes.md`), and `node e2e/axe-themes.mjs` (in-page axe, both moods).

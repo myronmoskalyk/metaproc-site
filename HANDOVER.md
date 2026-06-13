@@ -1,5 +1,50 @@
 # metaproc-site — Handover
 
+**Runtime theme picker 2026-06-13.** Added a header **theme picker**: a visitor can switch the
+**whole site** between the **10 preset palettes** in `metaproc-deploy/design/themes.md` (Orbital,
+Indigo, Ember, Forest, Royal, Graphite, Ocean, Rose, Atelier, Crimson) plus a live **Custom**
+option. It is a second, orthogonal axis to the mood toggle: `data-theme` stays the **mood**
+(light/dusk), and a new `data-theme-preset` on `<html>` is the **palette**; they compose (mood
+picks the light/dusk variant *within* the active preset). The app uses the same seeds so both
+surfaces render identical themes.
+- **How a preset applies:** because every surface already derives from `brand` + `canvas` via
+  `color-mix`, a preset is just a set of SEED overrides. The blocks live in `global.css` under
+  `:root[data-theme-preset="<id>"]` (light) + `…[data-theme="dusk"]` (dusk); they restate
+  `--mp-g1/g2`, `--mp-brand/-deep`, `--mp-canvas`, `--mp-ink`, `--mp-muted`, `--mp-link/-hover`,
+  the 3 accents + `-deep` + `--mp-on-accent*`, `--mp-plot-teal`, `--mp-code-fg`,
+  `--mp-cta-light-fg`. Everything else re-derives. **Orbital has no block** (selecting it removes
+  the attribute → the locked `:root` base wins; its rendered values incl. golden are unchanged —
+  verified `.mp-cta--light` text = `#0A7A68` byte-identical in both moods).
+- **Custom:** the picker exposes colour inputs for brand `g1`/`g2` + the 3 accents;
+  `src/scripts/theme.ts` derives brand/brand-deep/canvas/ink/muted/link/accent-`deep`/on-accent
+  and **auto-deepens text for AA** on the chosen canvas, writing inline custom props on `<html>`
+  (inline beats the preset blocks). Persists as `mp-site-theme-custom` (JSON blob).
+- **Pre-paint / persistence:** active preset persists under `mp-site-theme`; applied **before
+  first paint** by the extended inline script in `BaseLayout.astro` (sets `data-theme-preset`, or
+  for custom writes the derived inline vars) — no flash. Default = Orbital.
+- **AA:** per theme, the text-bearing tokens (`brand-deep`, each `accent*-deep`, `link`, `muted`)
+  are computed for AA on that theme's canvas/panels + the worst-case aurora composite and
+  auto-deepened until they clear 4.5:1 (3:1 for line/border/icon accents). Math +
+  auto-deepen: `e2e/theme-aa.mjs`. Four light `brand-deep` seeds were deepened (Ember
+  `#C2410C→#B63D0B`, Forest `#2B7A2B→#287328`, Ocean `#0E7490→#0D6D87`, Atelier
+  `#92600E→#895A0D`; `themes.md` permits this). New mood-independent helper `--mp-cta-light-fg`
+  (the always-dark AA-on-white brand-deep) backs `.mp-cta--light` and the skip link, both of
+  which sit on white/always-dark surfaces in *both* moods — a theme's dusk `--mp-brand-deep`
+  goes light and would otherwise fail there (the in-page axe gate caught exactly this).
+- **Picker UI:** `src/components/ThemePicker.astro` — a real `<button>` trigger (`aria-haspopup`,
+  `aria-expanded`) + a `role="radio"` swatch grid (each swatch = brand gradient + 3 accent dots +
+  name) + the custom `<form>`. Keyboard (Enter/Space/Escape, focus restored to trigger),
+  focus-visible, outside-click close, reduced-motion gates the popover transition.
+- **Gates:** `npm run build` green (11 pages). **In-page axe 0 violations across ALL 10 presets ×
+  {`/`, `/features`, `/methods`} × {light, dusk} = 60 combos** (`e2e/axe-themes.mjs`), default
+  Orbital still 0 across all 7 routes × both moods (`e2e/axe-run.mjs`), and the Custom theme
+  (tame + high-chroma) 0 in both moods (`e2e/axe-custom.mjs`). Seeds match `themes.md` exactly:
+  `e2e/verify-seeds.mjs` (117 assertions, 0 mismatches, 4 documented AA-deepenings). Visual
+  verification: `e2e/shoot-themes.mjs` (heroes per preset × mood, picker open, custom) +
+  `e2e/shoot-picker-full.mjs`. **To add a preset:** see the README "Runtime theme presets" how-to
+  (global.css block → `theme-aa.mjs` → `ThemePicker.astro` swatch → app `metaproc_palette()` →
+  re-run build + verify-seeds + axe-themes). Harness files are untracked under `e2e/`.
+
 **State (2026-06-12):** site fully rethemed to the locked **"Orbital"** brand
 (`metaproc-deploy/design/BRAND.md`; reference mockup
 `metaproc-deploy/design/portal-proposal/mockup-g-orbital-final.html`): warm-light default +
