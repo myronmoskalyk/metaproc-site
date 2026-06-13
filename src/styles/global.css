@@ -48,8 +48,8 @@
 	--mp-accent-deep: #B45309;
 	--mp-accent2: #F2613F;       /* coral, secondary / informational */
 	--mp-accent2-deep: #D24524;
-	--mp-accent3: #38BDF8;       /* sky, tertiary: data, links, focus glints */
-	--mp-accent3-deep: #0284C7;  /* AA text on the warm canvas (≈4.6:1) */
+	--mp-accent3: #38BDF8;       /* sky, tertiary: data, focus glints (decorative) */
+	--mp-accent3-deep: #0369A1;  /* AA text on warm canvas (5.2:1); #38BDF8/#0284C7 stay decorative */
 	--mp-on-accent: #fff;
 	--mp-on-accent2: #fff;
 	--mp-on-accent3: #fff;

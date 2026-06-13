@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ForestPlot from '../components/ForestPlot.astro';
 import ProofAsset from '../components/ProofAsset.astro';
 
 // Real screenshots from the live Orbital app (recaptured 2026-06-13 from the
@@ -114,6 +113,7 @@ const faqs = [
 <BaseLayout title="MetaProc" activePath="/">
 	<!-- ===================== HERO ===================== -->
 	<section class="hero">
+		<div class="hero__gridbg" aria-hidden="true"></div>
 		<div class="mp-container hero__grid">
 			<div class="hero__copy mp-rise">
 				<p class="mp-eyebrow">Reproducible meta-analysis</p>
@@ -122,28 +122,31 @@ const faqs = [
 					From data to forest plot to GRADE summary, with the exact R code behind every step.
 				</p>
 				<div class="hero__cta">
-					<a class="mp-cta mp-cta--lg" href="#" data-placeholder="app-url">
-						Launch MetaProc free
-						<span class="mp-cta__ico" aria-hidden="true">
-							<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l5 5-5 5" /></svg>
-						</span>
-					</a>
 					<a class="hero__secondary" href="/download">Prefer the desktop app?</a>
 				</div>
 			</div>
 			<div class="hero__visual mp-rise" style="--mp-rise-delay:.1s">
-				<!-- Launch-core ring miniature sits BEHIND the panel, fully contained in
-				     this column (pointer-events:none) so it can never reach the CTA. -->
-				<div class="hero__core" aria-hidden="true">
-					<span class="hero__halo hero__halo--bloom"></span>
-					<span class="hero__halo"></span>
-					<span class="hero__dashring"></span>
-				</div>
-				<div class="hero__panel mp-bezel">
-					<div class="mp-bezel__core hero__panelcore">
-						<ForestPlot />
-					</div>
-				</div>
+				<!-- Launch core: the animated launch button. Rings (breathe + spin + sonar)
+				     are decorative; the <a> is the real, accessible primary CTA. -->
+				<a class="launchcore" href="#" data-placeholder="app-url" aria-label="Launch MetaProc, free">
+					<span class="launchcore__rings" aria-hidden="true">
+						<span class="launchcore__sonar"></span>
+						<span class="launchcore__sonar launchcore__sonar--2"></span>
+						<span class="launchcore__halo launchcore__halo--bloom"></span>
+						<span class="launchcore__halo"></span>
+						<span class="launchcore__dash"></span>
+					</span>
+					<span class="launchcore__btn">
+						<span class="launchcore__mark" aria-hidden="true">
+							<svg viewBox="0 0 24 24" fill="none">
+								<rect x="11" y="4" width="2" height="16" rx="1" fill="#fff" opacity=".5" />
+								<polygon points="12,8 18.5,12 12,16 5.5,12" fill="#fff" />
+							</svg>
+						</span>
+						<span class="launchcore__label">Launch</span>
+						<span class="launchcore__free">free</span>
+					</span>
+				</a>
 			</div>
 		</div>
 	</section>
@@ -328,13 +331,29 @@ const faqs = [
 </BaseLayout>
 
 <style>
-	/* Hero: transparent over the aurora canvas; rise entrance + shine heading. */
+	/* Hero: transparent over the aurora canvas, with a faint graph-paper grid
+	   (masked to fade at the edges) for a quietly mathematical, statistical feel. */
 	.hero {
+		position: relative;
+		isolation: isolate;
 		padding-block: clamp(3rem, 7vw, 5.5rem);
+	}
+	.hero__gridbg {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		pointer-events: none;
+		background-image:
+			linear-gradient(var(--mp-hair) 1px, transparent 1px),
+			linear-gradient(90deg, var(--mp-hair) 1px, transparent 1px);
+		background-size: 46px 46px;
+		-webkit-mask: radial-gradient(78% 84% at 72% 46%, #000 0%, transparent 78%);
+		mask: radial-gradient(78% 84% at 72% 46%, #000 0%, transparent 78%);
+		opacity: .6;
 	}
 	.hero__grid {
 		display: grid;
-		grid-template-columns: 1.05fr 0.95fr;
+		grid-template-columns: 1.02fr 0.98fr;
 		gap: clamp(2rem, 5vw, 4.5rem);
 		align-items: center;
 	}
@@ -378,56 +397,145 @@ const faqs = [
 	}
 	.hero__secondary:hover::after { transform: scaleX(1); }
 
-	/* Visual column: the ring lives BEHIND the panel and is contained within this
-	   column's own box (inset:0, pointer-events:none) so it can never overlap the
-	   launch CTA in the copy column (the reported bug). */
+	/* ---- Launch core: the animated launch button. A pressable brand-gradient core
+	   inside a breathing + spinning ring system with radiating sonar pulses; click
+	   fires a burst ring + scale-punch (the script below). All gated by reduced-motion. */
 	.hero__visual {
+		display: grid;
+		place-items: center;
+		min-height: clamp(280px, 34vw, 420px);
+	}
+	.launchcore {
 		position: relative;
+		display: grid;
+		place-items: center;
+		width: clamp(228px, 26vw, 312px);
+		aspect-ratio: 1;
+		border-radius: 50%;
+		text-decoration: none;
 		isolation: isolate;
-		padding: clamp(1.25rem, 3.5vw, 2.75rem);
 	}
-	.hero__panel {
-		position: relative;
-		z-index: 1;
-	}
-	.hero__panelcore { padding: 1.15rem 1.4rem; }
-
-	.hero__core {
+	.launchcore__rings {
 		position: absolute;
 		inset: 0;
-		z-index: 0;
 		display: grid;
 		place-items: center;
 		pointer-events: none;
+		z-index: 0;
 		animation: mp-ringbreathe 5.5s ease-in-out infinite;
 		will-change: transform;
 	}
-	.hero__halo {
+	.launchcore__halo {
 		grid-area: 1 / 1;
-		width: min(94%, 380px);
+		width: 100%;
 		aspect-ratio: 1;
 		border-radius: 50%;
 		background: conic-gradient(from 0deg, var(--mp-g1), var(--mp-g2), var(--mp-g1), var(--mp-g2), var(--mp-g1));
-		-webkit-mask: radial-gradient(closest-side, transparent 0 79%, #000 80% 100%);
-		mask: radial-gradient(closest-side, transparent 0 79%, #000 80% 100%);
-		opacity: .82;
+		-webkit-mask: radial-gradient(closest-side, transparent 0 77%, #000 79% 100%);
+		mask: radial-gradient(closest-side, transparent 0 77%, #000 79% 100%);
+		opacity: .85;
 		animation: mp-spin 16s linear infinite;
 		will-change: transform;
 	}
-	.hero__halo--bloom { filter: blur(16px) saturate(1.2); opacity: .42; }
-	.hero__dashring {
+	.launchcore__halo--bloom { filter: blur(18px) saturate(1.25); opacity: .5; }
+	.launchcore__dash {
 		grid-area: 1 / 1;
-		width: min(100%, 408px);
+		width: 117%;
 		aspect-ratio: 1;
 		border-radius: 50%;
-		border: 1.5px dashed color-mix(in srgb, var(--mp-accent3) 48%, transparent);
-		animation: mp-spin 44s linear infinite reverse;
+		border: 1.5px dashed color-mix(in srgb, var(--mp-accent3) 52%, transparent);
+		animation: mp-spin 40s linear infinite reverse;
 		will-change: transform;
+	}
+	.launchcore__sonar {
+		grid-area: 1 / 1;
+		width: 66%;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		border: 1.5px solid color-mix(in srgb, var(--mp-brand) 55%, transparent);
+		animation: mp-sonar 4.2s ease-out infinite;
+		will-change: transform, opacity;
+	}
+	.launchcore__sonar--2 { animation-delay: 2.1s; }
+	.launchcore__btn {
+		position: relative;
+		z-index: 1;
+		display: grid;
+		place-items: center;
+		gap: .08rem;
+		width: 52%;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background: var(--mp-grad-cta);
+		color: #fff;
+		box-shadow:
+			0 22px 55px -20px var(--mp-glow),
+			inset 0 0 0 1px rgba(255, 255, 255, .14),
+			inset 0 2px 0 rgba(255, 255, 255, .24);
+		overflow: hidden;
+		transition: transform .25s var(--mp-ease), box-shadow .25s ease, filter .25s ease;
+	}
+	.launchcore:hover .launchcore__btn {
+		transform: scale(1.05);
+		filter: brightness(1.07);
+		box-shadow:
+			0 28px 64px -20px var(--mp-glow),
+			inset 0 0 0 1px rgba(255, 255, 255, .2),
+			inset 0 2px 0 rgba(255, 255, 255, .3);
+	}
+	.launchcore:active .launchcore__btn { transform: scale(.97); }
+	.launchcore:hover .launchcore__halo { animation-duration: 8s; }
+	.launchcore:focus-visible { outline: none; }
+	.launchcore:focus-visible .launchcore__btn {
+		box-shadow:
+			0 22px 55px -20px var(--mp-glow),
+			inset 0 0 0 1px rgba(255, 255, 255, .14),
+			0 0 0 4px var(--mp-focus);
+	}
+	.launchcore__mark svg { width: clamp(26px, 3.6vw, 38px); height: auto; display: block; }
+	.launchcore__label {
+		font-weight: 800;
+		font-size: clamp(1rem, 1.5vw, 1.2rem);
+		letter-spacing: -.01em;
+		line-height: 1;
+	}
+	.launchcore__free {
+		font-size: .62rem;
+		font-weight: 700;
+		letter-spacing: .14em;
+		text-transform: uppercase;
+		opacity: .85;
+	}
+	/* Click burst ring (injected by the script). */
+	.launchcore__burst {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		width: 52%;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		border: 2px solid color-mix(in srgb, var(--mp-brand) 70%, transparent);
+		pointer-events: none;
+		z-index: 0;
+		animation: mp-burst .56s ease-out forwards;
+	}
+
+	@keyframes mp-sonar {
+		0% { transform: scale(.66); opacity: .5; }
+		100% { transform: scale(1.5); opacity: 0; }
+	}
+	@keyframes mp-burst {
+		from { transform: translate(-50%, -50%) scale(1); opacity: .7; }
+		to { transform: translate(-50%, -50%) scale(2.3); opacity: 0; }
 	}
 
 	@media (max-width: 820px) {
 		.hero__grid { grid-template-columns: 1fr; }
-		.hero__visual { padding: 2rem 1rem; max-width: 32rem; margin-inline: auto; }
+		.hero__visual { margin-top: 0.5rem; }
+		.hero__gridbg {
+			-webkit-mask: radial-gradient(94% 56% at 50% 62%, #000, transparent 82%);
+			mask: radial-gradient(94% 56% at 50% 62%, #000, transparent 82%);
+		}
 	}
 
 	/* Generic section scaffolding */
@@ -765,3 +873,28 @@ const faqs = [
 		.demo-teaser__cta { width: 100%; }
 	}
 </style>
+
+<script>
+	// Launch core: click burst ring + scale punch on press (skipped under reduced
+	// motion — the rings already animate via CSS, which the global rule disables).
+	(function () {
+		const reduce =
+			window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (reduce) return;
+		const core = document.querySelector<HTMLElement>('.launchcore');
+		const btn = core && core.querySelector<HTMLElement>('.launchcore__btn');
+		if (!core || !btn) return;
+		core.addEventListener('pointerdown', () => {
+			const burst = document.createElement('span');
+			burst.className = 'launchcore__burst';
+			core.appendChild(burst);
+			burst.addEventListener('animationend', () => burst.remove());
+			if (btn.animate) {
+				btn.animate(
+					[{ transform: 'scale(.92)' }, { transform: 'scale(1.05)' }, { transform: 'scale(1)' }],
+					{ duration: 440, easing: 'cubic-bezier(.22,.61,.36,1)' },
+				);
+			}
+		});
+	})();
+</script>
