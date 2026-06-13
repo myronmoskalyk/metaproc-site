@@ -521,6 +521,275 @@
 	--mp-code-fg: #FFB3AE;
 }
 
+/* ========================================================================== *
+   EDITOR-INSPIRED PRESETS (round 2, themes.md #11-18) — premium takes on
+   familiar Obsidian / RStudio / editor palettes. Same seed-override pattern as
+   presets 2-10: each restates only the seeds and re-derives every surface. Each
+   keeps its OWN dusk canvas (Nord slate, Tokyo Night deep blue, Solarized
+   petrol, Gruvbox warm-charcoal, …) so the dark background changes per theme.
+   Seeds are EXACT from themes.md; text-bearing tokens (brand-deep, each
+   accent*-deep, link, muted, cta-light-fg) are AA-deepened to clear 4.5:1 on the
+   theme's canvas/panels + the worst-case aurora composite in BOTH moods (math in
+   e2e/theme-aa-new.mjs; in-page axe via e2e/axe-themes.mjs is the gate). Per the
+   themes.md "adjust for AA and document any change" rule, the deepenings beyond
+   the literal themes.md seed are flagged inline below.
+ * ========================================================================== */
+
+/* ---- 11. Nord — arctic frost (cool blue-grey) ----------------------------- */
+:root[data-theme-preset="nord"] {
+	--mp-g1: #5E81AC; --mp-g2: #81A1C1;
+	--mp-brand: #7091B7; --mp-brand-deep: #3B5A78;
+	--mp-cta-light-fg: #3B5A78;
+	--mp-accent: #D08770; --mp-accent-deep: #875849; --mp-on-accent: #fff;
+	--mp-accent2: #B48EAD; --mp-accent2-deep: #755C70; --mp-on-accent2: #fff;
+	--mp-accent3: #5E81AC; --mp-accent3-deep: #496586; --mp-on-accent3: #fff;
+	--mp-canvas: #ECEFF4;
+	--mp-ink: #1D2633;
+	--mp-muted: #546373;
+	--mp-link: #3B5A78; --mp-link-hover: #2F4860;
+	--mp-plot-teal: #5E81AC;
+	--mp-code-fg: #98B0CA;
+}
+:root[data-theme-preset="nord"][data-theme="dusk"],
+:root[data-theme-preset="nord"][data-theme="dark"] {
+	--mp-g1: #88C0D0; --mp-g2: #81A1C1;
+	--mp-brand: #85B1C9; --mp-brand-deep: #688A9D;
+	--mp-accent: #EBCB8B; --mp-accent-deep: #BCA26F; --mp-on-accent: #1c1206;
+	/* accent2: themes.md dusk seed #B48EAD measures ~3.9:1 as text on the slate
+	   canvas; lightened to #B995B2 (AA 4.76:1), per the themes.md AA rule. */
+	--mp-accent2: #B995B2; --mp-accent2-deep: #94778E; --mp-on-accent2: #0a0a12;
+	--mp-accent3: #A3BE8C; --mp-accent3-deep: #829870; --mp-on-accent3: #06121f;
+	--mp-canvas: #2E3440;
+	--mp-ink: #EDF3F8;
+	/* muted: design-time estimate #95A9B9 measured 4.45:1 in-page (axe) on the
+	   brand-tinted bento/tour panel that composites to ~#353E4B; lightened to
+	   #99ACBC (4.62:1) per the themes.md AA rule. */
+	--mp-muted: #99ACBC;
+	--mp-link: #88C0D0; --mp-link-hover: #ACD3DE;
+	--mp-plot-teal: #88C0D0;
+	--mp-code-fg: #AFD2DE;
+}
+
+/* ---- 12. Dracula — neon dusk (purple / pink) ------------------------------ */
+:root[data-theme-preset="dracula"] {
+	--mp-g1: #9558D4; --mp-g2: #D8569E;
+	--mp-brand: #B757B9; --mp-brand-deep: #7A3FB0;
+	--mp-cta-light-fg: #7A3FB0;
+	--mp-accent: #C9690E; --mp-accent-deep: #944D0A; --mp-on-accent: #fff;
+	--mp-accent2: #0E8FA8; --mp-accent2-deep: #0A697B; --mp-on-accent2: #fff;
+	--mp-accent3: #1E8E3E; --mp-accent3-deep: #176F30; --mp-on-accent3: #fff;
+	--mp-canvas: #F5F4F0;
+	--mp-ink: #232233;
+	--mp-muted: #665E7A;
+	--mp-link: #7A3FB0; --mp-link-hover: #62328D;
+	--mp-plot-teal: #9558D4;
+	--mp-code-fg: #B699E0;
+}
+:root[data-theme-preset="dracula"][data-theme="dusk"],
+:root[data-theme-preset="dracula"][data-theme="dark"] {
+	--mp-g1: #BD93F9; --mp-g2: #FF79C6;
+	--mp-brand: #DE86E0; --mp-brand-deep: #AD69AF;
+	--mp-accent: #FFB86C; --mp-accent-deep: #CC9356; --mp-on-accent: #1c1206;
+	--mp-accent2: #8BE9FD; --mp-accent2-deep: #6FBACA; --mp-on-accent2: #0a0a12;
+	--mp-accent3: #50FA7B; --mp-accent3-deep: #40C862; --mp-on-accent3: #06121f;
+	--mp-canvas: #282A36;
+	--mp-ink: #F3F0F9;
+	--mp-muted: #AC9EBF;
+	--mp-link: #BD93F9; --mp-link-hover: #D1B3FB;
+	--mp-plot-teal: #BD93F9;
+	--mp-code-fg: #CCBAF4;
+}
+
+/* ---- 13. Solarized — precise petrol & warm -------------------------------- */
+:root[data-theme-preset="solarized"] {
+	--mp-g1: #268BD2; --mp-g2: #2AA198;
+	/* brand-deep: themes.md seed #1E6FA8 measures ~4.4:1 on the cream aurora
+	   composite; deepened to #1C689E (AA 4.60:1), per the themes.md AA rule. */
+	--mp-brand: #2896B5; --mp-brand-deep: #1C689E;
+	--mp-cta-light-fg: #1C689E;
+	--mp-accent: #B58900; --mp-accent-deep: #7D5F00; --mp-on-accent: #fff;
+	--mp-accent2: #D33682; --mp-accent2-deep: #AF2D6C; --mp-on-accent2: #fff;
+	--mp-accent3: #859900; --mp-accent3-deep: #5C6A00; --mp-on-accent3: #fff;
+	--mp-canvas: #FDF6E3;
+	--mp-ink: #172732;
+	--mp-muted: #476472;
+	--mp-link: #1C689E; --mp-link-hover: #16537E;
+	--mp-plot-teal: #268BD2;
+	--mp-code-fg: #79B5DF;
+}
+:root[data-theme-preset="solarized"][data-theme="dusk"],
+:root[data-theme-preset="solarized"][data-theme="dark"] {
+	--mp-g1: #268BD2; --mp-g2: #2AA198;
+	--mp-brand: #2896B5; --mp-brand-deep: #1F758D;
+	--mp-accent: #B58900; --mp-accent-deep: #916E00; --mp-on-accent: #1c1206;
+	/* accent2: themes.md dusk seed #D33682 measures ~3.4:1 on the petrol canvas;
+	   lightened to #DF6BA3 (AA 4.66:1), per the themes.md AA rule. */
+	--mp-accent2: #DF6BA3; --mp-accent2-deep: #B25682; --mp-on-accent2: #0a0a12;
+	--mp-accent3: #859900; --mp-accent3-deep: #6A7A00; --mp-on-accent3: #06121f;
+	--mp-canvas: #002B36;
+	--mp-ink: #E8F1F7;
+	--mp-muted: #7CA2B4;
+	/* link: themes.md dusk seed #268BD2 measures ~3.8:1 on the petrol canvas;
+	   lightened for AA. The first estimate #3F99D7 still measured 4.3:1 in-page
+	   (axe) on the teal-tinted panel that composites to ~#033440 (lighter than the
+	   bare canvas), so lifted again to #4EA1DA (4.74:1) per the themes.md AA rule. */
+	--mp-link: #4EA1DA; --mp-link-hover: #83BDE5;
+	--mp-plot-teal: #268BD2;
+	--mp-code-fg: #79B5DF;
+}
+
+/* ---- 14. Catppuccin — soft pastel (Latte / Mocha) ------------------------- */
+:root[data-theme-preset="catppuccin"] {
+	--mp-g1: #8839EF; --mp-g2: #1E66F5;
+	--mp-brand: #5350F2; --mp-brand-deep: #7028C8;
+	--mp-cta-light-fg: #7028C8;
+	--mp-accent: #FE640B; --mp-accent-deep: #A54107; --mp-on-accent: #fff;
+	--mp-accent2: #EA76CB; --mp-accent2-deep: #8F487C; --mp-on-accent2: #fff;
+	--mp-accent3: #179299; --mp-accent3-deep: #116B70; --mp-on-accent3: #fff;
+	--mp-canvas: #EFF1F5;
+	--mp-ink: #1B2137;
+	--mp-muted: #545D84;
+	--mp-link: #7028C8; --mp-link-hover: #5A20A0;
+	--mp-plot-teal: #8839EF;
+	--mp-code-fg: #AF88EF;
+}
+:root[data-theme-preset="catppuccin"][data-theme="dusk"],
+:root[data-theme-preset="catppuccin"][data-theme="dark"] {
+	--mp-g1: #CBA6F7; --mp-g2: #89B4FA;
+	--mp-brand: #AAADF9; --mp-brand-deep: #8587C2;
+	--mp-accent: #FAB387; --mp-accent-deep: #C88F6C; --mp-on-accent: #1c1206;
+	--mp-accent2: #F5C2E7; --mp-accent2-deep: #C49BB9; --mp-on-accent2: #0a0a12;
+	--mp-accent3: #94E2D5; --mp-accent3-deep: #76B5AA; --mp-on-accent3: #06121f;
+	--mp-canvas: #1E1E2E;
+	--mp-ink: #F0F3FB;
+	--mp-muted: #9EA8C5;
+	--mp-link: #CBA6F7; --mp-link-hover: #DBC1F9;
+	--mp-plot-teal: #CBA6F7;
+	--mp-code-fg: #D4C4F3;
+}
+
+/* ---- 15. Tokyo Night — deep blue night ------------------------------------ */
+:root[data-theme-preset="tokyonight"] {
+	--mp-g1: #3760BF; --mp-g2: #7847BD;
+	--mp-brand: #5854BE; --mp-brand-deep: #2A4BA0;
+	--mp-cta-light-fg: #2A4BA0;
+	--mp-accent: #B15C00; --mp-accent-deep: #934C00; --mp-on-accent: #fff;
+	--mp-accent2: #C64343; --mp-accent2-deep: #A43838; --mp-on-accent2: #fff;
+	--mp-accent3: #007197; --mp-accent3-deep: #006485; --mp-on-accent3: #fff;
+	--mp-canvas: #E6E7ED;
+	--mp-ink: #1B2133;
+	--mp-muted: #555E7B;
+	--mp-link: #2A4BA0; --mp-link-hover: #223C80;
+	--mp-plot-teal: #3760BF;
+	--mp-code-fg: #839ED4;
+}
+:root[data-theme-preset="tokyonight"][data-theme="dusk"],
+:root[data-theme-preset="tokyonight"][data-theme="dark"] {
+	--mp-g1: #7AA2F7; --mp-g2: #BB9AF7;
+	--mp-brand: #9B9EF7; --mp-brand-deep: #797BC1;
+	--mp-accent: #FF9E64; --mp-accent-deep: #CC7E50; --mp-on-accent: #1c1206;
+	--mp-accent2: #F7768E; --mp-accent2-deep: #C65E72; --mp-on-accent2: #0a0a12;
+	--mp-accent3: #7DCFFF; --mp-accent3-deep: #64A6CC; --mp-on-accent3: #06121f;
+	--mp-canvas: #1A1B26;
+	--mp-ink: #EFF2FB;
+	--mp-muted: #9AA4C5;
+	--mp-link: #7AA2F7; --mp-link-hover: #A2BEF9;
+	--mp-plot-teal: #7AA2F7;
+	--mp-code-fg: #A7C2F3;
+}
+
+/* ---- 16. Gruvbox — retro warm --------------------------------------------- */
+:root[data-theme-preset="gruvbox"] {
+	--mp-g1: #D65D0E; --mp-g2: #B57614;
+	--mp-brand: #C66A11; --mp-brand-deep: #AF3A03;
+	--mp-cta-light-fg: #AF3A03;
+	--mp-accent: #79740E; --mp-accent-deep: #6B660C; --mp-on-accent: #fff;
+	--mp-accent2: #9D0006; --mp-accent2-deep: #9D0006; --mp-on-accent2: #fff;
+	--mp-accent3: #427B58; --mp-accent3-deep: #3A6D4E; --mp-on-accent3: #fff;
+	--mp-canvas: #FBF1C7;
+	--mp-ink: #242325;
+	--mp-muted: #69625C;
+	--mp-link: #AF3A03; --mp-link-hover: #8C2E02;
+	--mp-plot-teal: #D65D0E;
+	--mp-code-fg: #DA9C73;
+}
+:root[data-theme-preset="gruvbox"][data-theme="dusk"],
+:root[data-theme-preset="gruvbox"][data-theme="dark"] {
+	--mp-g1: #FE8019; --mp-g2: #FABD2F;
+	--mp-brand: #FC9F24; --mp-brand-deep: #C57C1C;
+	--mp-accent: #B8BB26; --mp-accent-deep: #93961E; --mp-on-accent: #1c1206;
+	/* accent2: themes.md dusk seed #FB4934 measures ~4.0:1 on the charcoal
+	   canvas; lightened to #FC6856 (AA 4.72:1), per the themes.md AA rule. */
+	--mp-accent2: #FC6856; --mp-accent2-deep: #CA5345; --mp-on-accent2: #0a0a12;
+	--mp-accent3: #8EC07C; --mp-accent3-deep: #729A63; --mp-on-accent3: #06121f;
+	--mp-canvas: #282828;
+	--mp-ink: #F4F2EE;
+	--mp-muted: #B3A48E;
+	--mp-link: #FE8019; --mp-link-hover: #FEA65E;
+	--mp-plot-teal: #FE8019;
+	--mp-code-fg: #F0AF79;
+}
+
+/* ---- 17. One Dark — editor slate (Atom / RStudio) ------------------------- */
+:root[data-theme-preset="onedark"] {
+	--mp-g1: #4078F2; --mp-g2: #0184BC;
+	--mp-brand: #217ED7; --mp-brand-deep: #2E5BC0;
+	--mp-cta-light-fg: #2E5BC0;
+	--mp-accent: #986801; --mp-accent-deep: #7E5601; --mp-on-accent: #fff;
+	--mp-accent2: #A626A4; --mp-accent2-deep: #A626A4; --mp-on-accent2: #fff;
+	--mp-accent3: #50A14F; --mp-accent3-deep: #346833; --mp-on-accent3: #fff;
+	--mp-canvas: #F4F4F6;
+	--mp-ink: #172535;
+	--mp-muted: #4B657F;
+	--mp-link: #2E5BC0; --mp-link-hover: #25499A;
+	--mp-plot-teal: #4078F2;
+	--mp-code-fg: #88ABF0;
+}
+:root[data-theme-preset="onedark"][data-theme="dusk"],
+:root[data-theme-preset="onedark"][data-theme="dark"] {
+	--mp-g1: #61AFEF; --mp-g2: #56B6C2;
+	--mp-brand: #5CB3D9; --mp-brand-deep: #488CA9;
+	--mp-accent: #E5C07B; --mp-accent-deep: #B79A62; --mp-on-accent: #1c1206;
+	--mp-accent2: #C678DD; --mp-accent2-deep: #9E60B1; --mp-on-accent2: #0a0a12;
+	--mp-accent3: #98C379; --mp-accent3-deep: #7A9C61; --mp-on-accent3: #06121f;
+	--mp-canvas: #282C34;
+	--mp-ink: #EBF3F9;
+	--mp-muted: #8AA9BD;
+	--mp-link: #61AFEF; --mp-link-hover: #90C7F4;
+	--mp-plot-teal: #61AFEF;
+	--mp-code-fg: #9AC9EF;
+}
+
+/* ---- 18. Rosé Pine — muted rose & gold ------------------------------------ */
+:root[data-theme-preset="rosepine"] {
+	--mp-g1: #B4637A; --mp-g2: #EA9D34;
+	--mp-brand: #CF8057; --mp-brand-deep: #8A4A5E;
+	--mp-cta-light-fg: #8A4A5E;
+	--mp-accent: #D7827E; --mp-accent-deep: #8B5452; --mp-on-accent: #fff;
+	--mp-accent2: #907AA9; --mp-accent2-deep: #705F84; --mp-on-accent2: #fff;
+	--mp-accent3: #56949F; --mp-accent3-deep: #3F6D75; --mp-on-accent3: #fff;
+	--mp-canvas: #FAF4ED;
+	--mp-ink: #25252B;
+	--mp-muted: #6A6668;
+	--mp-link: #8A4A5E; --mp-link-hover: #6E3B4B;
+	--mp-plot-teal: #B4637A;
+	--mp-code-fg: #C79FAE;
+}
+:root[data-theme-preset="rosepine"][data-theme="dusk"],
+:root[data-theme-preset="rosepine"][data-theme="dark"] {
+	--mp-g1: #EBBCBA; --mp-g2: #F6C177;
+	--mp-brand: #F1BF99; --mp-brand-deep: #BC9577;
+	--mp-accent: #F6C177; --mp-accent-deep: #C59A5F; --mp-on-accent: #1c1206;
+	--mp-accent2: #C4A7E7; --mp-accent2-deep: #9D86B9; --mp-on-accent2: #0a0a12;
+	--mp-accent3: #9CCFD8; --mp-accent3-deep: #7DA6AD; --mp-on-accent3: #06121f;
+	--mp-canvas: #191724;
+	--mp-ink: #F4F4F5;
+	--mp-muted: #B1ADAC;
+	--mp-link: #EBBCBA; --mp-link-hover: #F1D0CF;
+	--mp-plot-teal: #EBBCBA;
+	--mp-code-fg: #E6D0D1;
+}
+
 /* ---- Custom theme: seeds come from JS-applied inline custom properties on
    <html> (data-theme-preset="custom"). The pre-paint script writes the brand
    g1/g2 + 3 accents the user picked; brand/brand-deep/link/muted are derived
