@@ -83,6 +83,21 @@ by ~51%). Verified with a pixel check (`e2e/gridcheck.mjs`): forcing the grid la
 red, **0 grid pixels land inside any padded text rect** across desktop+mobile × light+dusk (0 of
 ~535k sampled). Every character is crisp in both moods.
 
+**More glass + visual polish 2026-06-13.** Frosted-glass treatment broadened tastefully across
+chrome and panels (BRAND §5 "broaden glass onto more chrome"), each with a layered recipe
+(translucent tint + a top-light sheen `::before` for edge refraction + inner highlight + edge-lit
+hairline) and a `prefers-reduced-transparency: reduce` SOLID fallback: the nav island (enriched +
+a scroll-aware lifted state driven by a top-of-page IntersectionObserver sentinel, never a scroll
+listener), the double-bezel shells (`.mp-bezel`), a new reusable `.mp-glass-panel` utility, the
+FAQ disclosures (now glass; the "+" sits in a circular well and rotates 135deg into an "x" on
+open), the final-CTA panel, and the footer band. New glass tokens live in `global.css`:
+`--mp-glass-panel`, `--mp-glass-soft`, `--mp-glass-sheen`, `--mp-blur` (per mood). Polish: custom
+easing throughout (unchanged `cubic-bezier(.22,.61,.36,1)`), `:active` press scales, the
+button-in-button trailing-icon physics. Gates after this work: build green (11 pages); **in-page
+axe 0 violations on all 7 routes x both moods** (the frosted panels keep text AA — verified the
+glass translucency did not drop contrast); reduced-transparency emulation confirmed the panels
+render solid (FAQ `backdrop-filter: none`); launch-core geometry probe still 0.00 offsets.
+
 **Remaining before public:**
 1. **Recapture proof assets** — **DONE 2026-06-13** for the six screenshots + the poster
    frame: `src/assets/proof/hero-app-overview.png`, `workflow-store.png`, `plots-studio.png`,

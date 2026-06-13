@@ -294,3 +294,36 @@ only behind the launch core.
 
 **Gates.** `npm run build` green (11 pages); in-page axe still 0 (grid is decorative,
 `aria-hidden`, unchanged structurally).
+
+## [2026-06-13] polish | More frosted glass + free-rein visual polish
+Broadened the frosted-glass language across chrome and panels, plus taste-driven micro-polish.
+
+- **Central glass recipe** (in `global.css`): new tokens `--mp-glass-panel` (content glass that
+  holds body text), `--mp-glass-soft` (lighter shells/bands), `--mp-glass-sheen` (top-light
+  gradient for edge refraction), `--mp-blur` (16px, BRAND §5 12-16). Every glass surface layers a
+  translucent tint + a sheen `::before` + an inner highlight (`--mp-hi-*`) + an edge-lit hairline,
+  and ALL carry a `prefers-reduced-transparency: reduce` solid fallback (background -> opaque
+  panel/tint, `backdrop-filter: none`, sheen hidden).
+- **Surfaces upgraded to glass:** the nav island (`.mp-island`, enriched + a scroll-aware lifted
+  state), the double-bezel shells (`.mp-bezel`, now a frosted tray), a reusable `.mp-glass-panel`,
+  the FAQ disclosures (`.faq__item`), the final-CTA panel (`.final-cta`, keeps its amber HUD
+  bracket), and the footer band (`.mp-footer`).
+- **Scroll-aware nav:** a zero-height top-of-page sentinel + IntersectionObserver toggles
+  `data-scrolled` on the island (deeper shadow + brand-tinted edge when scrolled) — no scroll
+  listener (perf).
+- **Micro-polish:** the FAQ "+" now sits in a circular tertiary-tinted well and rotates 135deg
+  into an "x" on open (animated, replaces the glyph swap); custom easing throughout; `:active`
+  press scales; button-in-button trailing-icon hover physics retained.
+- **Colour tokens tightened further:** the last raw literals inside `global.css` rules (CTA white
+  text/bg, skip-link white, ripple/highlight rgba) moved onto tokens (`--mp-on-brand`,
+  `--mp-hi-42`, `--mp-glow-white`) so even the central file's *rules* reference tokens; literals
+  remain only in `:root`/`[data-theme]`/`@theme` definitions.
+
+**Gates.** `npm run build` green (11 pages). **In-page axe (Playwright + Chrome, full ruleset,
+both moods, all 7 marketing routes) = 0 violations** — the frosted panels keep text AA (the glass
+opacity was tuned so the worst-case aurora composite still passes). Reduced-transparency emulation
+confirms panels render solid (`.faq__item` computes `backdrop-filter: none`). Launch-core geometry
+probe still reads 0.00 offsets desktop+mobile both moods. Em-dash/en-dash count in built marketing
+HTML = 0. Motion stays gated: the global reduced-motion rule kills the new nav transition + FAQ
+icon rotation. Screenshots: hero (both moods, desktop+mobile), full pages, section crops, scrolled
+nav, reduced-transparency fallback — all under `e2e/shots/`.

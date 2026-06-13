@@ -53,12 +53,15 @@
 	/* Inner-highlight whites (top-edge sheen on raised/gradient surfaces). One
 	   semantic scale so the literal lives only here, not in component styles. */
 	--mp-hi-14: rgba(255, 255, 255, .14);
+	--mp-hi-15: rgba(255, 255, 255, .15);
 	--mp-hi-16: rgba(255, 255, 255, .16);
 	--mp-hi-18: rgba(255, 255, 255, .18);
 	--mp-hi-20: rgba(255, 255, 255, .20);
 	--mp-hi-24: rgba(255, 255, 255, .24);
 	--mp-hi-25: rgba(255, 255, 255, .25);
 	--mp-hi-30: rgba(255, 255, 255, .30);
+	--mp-hi-42: rgba(255, 255, 255, .42);  /* button ripple fill */
+	--mp-glow-white: rgba(255, 255, 255, .80); /* light-CTA hover glow on the dark band */
 
 	/* Mask paint: CSS mask/-webkit-mask uses this purely for alpha/luminance to
 	   carve a shape (it is NOT a rendered colour, and never changes with mood). */
@@ -88,6 +91,14 @@
 	--mp-tint: color-mix(in srgb, var(--mp-g1) 7%, var(--mp-canvas));
 
 	--mp-glass: color-mix(in srgb, var(--mp-brand) 5%, rgba(255, 255, 255, .82));
+	/* Content glass: a touch more translucent than chrome glass, for panels that
+	   hold body text (FAQ, final CTA, bezel shells). Kept opaque enough that text
+	   over it still clears AA on the worst-case aurora composite. */
+	--mp-glass-panel: color-mix(in srgb, var(--mp-brand) 6%, rgba(255, 255, 255, .74));
+	--mp-glass-soft: color-mix(in srgb, var(--mp-brand) 5%, rgba(255, 255, 255, .62));
+	/* Top-light sheen laid over a glass surface for edge refraction (BRAND §5). */
+	--mp-glass-sheen: linear-gradient(180deg, rgba(255, 255, 255, .55), rgba(255, 255, 255, 0) 42%);
+	--mp-blur: 16px;             /* shared glass blur radius (BRAND §5: 12-16px) */
 	--mp-panel: #FDFCF8;         /* tinted opaque card surface */
 	--mp-cap: color-mix(in srgb, var(--mp-brand) 7%, #FAF7F0);
 
@@ -158,6 +169,13 @@
 	--mp-tint: color-mix(in srgb, var(--mp-brand) 8%, var(--mp-canvas));
 
 	--mp-glass: color-mix(in srgb, var(--mp-brand) 9%, rgba(16, 22, 32, .60));
+	/* Content glass (dusk): deep, faintly brand-tinted, translucent over the
+	   near-black canvas; opaque enough to keep body text AA on the aurora. */
+	--mp-glass-panel: color-mix(in srgb, var(--mp-brand) 10%, rgba(18, 25, 35, .56));
+	--mp-glass-soft: color-mix(in srgb, var(--mp-brand) 9%, rgba(16, 22, 32, .42));
+	/* Top-light sheen for edge refraction on dusk glass (cooler, dimmer). */
+	--mp-glass-sheen: linear-gradient(180deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, 0) 46%);
+	--mp-blur: 16px;
 	--mp-panel: #141C25;         /* solid card fallback (BRAND §3) */
 	--mp-cap: #18222B;           /* elevated */
 
@@ -269,7 +287,7 @@ body.mp-marketing::after {
 	left: -9999px;
 	top: 0;
 	background: var(--mp-brand-deep);
-	color: #fff;
+	color: var(--mp-on-brand);
 	font-weight: 800;
 	padding: 0.6rem 1rem;
 	z-index: 100;
@@ -350,20 +368,20 @@ body.mp-marketing::after {
 	justify-content: center;
 	gap: 0.5rem;
 	background: var(--mp-grad-cta);
-	color: #fff;
+	color: var(--mp-on-brand);
 	font-weight: 700;
 	text-decoration: none;
 	padding: 0.85rem 1.6rem;
 	border: 0;
 	border-radius: var(--mp-radius);
-	box-shadow: 0 6px 20px -8px var(--mp-glow), inset 0 1px 0 rgba(255, 255, 255, .18);
+	box-shadow: 0 6px 20px -8px var(--mp-glow), inset 0 1px 0 var(--mp-hi-18);
 	transition: transform .15s var(--mp-ease), box-shadow .15s ease, filter .15s ease;
 }
 .mp-cta:hover {
-	color: #fff;
+	color: var(--mp-on-brand);
 	transform: translateY(-1px);
 	filter: brightness(1.05);
-	box-shadow: 0 10px 30px -10px var(--mp-glow), inset 0 1px 0 rgba(255, 255, 255, .18);
+	box-shadow: 0 10px 30px -10px var(--mp-glow), inset 0 1px 0 var(--mp-hi-18);
 }
 .mp-cta:active {
 	transform: scale(0.96);
@@ -371,14 +389,14 @@ body.mp-marketing::after {
 .mp-cta--sm { padding: 0.5rem 1rem; font-size: 0.9rem; }
 .mp-cta--lg { padding: 1.05rem 2.2rem; font-size: 1.1rem; }
 .mp-cta--light {
-	background: #fff;
+	background: var(--mp-on-brand);
 	color: var(--mp-brand-deep);
 	box-shadow: none;
 }
 .mp-cta--light:hover {
 	color: var(--mp-brand-deep);
 	filter: none;
-	box-shadow: 0 0 26px -10px rgba(255, 255, 255, .8);
+	box-shadow: 0 0 26px -10px var(--mp-glow-white);
 }
 .mp-cta--outline {
 	background: transparent;
@@ -400,7 +418,7 @@ body.mp-marketing::after {
 .mp-ripple {
 	position: absolute;
 	border-radius: 50%;
-	background: rgba(255, 255, 255, .42);
+	background: var(--mp-hi-42);
 	transform: translate(-50%, -50%) scale(0);
 	pointer-events: none;
 	mix-blend-mode: screen;
@@ -530,31 +548,96 @@ body.mp-marketing::after {
 }
 .mp-reveal.is-in { opacity: 1; transform: none; filter: none; }
 
-/* Floating glass "island", chrome only (nav, clusters). Detached pill with an
-   inner highlight; solid fallback under reduced-transparency. */
+/* Floating glass "island", chrome only (nav, clusters). Detached pill: a
+   layered frosted surface (translucent tint + a top-light sheen for edge
+   refraction) with an inner highlight and edge-lit hairline. Solid fallback
+   under prefers-reduced-transparency. The sheen rides a ::before so it layers
+   over the backdrop-blur without a second blur pass. */
 .mp-island {
+	position: relative;
+	isolation: isolate;
 	background: var(--mp-glass);
-	-webkit-backdrop-filter: saturate(150%) blur(16px);
-	backdrop-filter: saturate(150%) blur(16px);
+	-webkit-backdrop-filter: saturate(155%) blur(var(--mp-blur));
+	backdrop-filter: saturate(155%) blur(var(--mp-blur));
 	border: 1px solid var(--mp-edge);
-	box-shadow: var(--mp-shadow-panel), inset 0 1px 0 rgba(255, 255, 255, .18);
+	box-shadow: var(--mp-shadow-panel), inset 0 1px 0 var(--mp-hi-18);
 }
-@media (prefers-reduced-transparency: reduce) {
-	.mp-island { background: var(--mp-panel); backdrop-filter: none; -webkit-backdrop-filter: none; }
+.mp-island::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	border-radius: inherit;
+	background: var(--mp-glass-sheen);
+	pointer-events: none;
 }
 
-/* Double-bezel: outer shell + concentric inner core (BRAND §5). */
+/* Content glass: a frosted panel that holds body text (FAQ, final CTA, bezel
+   shells). Same layered recipe, tuned for legibility; solid fallback below. */
+.mp-glass-panel {
+	position: relative;
+	isolation: isolate;
+	background: var(--mp-glass-panel);
+	-webkit-backdrop-filter: saturate(150%) blur(var(--mp-blur));
+	backdrop-filter: saturate(150%) blur(var(--mp-blur));
+	border: 1px solid var(--mp-edge);
+	box-shadow: var(--mp-shadow-panel), inset 0 1px 0 var(--mp-hi-18);
+}
+.mp-glass-panel::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	border-radius: inherit;
+	background: var(--mp-glass-sheen);
+	pointer-events: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+	.mp-island,
+	.mp-glass-panel {
+		background: var(--mp-panel);
+		backdrop-filter: none;
+		-webkit-backdrop-filter: none;
+	}
+	.mp-island::before,
+	.mp-glass-panel::before { display: none; }
+}
+
+/* Double-bezel: outer shell + concentric inner core (BRAND §5). The shell is a
+   light frosted tray; the core is the opaque content surface inside it. */
 .mp-bezel {
+	position: relative;
+	isolation: isolate;
 	padding: 6px;
 	border-radius: 26px;
-	background: color-mix(in srgb, var(--mp-brand) 6%, var(--mp-glass));
-	border: 1px solid var(--mp-hair);
-	box-shadow: var(--mp-shadow-panel);
+	background: color-mix(in srgb, var(--mp-brand) 6%, var(--mp-glass-soft));
+	-webkit-backdrop-filter: saturate(140%) blur(var(--mp-blur));
+	backdrop-filter: saturate(140%) blur(var(--mp-blur));
+	border: 1px solid var(--mp-edge);
+	box-shadow: var(--mp-shadow-panel), inset 0 1px 0 var(--mp-hi-16);
+}
+.mp-bezel::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	border-radius: inherit;
+	background: var(--mp-glass-sheen);
+	pointer-events: none;
+}
+@media (prefers-reduced-transparency: reduce) {
+	.mp-bezel {
+		background: color-mix(in srgb, var(--mp-brand) 6%, var(--mp-panel));
+		backdrop-filter: none;
+		-webkit-backdrop-filter: none;
+	}
+	.mp-bezel::before { display: none; }
 }
 .mp-bezel__core {
 	border-radius: 20px;
 	background: var(--mp-panel);
-	box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15);
+	box-shadow: inset 0 1px 0 var(--mp-hi-15);
 	overflow: hidden;
 }
 
@@ -565,7 +648,7 @@ body.mp-marketing::after {
 	width: 1.55em;
 	height: 1.55em;
 	border-radius: 50%;
-	background: rgba(255, 255, 255, .16);
+	background: var(--mp-hi-16);
 	transition: transform .2s var(--mp-ease);
 }
 .mp-cta:hover .mp-cta__ico { transform: translate(2px, -1px) scale(1.06); }

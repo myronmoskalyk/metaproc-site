@@ -75,9 +75,23 @@ const nav = [
 <style>
 	.mp-footer {
 		position: relative;
+		isolation: isolate;
 		margin-top: 5rem;
 		border-top: 1px solid var(--mp-edge);
-		background: var(--mp-tint);
+		/* Frosted band: translucent tint + a soft top-light sheen over a light
+		   backdrop blur. Solid tint fallback under reduced transparency. */
+		background:
+			var(--mp-glass-sheen),
+			var(--mp-glass-soft);
+		-webkit-backdrop-filter: saturate(140%) blur(var(--mp-blur));
+		backdrop-filter: saturate(140%) blur(var(--mp-blur));
+	}
+	@media (prefers-reduced-transparency: reduce) {
+		.mp-footer {
+			background: var(--mp-tint);
+			backdrop-filter: none;
+			-webkit-backdrop-filter: none;
+		}
 	}
 	/* Edge-lit top hairline (secondary accent), matching .mp-panel chrome. */
 	.mp-footer::before {

@@ -10,6 +10,7 @@ const nav = [
 	{ label: 'FAQ', href: '/#faq' },
 ];
 ---
+<span class="mp-head-sentinel" aria-hidden="true"></span>
 <div class="mp-headwrap">
 	<header class="mp-header mp-island" aria-label="Site header">
 		<a href="/" class="mp-wordmark" aria-label="MetaProc home">
@@ -83,6 +84,16 @@ const nav = [
 </div>
 
 <style>
+	/* Zero-height sentinel at the very top: an IntersectionObserver watches it so
+	   the nav can react to scroll without a scroll listener (perf). */
+	.mp-head-sentinel {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 1px;
+		height: 1px;
+		pointer-events: none;
+	}
 	/* Sticky wrapper; the gap above the pill stays click-through. */
 	.mp-headwrap {
 		position: sticky;
@@ -100,7 +111,17 @@ const nav = [
 		gap: 1rem;
 		padding: 0.5rem 0.6rem 0.5rem 1.1rem;
 		border-radius: 20px;
-		transition: box-shadow .3s var(--mp-ease), border-color .3s ease;
+		transition: box-shadow .3s var(--mp-ease), border-color .3s ease, background-color .3s ease;
+	}
+	/* Scrolled state: the island lifts off the content with a deeper shadow and a
+	   brighter brand edge (toggled by a top-of-page IntersectionObserver sentinel,
+	   never a scroll listener). */
+	.mp-header[data-scrolled='true'] {
+		border-color: color-mix(in srgb, var(--mp-brand) 30%, var(--mp-edge));
+		box-shadow:
+			var(--mp-shadow-panel),
+			0 18px 50px -30px var(--mp-glow),
+			inset 0 1px 0 var(--mp-hi-20);
 	}
 
 	.mp-wordmark {
@@ -319,5 +340,17 @@ const nav = [
 		document.addEventListener('keydown', (e) => {
 			if (e.key === 'Escape' && burger.getAttribute('aria-expanded') === 'true') setSheet(false);
 		});
+	}
+
+	// Scroll-aware nav: a top-of-page sentinel toggles the island's lifted state
+	// when it leaves the viewport. IntersectionObserver, never a scroll listener.
+	const sentinel = document.querySelector('.mp-head-sentinel');
+	const island = document.querySelector('.mp-header');
+	if (sentinel && island && 'IntersectionObserver' in window) {
+		const io = new IntersectionObserver(
+			([entry]) => island.setAttribute('data-scrolled', entry.isIntersecting ? 'false' : 'true'),
+			{ threshold: 0 },
+		);
+		io.observe(sentinel);
 	}
 </script>
