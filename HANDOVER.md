@@ -33,6 +33,25 @@ CLS 0). The `@axe-core/cli` selenium runner still over-reports `color-contrast` 
 text in both the baseline and now (chromedriver over-samples the gradient); the in-page method
 and computed worst-case both pass. See the PROJECT_LOG redesign entry.
 
+**Homepage cut + launch-core centering 2026-06-13:** the homepage was trimmed from 9 sections to
+**5** (Hero / How-it-works / Workspace tour / Methods / closing FAQ+CTA) for a less-cluttered,
+more premium read. Dropped: the standalone demo teaser (its "Watch the demo" link folded into the
+tour, still -> `/features#demo`), the docs-rail teaser (lives in nav + footer; one Quickstart link
+folded into the FAQ), and the three audience cards. FAQ trimmed 6 -> 3 essentials; the `/#faq`
+anchor the nav points to is preserved on the closing section. Bento tour condensed 5 -> 4 shots
+(GRADE shot dropped from home, still used on /features). The hero **launch core is now perfectly
+concentric**: it was rebuilt as one fixed-size grid stage (every ring + the button share one cell,
+`place-items:center`, no `translate()`), fixing a 25px vertical offset that came from a `1fr` grid
+track inflating to the 117% dash ring's min-content. A Playwright geometry probe confirms
+button-vs-every-ring offset = 0.00,0.00 and core-vs-column = 0.00,0.00 at desktop + mobile, both
+moods. AA: `--mp-muted` deepened **#5B6877 -> #525F6D** (warm light only) because the drifting
+aurora tinted the tour band + footer backgrounds green enough that the locked muted dipped to
+~4.3:1 on small text (axe); this also fixes a pre-existing footer contrast borderline that failed
+on the committed HEAD for /changelog + /privacy under stricter aurora sampling. Gates: build green
+(11 pages); **in-page axe 0 violations, all rules, both moods, all 7 marketing routes**. See the
+PROJECT_LOG entry. (Verification harness: untracked `e2e/{shoot,sections,axe-run,interact}.mjs`,
+runs Playwright from `metaproc-deploy/node_modules` against `astro preview`.)
+
 **Remaining before public:**
 1. **Recapture proof assets** — **DONE 2026-06-13** for the six screenshots + the poster
    frame: `src/assets/proof/hero-app-overview.png`, `workflow-store.png`, `plots-studio.png`,

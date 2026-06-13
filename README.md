@@ -27,7 +27,11 @@ scripts/sync-docs.*     one-way sync from the app repo (PRODUCT_MANUAL.md, fct_m
   nudged ≤4% toward brand so white CTA text stays ≥4.5:1 across the surface; warm-light link/
   eyebrow **text** token `#097264` — brand-deep deepened one notch because `#0A7A68` text only
   reaches 4.38–4.48:1 on the tinted surfaces it lands on (footer tint, download banner) once
-  aurora compositing is counted (buttons/gradients keep `#0A7A68`, where white-on passes).
+  aurora compositing is counted (buttons/gradients keep `#0A7A68`, where white-on passes);
+  warm-light **muted body** token `#525F6D` (BRAND §3 lists `#5B6877`) - deepened because the
+  drifting aurora tints local backgrounds green enough (~`#E3EDE5`) that small antialiased muted
+  text composited 4.27-4.47:1 on the tinted tour band and the footer; `#525F6D` computes >=5.4:1
+  there, 5.7:1 on canvas, 6.4:1 on panels (dusk muted `#9DB0C3` unchanged, already AA).
 - Gates: Lighthouse ≥ 95 ×4, LCP < 2 s, CLS ≈ 0, WCAG 2.2 AA, reduced-motion fallbacks.
 - **Proof assets are stale — recapture pending:** every screenshot in `src/assets/proof/`
   plus `demo.webm`/`demo-poster.png` still shows the violet-era app UI. Recapture happens

@@ -200,3 +200,48 @@ over the densest aurora centre still clears AA (prose body 9.4-10.2, links 4.55-
 in-page method reports 0. Treated as the documented tooling artifact, not a regression. CLS 0
 confirms the bento/timeline/reveal add no layout shift; `.mp-reveal` animates transform/opacity
 only and is killed under reduced-motion globally.
+
+## [2026-06-13] redesign | Homepage cut to 5 sections + launch-core centering fix
+Per Myron: the homepage felt cluttered and the hero launch core looked slightly off-centre.
+
+- **Cut 9 sections to 5** (premium = restraint + whitespace). Kept: Hero / How-it-works /
+  Workspace tour / Methods / closing FAQ+CTA. **Removed** the standalone "See it run" demo teaser
+  (its "Watch the demo" link folded into the tour foot, still points to `/features#demo`), the
+  docs-rail teaser (it lives in the nav + footer; one Quickstart link folded into the FAQ column),
+  and the three audience cards. **Trimmed** the FAQ from 6 questions to the 3 essentials (free /
+  privacy / can-I-see-the-code); the rest live in the docs. The `#faq` anchor the header nav
+  points to is preserved (moved onto the closing section). The bento tour was condensed from 5
+  shots to 4 (one wide code-panel feature tile + workflow / plots / report); the GRADE shot was
+  dropped from the homepage (still used on /features, asset retained). Every remaining headline
+  and sub was tightened (subs <=20 words, no em-dashes). Section padding opened up
+  (`clamp(4rem,8vw,7rem)`), section titles balance-wrapped at 24ch. Eyebrows rationed to 2 across
+  5 sections (hero + methods) per BRAND §4 / taste-skill (dropped the "How it works" eyebrow). The
+  final CTA became a bracketed glass panel paired with the FAQ in a 2-col closing block; it was a
+  `<div>`, not `<aside>`, to avoid `landmark-complementary-is-top-level`.
+- **Launch-core centering (root cause + fix).** A Playwright geometry probe measured the centre of
+  every ring vs the button: the rings sat 25px BELOW the button (`btn-vs-halo dy=25.5`). Cause: the
+  rings used a `1fr`/auto grid track, whose min-content floor was inflated by the 117% dash child
+  past the box height, so `place-items:center` centred the rings in the oversized track, not the
+  box. Fix: the whole core is now ONE square grid stage with every layer in a single fixed-size
+  cell (`grid-template:"core" var(--stage)/var(--stage)`, all children `grid-area:core`,
+  `place-items:center`, `min-*:0`) and the rings wrapper the same trick at `--halo`. Fixed-length
+  tracks ignore min-content, so the 117% dash overflows symmetrically and stays concentric. No
+  `translate()` anywhere, so spin/breathe/press transforms can't clobber centring. Probe now reads
+  **btn-vs-halo / dash / sonar = 0.00,0.00 and core-vs-column = 0.00,0.00 at desktop AND mobile, in
+  both moods** (mobile 0.01 = sub-pixel). Burst/press-punch keyframes updated to scale-only.
+- **AA: deepened `--mp-muted` #5B6877 -> #525F6D** (warm light only). The locked value clears AA on
+  the static canvas but the drifting aurora transiently tints local backgrounds greener (~#E3EDE5),
+  where small antialiased muted text composited 4.27-4.47:1 (axe) on the tinted tour band AND the
+  footer (`.mp-footer__tag` / `.mp-footer__legal`) - the footer failure pre-existed this work
+  (reproduced on the committed HEAD for /changelog + /privacy). #525F6D computes >=5.4:1 on the
+  green-tinted composite, 5.7:1 on canvas, 6.4:1 on panels; derive-and-document per BRAND §1 (same
+  pattern as the earlier `--mp-link` #097264 fix). Dusk muted (#9DB0C3) unchanged (already AA).
+
+**Gates.** `npm run build` green (11 pages). In-page axe (Playwright + Chrome, full ruleset, both
+moods, all 7 marketing routes) = **0 violations** - and the footer pages that failed on HEAD with
+this stricter aurora sampling now pass. The axe runner resolves `.mp-reveal` to its resting state
+before scanning (mid-fade translucent text is a measurement artifact, not what a user or the
+reduced-motion path sees). Interaction checks pass: `#faq` anchor lands on the closing section,
+FAQ items toggle, launch core is a focusable `<a>` with aria-label, `data-placeholder="app-url"`
+x4 preserved, rings animation is `none` under reduced motion. Screenshot + probe harness lives in
+`e2e/shoot.mjs` / `e2e/sections.mjs` / `e2e/axe-run.mjs` / `e2e/interact.mjs` (untracked).
