@@ -46,26 +46,33 @@ const ANALYTICS_TOKEN = '';
 			(function () {
 				var html = document.documentElement;
 
-				// ---- mood ----
-				var mood = 'light';
+				// ---- default light/dark: OS preference first, else time of day ----
+				// 8:00am-6:00pm => light/Solarized; 6:01pm-7:59am => dark/Gruvbox.
+				var defDark = false;
+				try {
+					var mq = window.matchMedia;
+					if (mq && mq('(prefers-color-scheme: dark)').matches) { defDark = true; }
+					else if (mq && mq('(prefers-color-scheme: light)').matches) { defDark = false; }
+					else { var t = new Date(), mins = t.getHours() * 60 + t.getMinutes(); defDark = (mins < 480 || mins > 1080); }
+				} catch (e) { /* keep light */ }
+
+				// ---- mood (a stored choice always wins; else the default) ----
+				var mood = defDark ? 'dusk' : 'light';
 				try {
 					var sm = localStorage.getItem('mp-site-mood');
-					if (sm === 'light' || sm === 'dusk') {
-						mood = sm;
-					} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-						mood = 'dusk';
-					}
-				} catch (e) { /* storage unavailable, keep light */ }
+					if (sm === 'light' || sm === 'dusk') { mood = sm; }
+				} catch (e) { /* keep default */ }
 				html.setAttribute('data-theme', mood);
 
-				// ---- theme preset ----
-				var preset = 'orbital';
+				// ---- theme preset (explicit pick wins; else couple to mood) ----
+				var preset = (mood === 'dusk') ? 'gruvbox' : 'solarized';
 				var customBlob = null;
 				try {
-					preset = localStorage.getItem('mp-site-theme') || 'orbital';
+					var st = localStorage.getItem('mp-site-theme');
+					if (st) preset = st;
 					var cb = localStorage.getItem('mp-site-theme-custom');
 					if (cb) customBlob = JSON.parse(cb);
-				} catch (e) { /* keep orbital */ }
+				} catch (e) { /* keep default */ }
 
 				if (preset === 'custom') {
 					applyCustom(html, customBlob || {}, mood);
