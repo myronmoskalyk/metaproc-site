@@ -34,9 +34,10 @@ scripts/sync-docs.*     one-way sync from the app repo (PRODUCT_MANUAL.md, fct_m
   text composited 4.27-4.47:1 on the tinted tour band and the footer; `#525F6D` computes >=5.4:1
   there, 5.7:1 on canvas, 6.4:1 on panels (dusk muted `#9DB0C3` unchanged, already AA).
 - Gates: Lighthouse ≥ 95 ×4, LCP < 2 s, CLS ≈ 0, WCAG 2.2 AA, reduced-motion fallbacks.
-- **Proof assets are stale — recapture pending:** every screenshot in `src/assets/proof/`
-  plus `demo.webm`/`demo-poster.png` still shows the violet-era app UI. Recapture happens
-  after the app itself is rethemed to Orbital (later stage) — do not recapture before that.
+- **Proof assets:** the 6 screenshots + `demo-poster.png` were recaptured from the Orbital
+  v0.2.4 app (2026-06-13) via `e2e/recapture/capture.mjs`. **`demo.webm` is still the
+  violet-era video** — regenerate it from the new app before public launch (no harness yet;
+  a Playwright `recordVideo` walkthrough or a manual screen capture).
 - `/download` renders only when the public source repo + matching release tag exist (GPL §6).
 - No `/pricing` page until a real number exists — "Free while in beta" copy only (D5).
 
