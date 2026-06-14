@@ -16,8 +16,8 @@
 
 /* Self-hosted fonts (no Google CDN). Geist variable for UI/headings, Geist Mono
    for code/numbers, the premium pairing the app shares (BRAND.md §4, 2026-06-13). */
-@import "@fontsource-variable/geist";
-@import "@fontsource-variable/geist-mono";
+@import "@fontsource-variable/onest";
+@import "@fontsource-variable/jetbrains-mono";
 
 /* ---- Core brand (mood-independent), BRAND.md §1 -------------------------- */
 :root {
@@ -805,8 +805,8 @@
 	--color-amber-accent: #E08A00;
 	--color-ink: #19222C;
 	--color-canvas: #F3F0E9;
-	--font-sans: "Geist Variable", Geist, system-ui, -apple-system, "Segoe UI", sans-serif;
-	--font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+	--font-sans: "Onest Variable", Onest, system-ui, -apple-system, "Segoe UI", sans-serif;
+	--font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 	--color-accent-sky: #38BDF8;
 	--color-accent-coral: #F2613F;
 	--color-accent-violet: #9B8BFF;
@@ -943,13 +943,13 @@ body.mp-marketing::after {
 .mp-panel--bracket::after {
 	content: "";
 	position: absolute;
-	top: 11px;
-	left: 11px;
-	width: 15px;
-	height: 15px;
+	top: 12px;
+	right: 12px;
+	width: 14px;
+	height: 14px;
 	border-top: 2px solid var(--mp-accent);
-	border-left: 2px solid var(--mp-accent);
-	border-radius: 5px 0 0 0;
+	border-right: 2px solid var(--mp-accent);
+	border-radius: 0 5px 0 0;
 	opacity: 0.65;
 	pointer-events: none;
 }
@@ -1084,8 +1084,8 @@ body.mp-marketing::after {
    brand teal with computed AA (accent carries white/inverted text ≥4.5:1;
    accent-high is the link colour in dark mode, deep variant in light). */
 :root {
-	--sl-font: "Geist Variable", Geist, sans-serif;
-	--sl-font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
+	--sl-font: "Onest Variable", Onest, sans-serif;
+	--sl-font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
 
 	/* Dark mode (Starlight's default), deep-dusk, teal-tinted grays */
 	--sl-color-accent-low: #0E322D;

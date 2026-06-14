@@ -3,9 +3,9 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
-// Self-hosted Geist variable font file, for an LCP-light <link rel="preload">.
+// Self-hosted Onest variable font file, for an LCP-light <link rel="preload">.
 // Resolved at build time so the hashed asset URL is correct.
-import geistWoff2 from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
+import uiFontWoff2 from '@fontsource-variable/onest/files/onest-latin-wght-normal.woff2?url';
 
 interface Props {
 	title: string;
@@ -156,7 +156,7 @@ const ANALYTICS_TOKEN = '';
 		<!-- LCP: preload the variable UI font so the hero headline paints fast. -->
 		<link
 			rel="preload"
-			href={geistWoff2}
+			href={uiFontWoff2}
 			as="font"
 			type="font/woff2"
 			crossorigin
