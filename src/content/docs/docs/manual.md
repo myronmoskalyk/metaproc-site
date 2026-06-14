@@ -8,7 +8,7 @@ description: Full MetaProc capability inventory, synced from the app repository.
      .exe / desktop menu) are filtered out for the web docs. -->
 
 :::note
-This page is **generated** from the MetaProc app repository (last synced 2026-06-13).
+This page is **generated** from the MetaProc app repository (last synced 2026-06-14).
 Do not edit it here — changes will be overwritten. Update `PRODUCT_MANUAL.md` in the
 app repo and re-run `scripts/sync-docs.mjs`.
 :::
