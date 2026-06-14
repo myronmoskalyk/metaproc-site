@@ -3,8 +3,9 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import tailwindcss from '@tailwindcss/vite';
 
-// Stage 8: replace with the real production domain before public launch.
-const SITE = 'https://metaproc.example';
+// Production domain — evidenced by the Auth0 roles namespace https://metaproc.app/.
+// Confirm/replace before public launch if the real domain differs.
+const SITE = 'https://metaproc.app';
 
 // https://astro.build/config
 export default defineConfig({
