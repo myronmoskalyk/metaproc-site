@@ -341,6 +341,8 @@ const faqs = [
 		display: grid;
 		place-items: center;
 		min-height: clamp(330px, 37vw, 440px);
+		will-change: transform;
+		transition: transform .5s cubic-bezier(.22, .61, .36, 1);
 	}
 	/* The launch core is built as ONE square grid stage: every layer lives in the
 	   same single grid cell (grid-area 1/1) and is centered by `place-items: center`.
@@ -366,6 +368,10 @@ const faqs = [
 		border-radius: 50%;
 		text-decoration: none;
 		isolation: isolate;
+		/* Passive ambient float: the whole core bobs gently in place. Composes with
+		   the hero pointer-parallax (set on .hero__visual, the parent). Reduced-motion
+		   is handled by the global kill-switch. */
+		animation: mp-float 7s ease-in-out infinite;
 	}
 	.launchcore > * { grid-area: core; min-width: 0; min-height: 0; }
 	/* Rings wrapper: a centered square of side --halo, same fixed-track trick so the
@@ -423,13 +429,16 @@ const faqs = [
 		width: calc(var(--halo) * 0.52);
 		height: calc(var(--halo) * 0.52);
 		border-radius: 50%;
-		background: var(--mp-grad-cta);
+		background:
+			radial-gradient(135% 120% at 50% 6%, color-mix(in srgb, #fff 26%, transparent), transparent 48%),
+			var(--mp-grad-cta);
 		color: var(--mp-on-brand);
 		box-shadow:
-			0 24px 52px -24px var(--mp-glow),
-			0 6px 22px -10px var(--mp-glow),
-			inset 0 0 0 1px var(--mp-hi-14),
-			inset 0 2px 0 var(--mp-hi-24);
+			0 34px 64px -28px var(--mp-glow),
+			0 12px 30px -14px var(--mp-glow),
+			inset 0 0 0 1px var(--mp-hi-20),
+			inset 0 2px 1px var(--mp-hi-30),
+			inset 0 -18px 34px -16px rgba(6, 28, 24, .42);
 		overflow: hidden;
 		transition: transform .25s var(--mp-ease), box-shadow .25s ease, filter .25s ease;
 	}
@@ -486,6 +495,19 @@ const faqs = [
 	@keyframes mp-burst {
 		from { transform: scale(1); opacity: .7; }
 		to { transform: scale(2.3); opacity: 0; }
+	}
+	/* Passive launch-core bob + in-frame scroll parallax for the framed shots. */
+	@keyframes mp-float {
+		0%, 100% { transform: translateY(0); }
+		50% { transform: translateY(-7px); }
+	}
+	@keyframes mp-parallax {
+		from { transform: translateY(-3%) scale(1.08); }
+		to { transform: translateY(3%) scale(1.08); }
+	}
+	@keyframes mp-bandglow {
+		from { transform: translate3d(-6%, 4%, 0); }
+		to { transform: translate3d(10%, -7%, 0); }
 	}
 
 	@media (max-width: 820px) {
@@ -592,6 +614,20 @@ const faqs = [
 		border-radius: 20px;
 		box-shadow: none;
 	}
+	/* Mild in-frame parallax: the framed shot drifts a few percent within its
+	   clipped frame as the section scrolls through the viewport. Progressive
+	   enhancement (scroll-driven timelines only) and fully skipped under reduced
+	   motion, so the image is never left scaled/cropped without the motion. */
+	@supports (animation-timeline: view()) {
+		@media (prefers-reduced-motion: no-preference) {
+			.how__shotcore :global(.mp-proof img),
+			.bento__cell--feature .bento__shot :global(.mp-proof img) {
+				animation: mp-parallax linear both;
+				animation-timeline: view();
+				animation-range: cover;
+			}
+		}
+	}
 	.how__shotcore :global(.mp-proof figcaption) {
 		padding: 0.85rem 1.1rem 0.1rem;
 		line-height: 1.5;
@@ -627,6 +663,21 @@ const faqs = [
 		box-shadow: var(--mp-shadow-panel), inset 0 1px 0 var(--mp-hair);
 		transition: transform .2s var(--mp-ease), box-shadow .22s ease, border-color .2s ease;
 	}
+	/* Glass glint: a soft diagonal light sweep crosses the framed shot on hover.
+	   White (not brand-tinted) so it reads as a reflection, never a colour cast,
+	   and clipped by the shot's overflow. */
+	.bento__shot::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		z-index: 2;
+		pointer-events: none;
+		border-radius: inherit;
+		background: linear-gradient(115deg, transparent 32%, rgba(255, 255, 255, .26) 48%, transparent 64%);
+		transform: translateX(-115%);
+		transition: transform .7s var(--mp-ease);
+	}
+	.bento__cell:hover .bento__shot::before { transform: translateX(115%); }
 	.bento__shot::after {
 		content: "";
 		position: absolute;
@@ -681,6 +732,22 @@ const faqs = [
 	.tour__demo { flex: none; }
 
 	/* ---- Methods (dark code anchor) ---------------------------------------- */
+	/* A slow drifting teal glow gives the dark band quiet passive movement. Faint
+	   (≈16% brand) and clipped to the band; it complements the static glow already
+	   in the band's background and never lifts the near-black bg enough to affect
+	   the AA of the light text on it. */
+	.methods-sec { position: relative; isolation: isolate; overflow: hidden; }
+	.methods-sec::before {
+		content: "";
+		position: absolute;
+		inset: -25%;
+		z-index: -1;
+		pointer-events: none;
+		background: radial-gradient(36% 48% at 28% 82%,
+			color-mix(in srgb, var(--mp-g1) 16%, transparent), transparent 62%);
+		animation: mp-bandglow 28s ease-in-out infinite alternate;
+		will-change: transform;
+	}
 	.methods {
 		display: grid;
 		grid-template-columns: 1.55fr 1fr;
@@ -892,5 +959,22 @@ const faqs = [
 				);
 			}
 		});
+	})();
+
+	// Mild pointer parallax on the hero launch core — layered depth, reduced-motion gated.
+	(function () {
+		const rm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (rm) return;
+		const hero = document.querySelector<HTMLElement>('.hero');
+		const vis = document.querySelector<HTMLElement>('.hero__visual');
+		if (!hero || !vis) return;
+		let raf = 0, tx = 0, ty = 0;
+		hero.addEventListener('pointermove', (e: PointerEvent) => {
+			const r = hero.getBoundingClientRect();
+			tx = (e.clientX - r.left) / r.width - 0.5;
+			ty = (e.clientY - r.top) / r.height - 0.5;
+			if (!raf) raf = requestAnimationFrame(() => { raf = 0; vis.style.transform = `translate3d(${tx * 28}px, ${ty * 24}px, 0)`; });
+		});
+		hero.addEventListener('pointerleave', () => { vis.style.transform = ''; });
 	})();
 </script>
