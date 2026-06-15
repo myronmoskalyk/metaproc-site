@@ -816,6 +816,7 @@
 html {
 	font-family: var(--font-sans, system-ui, sans-serif);
 	scroll-behavior: smooth;
+	scroll-padding-top: 5.5rem; /* in-page #anchors clear the sticky header island */
 }
 
 body.mp-marketing {
@@ -1038,6 +1039,16 @@ body.mp-marketing::after {
 	color: transparent;
 	text-shadow: var(--mp-tshadow);
 	animation: mp-shine 8s ease-in-out infinite;
+}
+/* Forced-colors / Windows High Contrast: the gradient text fill is not painted,
+   so restore a visible system-coloured headline instead of transparent text. */
+@media (forced-colors: active) {
+	.mp-shine {
+		-webkit-text-fill-color: CanvasText;
+		color: CanvasText;
+		background: none;
+		text-shadow: none;
+	}
 }
 
 /* Rise entrance (initial load only, BRAND §6). Stagger via --mp-rise-delay. */

@@ -5,18 +5,17 @@ const subprocessors = [
 	{ name: 'Hetzner', purpose: 'Application hosting & compute', location: 'Germany / Finland (EU)' },
 	{ name: 'Cloudflare', purpose: 'CDN, DNS, and edge delivery', location: 'Global edge (config in EU)' },
 	{ name: 'Auth0 / Okta', purpose: 'Authentication / login', location: 'EU region' },
-	{ name: 'Backblaze', purpose: 'Build artifact storage', location: 'EU region' },
 ];
 ---
 <PageLayout
 	title="Privacy"
 	activePath="/privacy"
-	lede="How MetaProc handles your data. Short version: analyses run in throwaway, EU-hosted containers, and you should never upload identifiable patient-level data."
-	description="MetaProc privacy: ephemeral EU-hosted analysis containers, no identifiable patient-level data, and the list of sub-processors."
+	lede="How MetaProc handles your data. Short version: analyses run in throwaway, EU-hosted containers, sign-in is handled by Auth0, and you should never upload identifiable patient-level data."
+	description="MetaProc privacy: ephemeral EU-hosted analysis containers, Auth0 sign-in, no identifiable patient-level data, and the list of sub-processors."
 >
-	<p slot="banner" class="mp-banner mp-banner--draft">
-		Draft, pending review. This page describes intended practice and will be finalized
-		before public launch.
+	<p slot="banner" class="mp-banner mp-banner--info">
+		Last updated 14 June 2026. We may refine this policy as the service evolves; any
+		material change will be noted here.
 	</p>
 
 	<h2>No identifiable patient-level data</h2>
@@ -34,10 +33,20 @@ const subprocessors = [
 		<strong>destroyed at the end of your session</strong>. Data you upload lives in that
 		container's memory for the duration of your work and is not written to long-term
 		storage by the analysis runtime. When your session ends, the container (and the data
-		in it) is torn down.
+		in it) is torn down. Projects you choose to save are downloaded to <strong>your own
+		device</strong> as a <code>.rds</code> file — they are not stored on our servers.
 	</p>
 
-	<h2>Hosting & sub-processors</h2>
+	<h2>Your account &amp; login</h2>
+	<p>
+		To use the hosted app you sign in through <strong>Auth0</strong>, our authentication
+		provider. To manage your sign-in, Auth0 stores your <strong>email address and a login
+		identity</strong>. This is the one piece of data MetaProc keeps about you that
+		persists between sessions; it is used only to authenticate you and to control access,
+		and is held in the EU. We do not sell it or use it for advertising.
+	</p>
+
+	<h2>Hosting &amp; sub-processors</h2>
 	<p>
 		MetaProc is hosted in the EU. The following sub-processors may handle data in the
 		course of running the service:
@@ -53,10 +62,12 @@ const subprocessors = [
 		</tbody>
 	</table>
 
-	<h2>Erasure & contact</h2>
+	<h2>Erasure &amp; contact</h2>
 	<p>
-		Because analyses are ephemeral, there is normally nothing persistent to erase once
-		your session ends. For any privacy question, data-erasure request, or concern, contact
+		Your uploaded analysis data is ephemeral and is gone when your session ends. Your
+		<strong>login account</strong> (email and identity, held by Auth0) persists until you
+		ask us to remove it. To delete your account and its associated login data, or for any
+		privacy question or concern, contact
 		<a href="mailto:myron.moskalyk@gmail.com?subject=metaproc%20privacy">myron.moskalyk@gmail.com</a>.
 	</p>
 </PageLayout>

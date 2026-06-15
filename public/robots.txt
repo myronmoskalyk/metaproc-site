@@ -1,0 +1,6 @@
+# MetaProc — https://metaproc.app
+# Public marketing site; everything is crawlable.
+User-agent: *
+Allow: /
+
+Sitemap: https://metaproc.app/sitemap-index.xml

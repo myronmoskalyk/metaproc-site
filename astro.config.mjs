@@ -21,7 +21,7 @@ export default defineConfig({
 			disable404Route: true, // let the Astro app own the global 404, not Starlight
 			customCss: ['./src/styles/global.css'],
 			social: [
-				{ icon: 'github', label: 'GitHub', href: 'https://github.com/myronmoskalyk/metaproc' },
+				// GitHub icon hidden until github.com/myronmoskalyk/metaproc is public (it currently 404s).
 			],
 			// Docs files live under src/content/docs/docs/* so every route is /docs/*,
 			// leaving the site root (/) to the marketing landing page.

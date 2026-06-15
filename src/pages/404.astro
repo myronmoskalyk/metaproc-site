@@ -1,0 +1,24 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+
+// Custom 404. Astro emits this as dist/404.html, which Cloudflare Pages serves
+// (with a 404 status) for any unmatched route — replacing the soft-404 that
+// previously returned the homepage with a 200. Starlight's own 404 is disabled
+// (astro.config.mjs disable404Route:true) so this page owns every miss.
+---
+<PageLayout
+	title="Page not found"
+	description="That page doesn't exist. Head back to MetaProc, browse the docs, or launch the app."
+	lede="That page doesn't exist — the link may be outdated, or the page may have moved."
+>
+	<h2>Find your way back</h2>
+	<ul>
+		<li><a href="/">Home</a> — what MetaProc is and how it works.</li>
+		<li><a href="/features">Features</a> — the full workflow, from data to GRADE.</li>
+		<li><a href="/docs/quickstart">Quickstart</a> — your first meta-analysis in about ten minutes.</li>
+		<li><a href="/methods">Methods</a> — the engines and statistics behind every result.</li>
+	</ul>
+	<p>
+		Ready to run an analysis? <a href="https://studio.metaproc.app" data-placeholder="app-url">Launch MetaProc</a> — it runs in your browser, with nothing to install.
+	</p>
+</PageLayout>

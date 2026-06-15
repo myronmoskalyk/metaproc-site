@@ -19,7 +19,9 @@ const {
 	activePath = '',
 } = Astro.props;
 
-const fullTitle = title === 'MetaProc' ? title : `${title} · MetaProc`;
+const fullTitle = title === 'MetaProc' ? 'MetaProc — reproducible meta-analysis in your browser' : `${title} · MetaProc`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
+const ogImageURL = new URL('/og/metaproc-og.png', Astro.site).href;
 
 // Stage 8: paste the Cloudflare Web Analytics token here to enable the snippet.
 // Empty string => nothing renders (no third-party request, no cookie).
@@ -33,13 +35,15 @@ const ANALYTICS_TOKEN = '';
 		<title>{fullTitle}</title>
 		<meta name="description" content={description} />
 		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+		<link rel="canonical" href={canonicalURL} />
 
 		<!-- Mood + theme preset (Orbital): warm light default, deep dusk opt-in, and
 		     the runtime theme picker's preset. BOTH applied BEFORE first paint
 		     (inline + blocking on purpose) so there is no flash. Mood persists under
 		     'mp-site-mood' (first visit honours prefers-color-scheme); the active
 		     theme preset persists under 'mp-site-theme' (+ a custom seed blob under
-		     'mp-site-theme-custom'). Default theme = Orbital (no attribute).
+		     'mp-site-theme-custom'). Default preset couples to mood (Solarized light / Gruvbox dusk).
 		     The custom-theme derivation below mirrors src/scripts/theme.ts; keep
 		     the two in sync. -->
 		<script is:inline>
@@ -65,7 +69,7 @@ const ANALYTICS_TOKEN = '';
 				html.setAttribute('data-theme', mood);
 
 				// ---- theme preset (explicit pick wins; else couple to mood) ----
-				var preset = (mood === 'dusk') ? 'gruvbox' : 'solarized';
+				var preset = (mood === 'dusk') ? 'catppuccin' : 'solarized';
 				var customBlob = null;
 				try {
 					var st = localStorage.getItem('mp-site-theme');
@@ -172,6 +176,25 @@ const ANALYTICS_TOKEN = '';
 		<meta property="og:title" content={fullTitle} />
 		<meta property="og:description" content={description} />
 		<meta property="og:type" content="website" />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:site_name" content="MetaProc" />
+		<meta property="og:locale" content="en_US" />
+		<meta property="og:image" content={ogImageURL} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={fullTitle} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImageURL} />
+		<script type="application/ld+json" set:html={JSON.stringify({
+			'@context': 'https://schema.org',
+			'@type': 'SoftwareApplication',
+			name: 'MetaProc',
+			applicationCategory: 'HealthApplication',
+			operatingSystem: 'Web',
+			url: 'https://metaproc.app',
+			description: 'Run a complete, reproducible meta-analysis in your browser — from data to forest plot to GRADE, with the exact R code for every step.',
+		})} />
 
 		{
 			/* Stage 8: Cloudflare Web Analytics, guarded behind an empty token so it

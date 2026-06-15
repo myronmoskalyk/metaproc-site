@@ -218,7 +218,7 @@ const faqs = [
 			<ul class="engines mp-reveal" style="--mp-reveal-delay:.1s" aria-label="Underlying engines">
 				<li><span class="engines__name">metafor</span><span class="engines__role">pooling and diagnostics</span></li>
 				<li><span class="engines__name">netmeta</span><span class="engines__role">network meta-analysis</span></li>
-				<li><span class="engines__name">meta</span><span class="engines__role">reference dependency</span></li>
+				<li><span class="engines__name">meta</span><span class="engines__role">pooling and forest plots</span></li>
 				<li><span class="engines__name">robvis</span><span class="engines__role">risk-of-bias figures</span></li>
 				<li><span class="engines__name">esc</span><span class="engines__role">effect-size conversions</span></li>
 			</ul>
@@ -226,7 +226,7 @@ const faqs = [
 	</section>
 
 	<!-- ===================== FAQ + FINAL CTA (closing block) ================== -->
-	<section class="section close" id="faq" aria-labelledby="final">
+	<section class="section close" id="faq" aria-labelledby="faq-title">
 		<div class="mp-container close__grid">
 			<div class="faq mp-reveal">
 				<h2 id="faq-title" class="section__title faq__heading">Frequently asked</h2>
@@ -296,6 +296,7 @@ const faqs = [
 		font-size: clamp(2.35rem, 5.1vw, 4.1rem);
 		line-height: 1.03;
 		letter-spacing: -0.04em;
+		padding-bottom: 0.18em; /* room so the gradient-clipped descender ("y" in "your") isn't cut off */
 		font-weight: 800;
 		margin: 0 0 1.15rem;
 	}

@@ -464,9 +464,11 @@ const PRESETS = [
 		}
 
 		// ---- initial sync: reflect what the pre-paint script already applied -----
-		let active = 'orbital';
+		// No explicit pick → match the pre-paint default (mood-coupled: light→Solarized,
+		// dusk→Gruvbox) so the highlighted swatch matches what the page actually renders.
+		let active = document.documentElement.getAttribute('data-theme') === 'dusk' ? 'catppuccin' : 'solarized';
 		try {
-			active = localStorage.getItem(THEME_KEY) || 'orbital';
+			active = localStorage.getItem(THEME_KEY) || (document.documentElement.getAttribute('data-theme') === 'dusk' ? 'catppuccin' : 'solarized');
 		} catch {
 			/* keep orbital */
 		}
