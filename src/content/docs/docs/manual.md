@@ -8,7 +8,7 @@ description: Full MetaProc capability inventory, synced from the app repository.
      .exe / desktop menu) are filtered out for the web docs. -->
 
 :::note
-This page is **generated** from the MetaProc app repository (last synced 2026-06-14).
+This page is **generated** from the MetaProc app repository (last synced 2026-06-16).
 Do not edit it here — changes will be overwritten. Update `PRODUCT_MANUAL.md` in the
 app repo and re-run `scripts/sync-docs.mjs`.
 :::
@@ -76,23 +76,28 @@ to Home.
 |---|---|---|---|
 | 1 | **Home** | panel | `mod_home` |
 | 2 | **Data** | panel | `mod_data_import` |
-| 3 | **Combine** | panel | `mod_combine` |
-| 4 | **Plan** | panel | `mod_planner` |
+| 3 | **Citations** | panel | `mod_references` |
+| 4 | **Combine** | panel | `mod_combine` |
 | 5 | **EDA** | panel | `mod_eda` |
-| 6 | **Templates** | panel | `mod_templates` |
-| 7 | **Network** | panel | `mod_network` |
-| 8 | **Pipeline** | panel | `mod_pipeline` |
-| 9 | **Appraise** ▾ | menu | Risk of bias (`mod_rob`), GRADE (`mod_grade`), SWiM (`mod_swim`) |
-| 10 | **Report** ▾ | menu | Reproducible report (`mod_report`), PRISMA 2020 flow (`mod_prisma`) |
-| 11 | **Tools** ▾ | menu | Effect-size converter (`mod_esc`), Power analysis (`mod_power`) |
-| 12 | **Workspace** | button | toggles the slide-out dataset switcher |
-| 13 | **Guide** | panel | `mod_guide` |
-| 14 | **About** | panel | `mod_landing` |
-| 15 | **Help** | link | quick-help modal |
+| 6 | **Plan** | panel | `mod_planner` |
+| 7 | **Templates** | panel | `mod_templates` |
+| 8 | **Network** | panel | `mod_network` |
+| 9 | **Pipeline** | panel | `mod_pipeline` |
+| 10 | **Plots** | panel | `mod_plots` |
+| 11 | **Tables** | panel | `mod_tables` |
+| 12 | **Appraise** ▾ | menu | Risk of bias (`mod_rob`), GRADE (`mod_grade`), SWiM narrative (`mod_swim`) |
+| 13 | **Report** ▾ | menu | Reproducible report (`mod_report`), PRISMA 2020 flow (`mod_prisma`) |
+| 14 | **Tools** ▾ | menu | Effect-size converter (`mod_esc`), Power analysis (`mod_power`) |
+| 15 | **Guide** | panel | `mod_guide` |
+| 16 | **Manual** | panel | `mod_manual` (this document, in-app) |
+| 17 | **About** | panel | `mod_landing` |
+| 18 | **Help** | link | quick-help modal |
 
-**Global chrome:** floating zoom/scale control (root-rem based, persists in
-`localStorage`); slide-out **Workspace** panel listing every loaded file/sheet with
-row×col counts (click to switch active dataset app-wide); slide-out **glossary
+**Global chrome:** a floating **display cluster** — zoom/scale (root-rem based, persists in
+`localStorage`) plus the light/dark mood and colourblind-safe palette toggles (both moved out of
+the navbar); a docked **Workspace** edge tab (grouped beside the **Workflow** tray) opening a
+slide-out that lists every loaded file/sheet with row×col counts (click to switch active dataset
+app-wide); slide-out **glossary
 info-panel** (102 plain-language term definitions opened by ⓘ icons — the most-used deepened with worked examples + cautions; ~76 placed
 across tabs); scroll-down cue; keyboard nav (Ctrl+←/→ cycle tabs, Backspace
 back / Shift+Backspace forward).
@@ -171,6 +176,21 @@ view). All plots are resizable (drag a corner) and full-screen-expandable (⛶);
 **Does NOT exist:** outlier tests, normality tests, time-series/longitudinal EDA,
 pairs-plot matrix, interactive hover on views other than Scatter, export of EDA plots
 as files (EDA plots are on-screen only; only their code is copyable).
+
+### 3.4 Citations tab (`mod_references` + `fct_references`)
+**Exists:** an **offline** reference / screening-export importer (navbar item 3, right after
+Data). Parses **RIS**, **CSL-JSON**, **RevMan RM5** (XML), and **Covidence / Rayyan CSV** into one
+fixed bibliographic schema (`ref_id`, authors, year, title, journal, doi, source_format), previews
+them in a DataTable, and parks them in `rv$references` — from where an opt-in **References** block
+can be added to the Reproducible report; the parsed set also downloads as CSV. Everything is parsed
+in-process — **nothing leaves the machine** — behind size-cap, XML external-entity (XXE) and CSV
+formula-injection guards with a fixed-schema output. Deliberately kept **separate** from the
+analysis datasets (`rv$datasets`): references are bibliographic, not effect-size data, so they never
+pollute the Templates / Plots pickers.
+
+**Does NOT exist:** PubMed / Zotero / Mendeley / EndNote-library import or any network lookup;
+de-duplication or screening decisions (it ingests an existing screening export — it is not itself a
+screening tool); CSL citation-style formatting of the references in the report.
 
 ---
 
@@ -417,6 +437,46 @@ uses; the two share this localStorage key, which the portal reads read-only).
   `--mp-*` tokens so the card reads in both warm-light and deep-dusk, and all motion
   is disabled under `prefers-reduced-motion`.
 
+### 5.10 Plots studio (`mod_plots` + `fct_plots`)
+**Exists:** a dedicated **Plots** tab that re-draws forest and funnel plots from a saved analysis
+(verified against its snapshot), with **two drawing engines** selectable per plot — native
+**metafor** base graphics and a themed **ggplot2** path. The ggplot "studio" exposes fine-grained,
+**opt-in** customization that leaves the default output byte-for-byte unchanged: per-plot appearance
+(diamond, reference line, axis limits/ticks, point shape/size, subtitle), **per-study row styling**
+(point / CI / label colour + shape), **per-element text** controls (family, size, weight, colour),
+and cosmetic **presets**. Plots follow the runtime theme and the colourblind-safe **Okabe–Ito**
+palette, and export to **PNG / vector (SVG/PDF)** with explicit size controls. As everywhere, the
+exact **reproducible R code** that drew the preview sits beneath it, and an **opt-in standalone
+(literal) ggplot2 emitter** produces self-contained plotting code that runs without metaproc.
+Freeman–Tukey double-arcsine proportion forests draw on the correct back-transformed [0, 1] scale.
+
+**Does NOT exist:** journal house-style layouts (JAMA / RevMan via `{meta}`); drag-to-position
+annotations; plotting of surfaces other than the saved forest / funnel analyses.
+
+### 5.11 Tables tab — formatted tables & Table 1 (`mod_tables`, `fct_tables`, `fct_table1`)
+**Exists:** a **Tables** tab that turns any loaded data frame into a **publication-ready table**,
+exported to **HTML, LaTeX, or Word** through `knitr::kable` (no new dependencies). Two modes share
+one preview / export / reproducible-code / save-to-report path:
+- **Format a table** — title, caption, column selection + renaming, alignment, rounding, footnotes
+  over any source frame.
+- **Summary / Table 1** — a hand-rolled (base R) descriptive-table builder for medical **Table 1**s.
+  Per-column **operations**: continuous (mean (SD) / median [IQR] / median [range] / range / both),
+  categorical (n (%) per level), binary (the "yes" level), count (n, or **pooled n** = column sum),
+  and **binned** (cut a continuous column at custom **thresholds** or *k* equal bins → n (%)).
+  Optional **stratification** by a grouping column (an Overall column + per-group columns with group
+  Ns, Overall toggleable), opt-in comparison **p-values** (t / ANOVA for continuous, χ² / Fisher
+  for categorical), **missing** counts, and an auto **methods footnote** that self-documents the
+  statistics used.
+Both modes draw from the active dataset, any loaded dataset, imported references, a saved
+**workflow** item's data (analysis + EDA "Data summary" snapshots), or a generic snapshot store
+(`mp_table_store_add`). The exact R that built the table is shown and can be saved to the report as
+a `table` block.
+
+**Does NOT exist:** automatic test selection beyond the t/ANOVA · χ²/Fisher defaults (no
+non-parametric / Welch switching); multi-level column spanners or weighted / survey summaries; Word
+output for the *Reproducible report* itself (the Tables tab exports Word; the report still does not —
+see §5.4).
+
 ---
 
 ## 6. Real-world data robustness (the Phase 4 batch)
@@ -486,19 +546,23 @@ stores the data + rules, not the analysis state.
   whether the evidence base is yet conclusive).
 
 **Reporting**
-- Report is **HTML only** (no PDF/Word).
+- The **Reproducible report** outputs HTML / PDF / `.Rmd` — **no Word**. *(Standalone publication
+  tables, including **Word** and **LaTeX**, are available on the **Tables** tab; see §5.11.)*
 - Report does **not** include Network, RoB, GRADE, SWiM, pipeline, or the PRISMA
   *diagram* (only typed PRISMA counts as bullets).
-- No journal **forest layouts** (JAMA/RevMan) — would require driving pooling off
-  the `{meta}` package.
+- No journal house-style **forest layouts** (JAMA / RevMan) — would require driving pooling off
+  the `{meta}` package. *(The **Plots** tab does add themed ggplot2 forest/funnel customization,
+  per-study styling, and a standalone-code emitter; see §5.10.)*
 
 **Appraisal**
 - RoB domains are generic `D1..Dn`, not instrument-named with signalling questions.
 - GRADE/SWiM are standalone calculators (no auto-import from the analysis).
 
 **Data handling**
-- Imports limited to CSV/Excel (no SPSS/Stata/RData/database/URL). *(In-app cell editing,
-  column retype/rename, row include/exclude, and Combine row-bind/stacking are now available.)*
+- Analysis-data imports limited to CSV/Excel (no SPSS/Stata/RData/database/URL). *(In-app cell
+  editing, column retype/rename, row include/exclude, and Combine row-bind/stacking are now
+  available; bibliographic **reference / screening exports** — RIS, CSL-JSON, RevMan,
+  Covidence/Rayyan — import via the **Citations** tab, see §3.4.)*
 - Drag-to-resize DT **column widths** not available (DT lacks it natively).
 
 **Persistence**
